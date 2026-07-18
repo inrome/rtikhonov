@@ -1,0 +1,36 @@
+---
+description: Security and privacy rules for this public repository
+alwaysApply: true
+---
+
+# Public repository — security and privacy
+
+This repo is **public**. Treat every commit, PR, and file as visible to the world.
+
+## Never commit or paste into the repo
+
+- Secrets: API keys, tokens, passwords, private keys, `.pem` / `.p12`, SSH keys
+- Env files: `.env`, `.env.*`, credentials JSON, service-account files
+- Private personal data: home address, phone, exact DOB, ID numbers, private calendars
+- Internal/work-only docs, unreleased company info, private URLs with auth
+- Real private emails or contact details the user has not explicitly approved as public
+
+## Before writing or committing
+
+1. Assume the change will be public.
+2. Prefer placeholders (`hello@example.com`, `YOUR_TOKEN`) over real secrets.
+3. If a secret is needed at build/deploy time, use GitHub Actions secrets / env vars — never hardcode.
+4. Do not commit `.env*`, key files, or credential dumps even “temporarily”.
+5. If a secret may already be in git history, stop and warn the user — rotating the secret is required; deleting the file alone is not enough.
+
+## Safe defaults for site content
+
+- Public bio, public social links, and an email the user chose for the site are OK.
+- When unsure whether content should be public, ask before adding it.
+- Do not scrape or copy private notes, chats, or local files into the site.
+
+## Agent behavior
+
+- Never print full secrets in chat replies if avoidable; redact middle characters.
+- Never request or store the user’s passwords or PATs in repo files.
+- Keep Cursor rules and `AGENTS.md` free of real secrets — only policies and placeholders.
