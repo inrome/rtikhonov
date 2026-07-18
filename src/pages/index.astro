@@ -1,10 +1,69 @@
 ---
+import { Image } from "astro:assets";
+import portrait from "../assets/roman.png";
+
 const name = "Roman Tikhonov";
-const bio = "Placeholder bio. Something short about what I do will go here.";
+const bio =
+	"Product Manager leading Onboarding and Identity at payme (TBC Uzbekistan), a payment app with millions of users. Former cognitive science researcher at Carnegie Mellon with a PhD in Cognitive Psychology from St. Petersburg University.";
+
 const links = [
-	{ label: "Email", href: "mailto:hello@rtikhonov.com" },
-	{ label: "GitHub", href: "https://github.com/rtikhonov" },
-	{ label: "LinkedIn", href: "https://www.linkedin.com/in/rtikhonov" },
+	{ label: "LinkedIn", href: "https://www.linkedin.com/in/romantikhonov/" },
+	{ label: "Telegram", href: "https://t.me/rvtikhonov" },
+];
+
+const timeline = [
+	{
+		year: "2025",
+		text: "Joined payme (TBC Uzbekistan) as Product Owner, later Product Manager. Own Onboarding and Identity. Tashkent.",
+	},
+	{
+		year: "2024",
+		text: "Co-founded ReviewLab.app, a product feedback platform. Shipped MVP in 2.5 months.",
+	},
+	{
+		year: "2023",
+		text: "Moved into product management: PM at HumanteQ (mental health tech).",
+	},
+	{
+		year: "2022",
+		text: "Postdoctoral Fellow at Carnegie Mellon University, Pittsburgh. Studied how people learn complex patterns; published in MIT's Open Mind.",
+	},
+	{
+		year: "2021",
+		text: 'Researcher at JetBrains Research. PhD in Psychology, St. Petersburg University. "Best Teacher" award at HSE University.',
+	},
+	{
+		year: "2018",
+		text: "Lecturer, then Senior Lecturer at HSE University, St. Petersburg. Designed 4 award-winning courses.",
+	},
+	{
+		year: "2016",
+		text: "Market Research Analyst at UsabilityLab: ranked 700+ features across 16 mobile banking apps.",
+	},
+	{
+		year: "2015",
+		text: "Master's in Cognitive Psychology (with distinction). Started 7 years as a researcher at St. Petersburg University; co-authored 20+ peer-reviewed papers.",
+	},
+	{
+		year: "2013",
+		text: "Bachelor's in Psychology, St. Petersburg University.",
+	},
+	{
+		year: "2012",
+		text: "Exchange semester at the University of Eastern Finland.",
+	},
+	{
+		year: "2010",
+		text: "Led a human rights education project at AIESEC with 14 international volunteers.",
+	},
+	{
+		year: "2009",
+		text: "Finished vocational training in web development; started studying psychology.",
+	},
+	{
+		year: "May 1992",
+		text: "Born in Kryvyi Rih, Ukraine.",
+	},
 ];
 ---
 
@@ -15,20 +74,46 @@ const links = [
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="description" content={`${name} — personal website`} />
+		<meta name="robots" content="noindex, nofollow" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{name}</title>
 	</head>
 	<body>
 		<main>
-			<h1>{name}</h1>
-			<p>{bio}</p>
-			<nav>
-				{
-					links.map((link) => (
-						<a href={link.href}>{link.label}</a>
-					))
-				}
-			</nav>
+			<header>
+				<Image
+					src={portrait}
+					alt={`${name} portrait`}
+					width={140}
+					height={140}
+					quality={85}
+					class="portrait"
+				/>
+				<h1>{name}</h1>
+				<p class="bio">{bio}</p>
+				<nav>
+					{
+						links.map((link) => (
+							<a href={link.href} rel="noopener noreferrer" target="_blank">
+								{link.label}
+							</a>
+						))
+					}
+				</nav>
+			</header>
+
+			<section class="timeline" aria-label="Timeline">
+				<ol>
+					{
+						timeline.map((entry) => (
+							<li>
+								<span class="year">{entry.year}</span>
+								<span class="event">{entry.text}</span>
+							</li>
+						))
+					}
+				</ol>
+			</section>
 		</main>
 	</body>
 </html>
@@ -45,6 +130,7 @@ const links = [
 		--bg: #fafafa;
 		--fg: #111;
 		--muted: #555;
+		--border: #ddd;
 		--link: #111;
 		--link-hover: #555;
 	}
@@ -54,6 +140,7 @@ const links = [
 			--bg: #111;
 			--fg: #f5f5f5;
 			--muted: #aaa;
+			--border: #333;
 			--link: #f5f5f5;
 			--link-hover: #aaa;
 		}
@@ -78,14 +165,26 @@ const links = [
 		margin: 0;
 		min-height: 100vh;
 		display: flex;
-		align-items: center;
 		justify-content: center;
-		padding: 2rem;
+		padding: 3rem 1.5rem;
 	}
 
 	main {
-		max-width: 28rem;
+		max-width: 38rem;
 		width: 100%;
+	}
+
+	header {
+		margin-bottom: 3rem;
+	}
+
+	.portrait {
+		display: block;
+		width: 140px;
+		height: 140px;
+		border-radius: 50%;
+		object-fit: cover;
+		margin: 0 0 1.25rem;
 	}
 
 	h1 {
@@ -95,7 +194,7 @@ const links = [
 		margin: 0 0 0.75rem;
 	}
 
-	p {
+	.bio {
 		margin: 0 0 1.5rem;
 		color: var(--muted);
 	}
@@ -114,5 +213,54 @@ const links = [
 
 	nav a:hover {
 		color: var(--link-hover);
+	}
+
+	.timeline ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-left: 1px solid var(--border);
+	}
+
+	.timeline li {
+		display: grid;
+		grid-template-columns: 5.5rem 1fr;
+		gap: 1rem;
+		padding: 0 0 1.25rem 1.25rem;
+		position: relative;
+	}
+
+	.timeline li:last-child {
+		padding-bottom: 0;
+	}
+
+	.timeline li::before {
+		content: "";
+		position: absolute;
+		left: -3.5px;
+		top: 0.55em;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--muted);
+	}
+
+	.year {
+		font-variant-numeric: tabular-nums;
+		font-size: 0.875rem;
+		color: var(--muted);
+		line-height: 1.5;
+	}
+
+	.event {
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	@media (max-width: 480px) {
+		.timeline li {
+			grid-template-columns: 1fr;
+			gap: 0.25rem;
+		}
 	}
 </style>
