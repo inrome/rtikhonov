@@ -2,6 +2,15 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-07-19 — Everything in Its Right Place
+
+- The projects gallery now covers mentoring, publications, talks, and events, each with a local image and a public link.
+- Card links say what they open — “Read paper [in Russian]”, “Watch lecture [in Russian]” — instead of bare labels like “PDF”.
+- The Cognitive Hackathon paper is hosted on the site (`/files/`), and its card shows the journal title page.
+- ReviewLab.app joins the gallery as a product card, linking to the live site and a Loom walkthrough.
+- Publication cards can list more than one artifact (papers, thesis, event site) without leaving the homepage.
+- The career timeline folds in research programs and leadership projects from the portfolio notes, with sharper dates from the CV.
+
 ## 2026-07-19 — Keep It Simple
 
 - Project cards lift a few pixels with a soft shadow on hover. The old 3D tilt is gone.

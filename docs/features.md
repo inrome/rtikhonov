@@ -15,7 +15,7 @@ Minimal personal one-pager.
 - **Project gallery** — Uses the full screen width, supports swipe, and adds arrow controls on desktop.
 - **Card hover** — Lifts the card a few pixels with a soft neutral shadow on fine-pointer hover.
 - **Holographic portrait** — Sweeps a restrained orange sheen across the profile photo on hover.
-- **Markdown projects** — Keeps project content easy to update without adding detail pages.
+- **Markdown projects** — Keeps project content easy to update without adding detail pages. Cards can list more than one artifact link.
 - **Private contacts** — Shows useful handles while keeping clear contact targets out of static HTML.
 - **Video call** — Opens a relaxed 15-minute video call from a short “15 min call” link.
 - **Link previews** — Gives shared pages a clear title, description, portrait, theme color, and proper icons.

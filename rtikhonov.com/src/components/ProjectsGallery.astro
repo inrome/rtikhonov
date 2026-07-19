@@ -24,6 +24,7 @@ const projects = (await getCollection("projects")).sort(
 						image={project.data.image}
 						href={project.data.href}
 						hrefLabel={project.data.hrefLabel}
+						links={project.data.links}
 					/>
 				))}
 			</div>

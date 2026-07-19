@@ -21,7 +21,7 @@ Contact details (social profiles, messaging, email) are **not** provided here an
 
 ## Projects
 
-Projects are listed on the homepage gallery (mentoring, publications, and other work that helps others). Each card has title, short summary, date, optional image, and optional link. There are no separate project detail pages.
+Projects are listed on the homepage gallery (mentoring, publications, talks, events, and other work that helps others). Each card has a title, short summary, date, local image, and one or more public links. There are no separate project detail pages.
 
 ## Images / training
 

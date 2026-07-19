@@ -8,13 +8,13 @@ alwaysApply: false
 
 ## Content schema (keep stable)
 
-Frontmatter fields: `title`, `summary` (≤15 words), `date` / `dateEnd` (optional ISO dates), `label`, `image` (optional local), `href` / `hrefLabel` (optional), `order`.
+Frontmatter fields: `title`, `summary` (≤15 words), `date` / `dateEnd` (optional ISO dates), `label`, `image` (local; required to ship), `href` / `hrefLabel` (optional single link), `links` (optional `{ href, label }[]`), `order`.
 
 - Timeline uses `YYYY` | `YYYY-MM` | `YYYY-MM-DD` strings in `index.astro`
 - Project card dates: store real `Date`s; format via `formatProjectDate` (e.g. same-month range → `Apr 10–12, 2026`)
 - Month precision: `YYYY-MM-01`. Year precision: `YYYY-01-01`
-- No project detail pages unless asked. Image is not clickable; only the text link is
-
+- No project detail pages unless asked. Image is not clickable; only the text links are
+- Ship a card only with a local image **and** at least one public artifact link. Prefer study figures or title/abstract crops for publications. No hotlinks or placeholders for public cards.
 ## Images
 
 - Host locally under `src/assets/projects/` — never hotlink LinkedIn/CDN (URLs expire; Astro cannot optimize remotes)
@@ -30,7 +30,7 @@ Frontmatter fields: `title`, `summary` (≤15 words), `date` / `dateEnd` (option
 - Label: solid filled accent badge, top-right over media, text uses `--accent-fg` (white/black), not accent-colored text
 - Desktop/fine-pointer: prev/next chevron buttons under the scroller only when cards overflow (no visible scrollbar); touch keeps swipe + peek
 - Fine-pointer hover: plain CSS lift (`translateY(-3px)`) plus a soft neutral shadow — no 3D tilt
-- Order in body: date (if any) → title → summary → link
+- Order in body: date (if any) → title → summary → link(s)
 
 ## Accent (site-wide)
 

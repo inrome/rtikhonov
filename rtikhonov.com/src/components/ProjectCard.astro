@@ -5,6 +5,11 @@ import externalLinkIcon from "@tabler/icons/outline/external-link.svg?raw";
 import { formatProjectDate } from "../lib/format-project-date";
 import { placeholderSvg } from "../lib/project-placeholder";
 
+interface ProjectLink {
+	href: string;
+	label: string;
+}
+
 interface Props {
 	id: string;
 	title: string;
@@ -15,14 +20,18 @@ interface Props {
 	image?: ImageMetadata;
 	href?: string;
 	hrefLabel?: string;
+	links?: ProjectLink[];
 }
 
-const { id, title, summary, label, date, dateEnd, image, href, hrefLabel } =
+const { id, title, summary, label, date, dateEnd, image, href, hrefLabel, links } =
 	Astro.props;
 
 const dateLabel = formatProjectDate(date, dateEnd);
-const linkText = hrefLabel ?? "Open";
 const placeholder = placeholderSvg(id || title);
+const artifactLinks: ProjectLink[] = [
+	...(href ? [{ href, label: hrefLabel ?? "Open" }] : []),
+	...(links ?? []),
+];
 ---
 
 <article class="project-card">
@@ -77,17 +86,27 @@ const placeholder = placeholderSvg(id || title);
 		<h3 class="project-card__title">{title}</h3>
 		<p class="project-card__summary">{summary}</p>
 		{
-			href && (
-				<p class="project-card__link">
-					<a href={href} rel="noopener noreferrer" target="_blank">
-						<span
-							class="project-card__link-icon"
-							aria-hidden="true"
-							set:html={externalLinkIcon}
-						/>
-						<span class="project-card__link-label">{linkText}</span>
-					</a>
-				</p>
+			artifactLinks.length > 0 && (
+				<ul class="project-card__links">
+					{artifactLinks.map((link) => (
+						<li class="project-card__link">
+							<a
+								href={link.href}
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								<span
+									class="project-card__link-icon"
+									aria-hidden="true"
+									set:html={externalLinkIcon}
+								/>
+								<span class="project-card__link-label">
+									{link.label}
+								</span>
+							</a>
+						</li>
+					))}
+				</ul>
 			)
 		}
 	</div>
@@ -223,8 +242,17 @@ const placeholder = placeholderSvg(id || title);
 		font-variant-numeric: tabular-nums;
 	}
 
-	.project-card__link {
+	.project-card__links {
+		list-style: none;
 		margin: 0.25rem 0 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+	}
+
+	.project-card__link {
+		margin: 0;
 		font-size: 0.8rem;
 	}
 
