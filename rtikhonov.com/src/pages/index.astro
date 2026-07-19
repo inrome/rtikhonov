@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import ProjectsGallery from "../components/ProjectsGallery.astro";
 import portrait from "../assets/roman.png";
 
 const name = "Roman Tikhonov";
@@ -13,6 +14,10 @@ const links = [
 
 const timeline = [
 	{
+		year: "2026-04",
+		text: "Mentored teams at the Cursor hackathon (TBC Uzbekistan / payme). Helped choose and validate product ideas.",
+	},
+	{
 		year: "2025",
 		text: "Joined payme (TBC Uzbekistan) as Product Owner, later Product Manager. Own Onboarding and Identity. Tashkent.",
 	},
@@ -21,12 +26,16 @@ const timeline = [
 		text: "Co-founded ReviewLab.app, a product feedback platform. Shipped MVP in 2.5 months.",
 	},
 	{
+		year: "2023-11",
+		text: "Published in MIT's Open Mind: Prediction, Explanation, and Control — mental models in dynamic environments.",
+	},
+	{
 		year: "2023",
 		text: "Moved into product management: PM at HumanteQ (mental health tech).",
 	},
 	{
 		year: "2022",
-		text: "Postdoctoral Fellow at Carnegie Mellon University, Pittsburgh. Studied how people learn complex patterns; published in MIT's Open Mind.",
+		text: "Postdoctoral Fellow at Carnegie Mellon University, Pittsburgh. Studied how people learn complex patterns.",
 	},
 	{
 		year: "2021",
@@ -61,7 +70,7 @@ const timeline = [
 		text: "Finished vocational training in web development; started studying psychology.",
 	},
 	{
-		year: "May 1992",
+		year: "1992-05",
 		text: "Born in Kryvyi Rih, Ukraine.",
 	},
 ];
@@ -102,6 +111,8 @@ const timeline = [
 				</nav>
 			</header>
 
+			<ProjectsGallery />
+
 			<section class="timeline" aria-label="Timeline">
 				<ol>
 					{
@@ -133,6 +144,8 @@ const timeline = [
 		--border: #ddd;
 		--link: #111;
 		--link-hover: #555;
+		--accent: #e35d05;
+		--accent-fg: #fff;
 	}
 
 	@media (prefers-color-scheme: dark) {
@@ -143,6 +156,8 @@ const timeline = [
 			--border: #333;
 			--link: #f5f5f5;
 			--link-hover: #aaa;
+			--accent: #f59a56;
+			--accent-fg: #111;
 		}
 	}
 
@@ -159,6 +174,7 @@ const timeline = [
 		line-height: 1.5;
 		background: var(--bg);
 		color: var(--fg);
+		overflow-x: clip;
 	}
 
 	body {
@@ -167,6 +183,7 @@ const timeline = [
 		display: flex;
 		justify-content: center;
 		padding: 3rem 1.5rem;
+		overflow-x: clip;
 	}
 
 	main {
@@ -206,13 +223,13 @@ const timeline = [
 	}
 
 	nav a {
-		color: var(--link);
+		color: var(--accent);
 		text-decoration: underline;
 		text-underline-offset: 0.2em;
 	}
 
 	nav a:hover {
-		color: var(--link-hover);
+		color: color-mix(in srgb, var(--accent) 70%, var(--fg));
 	}
 
 	.timeline ol {
@@ -242,7 +259,7 @@ const timeline = [
 		width: 6px;
 		height: 6px;
 		border-radius: 50%;
-		background: var(--muted);
+		background: var(--accent);
 	}
 
 	.year {

@@ -1,0 +1,204 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { formatProjectDate } from "../lib/format-project-date";
+import { placeholderSvg } from "../lib/project-placeholder";
+
+interface Props {
+	id: string;
+	title: string;
+	summary: string;
+	label: string;
+	date?: Date;
+	dateEnd?: Date;
+	image?: ImageMetadata;
+	href?: string;
+	hrefLabel?: string;
+}
+
+const { id, title, summary, label, date, dateEnd, image, href, hrefLabel } =
+	Astro.props;
+
+const dateLabel = formatProjectDate(date, dateEnd);
+const linkText = hrefLabel ?? "Open";
+const placeholder = placeholderSvg(id || title);
+---
+
+<article class="project-card">
+	<div class="project-card__media">
+		{
+			image ? (
+				<>
+					<Image
+						src={image}
+						alt=""
+						width={112}
+						height={64}
+						format="webp"
+						quality={40}
+						loading="lazy"
+						decoding="async"
+						aria-hidden="true"
+						class="project-card__backdrop"
+					/>
+					<Image
+						src={image}
+						alt=""
+						height={320}
+						widths={[280, 400, 560]}
+						sizes="min(20rem, calc(100vw - 5.5rem))"
+						format="webp"
+						quality={80}
+						loading="lazy"
+						decoding="async"
+						class="project-card__image"
+					/>
+				</>
+			) : (
+				<span
+					class="project-card__placeholder"
+					set:html={placeholder}
+				/>
+			)
+		}
+		<span class="project-card__label">{label}</span>
+	</div>
+	<div class="project-card__body">
+		{
+			dateLabel && (
+				<p class="project-card__date">
+					<time datetime={date?.toISOString().slice(0, 10)}>
+						{dateLabel}
+					</time>
+				</p>
+			)
+		}
+		<h3 class="project-card__title">{title}</h3>
+		<p class="project-card__summary">{summary}</p>
+		{
+			href && (
+				<p class="project-card__link">
+					<a href={href} rel="noopener noreferrer" target="_blank">
+						{linkText}
+					</a>
+				</p>
+			)
+		}
+	</div>
+</article>
+
+<style>
+	.project-card {
+		/* Width comes from .projects tokens (fluid from phone → desktop) */
+		flex: 0 0 var(--card-width, 20rem);
+		width: var(--card-width, 20rem);
+		max-width: 100%;
+		scroll-snap-align: start;
+		scroll-snap-stop: always;
+		display: flex;
+		flex-direction: column;
+		border: 1px solid var(--border);
+		border-radius: 0.75rem;
+		overflow: hidden;
+		background: var(--bg);
+	}
+
+	.project-card__media {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 560 / 320;
+		background: var(--border);
+		overflow: hidden;
+	}
+
+	.project-card__backdrop {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: blur(14px) saturate(1.1);
+		transform: scale(1.15);
+	}
+
+	.project-card__image {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.project-card__placeholder {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.project-card__placeholder :global(svg) {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.project-card__label {
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		z-index: 1;
+		font-size: 0.7rem;
+		font-weight: 500;
+		letter-spacing: 0.02em;
+		text-transform: lowercase;
+		padding: 0.2rem 0.45rem;
+		border-radius: 0.35rem;
+		background: color-mix(in srgb, var(--accent) 75%, transparent);
+		color: var(--accent-fg);
+		backdrop-filter: blur(3px);
+	}
+
+	.project-card__body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		padding: 0.85rem 0.9rem 1rem;
+		flex: 1;
+	}
+
+	.project-card__title {
+		margin: 0;
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		line-height: 1.35;
+	}
+
+	.project-card__summary {
+		margin: 0;
+		font-size: 0.8rem;
+		line-height: 1.4;
+		color: var(--muted);
+	}
+
+	.project-card__date {
+		margin: 0;
+		font-size: 0.7rem;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.project-card__link {
+		margin: 0.25rem 0 0;
+		font-size: 0.8rem;
+	}
+
+	.project-card__link a {
+		color: var(--accent);
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+	}
+
+	.project-card__link a:hover {
+		color: color-mix(in srgb, var(--accent) 70%, var(--fg));
+	}
+</style>

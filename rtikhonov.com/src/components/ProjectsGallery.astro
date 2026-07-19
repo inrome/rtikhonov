@@ -1,0 +1,79 @@
+---
+import { getCollection } from "astro:content";
+import ProjectCard from "./ProjectCard.astro";
+
+const projects = (await getCollection("projects")).sort(
+	(a, b) => a.data.order - b.data.order,
+);
+---
+
+{
+	projects.length > 0 && (
+		<section class="projects" aria-label="Projects">
+			<div class="projects__scroller">
+				{projects.map((project) => (
+					<ProjectCard
+						id={project.id}
+						title={project.data.title}
+						summary={project.data.summary}
+						label={project.data.label}
+						date={project.data.date}
+						dateEnd={project.data.dateEnd}
+						image={project.data.image}
+						href={project.data.href}
+						hrefLabel={project.data.hrefLabel}
+					/>
+				))}
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.projects {
+		/*
+		 * Full-bleed breakout from the 38rem main column.
+		 * Shared tokens drive card width on every viewport — no breakpoint swap.
+		 */
+		--projects-gutter: 1.5rem;
+		--projects-pad: max(
+			var(--projects-gutter),
+			calc((100vw - 38rem) / 2 + var(--projects-gutter))
+		);
+		--card-gap: 0.75rem;
+		/* Peek of the next card so horizontal scroll is discoverable */
+		--card-peek: 2.5rem;
+		--card-max: 20rem;
+		--card-width: min(
+			var(--card-max),
+			calc(100vw - (2 * var(--projects-pad)) - var(--card-peek))
+		);
+
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
+		margin-bottom: 3rem;
+	}
+
+	.projects__scroller {
+		display: flex;
+		gap: var(--card-gap);
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x mandatory;
+		scroll-padding-inline: var(--projects-pad);
+		-webkit-overflow-scrolling: touch;
+		touch-action: pan-x;
+		scrollbar-width: thin;
+		padding: 0.15rem var(--projects-pad) 0.5rem;
+	}
+
+	.projects__scroller::-webkit-scrollbar {
+		height: 6px;
+	}
+
+	.projects__scroller::-webkit-scrollbar-thumb {
+		background: var(--border);
+		border-radius: 3px;
+	}
+</style>
