@@ -30,6 +30,7 @@ Frontmatter fields: `title`, `summary` (≤15 words), `date` / `dateEnd` (option
 - Label: solid filled accent badge, top-right over media, text uses `--accent-fg` (white/black), not accent-colored text
 - Desktop/fine-pointer: prev/next chevron buttons under the scroller only when cards overflow (no visible scrollbar); touch keeps swipe + peek
 - Fine-pointer hover: plain CSS lift (`translateY(-3px)`) plus a soft neutral shadow — no 3D tilt
+- Fine-pointer drag-to-pan (hand cursor): `cursor: grab` / `grabbing`; `user-select: none` on the scroller for **all** fine-pointer time (not only while `.is-dragging` — selection starts in the pre-drag threshold and fights the pan); disable snap while dragging; settle to nearest card on release; suppress the click that would open a link after a real drag; leave touch on native swipe
 - Order in body: date (if any) → title → summary → link(s)
 
 ## Accent (site-wide)

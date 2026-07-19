@@ -8,6 +8,19 @@ alwaysApply: false
 
 Site root is `rtikhonov.com/` (not the repo root). Run all Astro/wrangler commands from there.
 
+## Shell (avoid wasted turns)
+
+Agent shells often reset cwd to the **repo** root. Every command must `cd` into the site first (prefer the absolute path) and export nvm Node:
+
+```bash
+export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
+cd /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
+```
+
+Do not run Astro, npm, or Wrangler from the repository root. There is no site `package.json` there. Prefer `./node_modules/.bin/astro` over `npx astro` once deps are installed.
+
+For local preview / HMR / “did my CSS land?”, follow `.cursor/skills/preview-site/` (status → one port → lean verify).
+
 ## Preview
 
 ```bash
@@ -15,7 +28,9 @@ cd rtikhonov.com
 astro dev --background   # or: npm run dev -- --host 127.0.0.1 --port 4321
 ```
 
-If HMR looks stale (edits not reflected), kill the process on 4321 and restart. Prefer hard-refresh after image asset rewrites.
+- Always `astro dev status` before navigating or verifying — use **that** URL/port.
+- If HMR looks stale (edits not in served CSS), hard-refresh; then stop → kill ports 4321–4323 → start **one** server. Prefer hard-refresh after image asset rewrites.
+- Never start a second server while one is already running.
 
 ## Content “DB”
 
@@ -31,5 +46,3 @@ Prefer Astro content collections over inline arrays for growing lists (projects,
 When the user asks to deploy, follow `.cursor/rules/deploy.mdc` / the `deploy-site` skill (status → `npm run deploy` → URLs). Do not expand this section into a checklist.
 
 `npm run deploy` runs docs checks, builds, then Wrangler with IPv4-first DNS (required on Node 24 + macOS). Push alone does not ship prod.
-
-Do not run Astro or Wrangler from the repository root. There is no root `package.json`. Agent shells need nvm on PATH before npm.

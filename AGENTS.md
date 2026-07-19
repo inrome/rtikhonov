@@ -9,11 +9,23 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
-Agent shells often lack Node on PATH. Prefix npm/astro/wrangler with:
+Agent shells often lack Node on PATH and often reset cwd to the **repo** root. Every command should `cd` into the site (prefer the absolute path) and export nvm before npm/astro/wrangler:
 
 ```
 export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
+cd /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
 ```
+
+For local UI checks, use `.cursor/skills/preview-site/` — one server, verify on the port from `astro dev status`, lean verify for CSS.
+
+Agent shells often lack Node on PATH and often reset cwd to the **repo** root. Every command should `cd` into the site (prefer the absolute path) and export nvm before npm/astro/wrangler:
+
+```
+export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
+cd /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
+```
+
+For local UI checks, use `.cursor/skills/preview-site/` — one server, verify on the port from `astro dev status`, lean verify for CSS.
 
 ## Deploy
 

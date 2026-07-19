@@ -2,6 +2,12 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-07-19 — Slow Hands
+
+- You can now grab the projects gallery with the mouse and drag it sideways. The cursor turns into a hand over the cards.
+- A short drag will not open a card link by mistake, and after you let go the gallery settles on the nearest card.
+- Dragging no longer highlights card text; selection is off inside the gallery on mouse devices.
+
 ## 2026-07-19 — Fast As You Can
 
 - “Deploy” chats take a short path: check git status, run `npm run deploy`, report URLs. No docs archaeology when the tree is clean.

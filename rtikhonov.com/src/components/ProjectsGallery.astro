@@ -122,6 +122,125 @@ const projects = (await getCollection("projects")).sort(
 
 		window.addEventListener("resize", update, { passive: true });
 		update();
+		initDragToPan(scroller, prefersReducedMotion);
+	}
+
+	/**
+	 * Mouse drag-to-pan ("hand" cursor). Touch keeps native swipe.
+	 * Snap is disabled while dragging, then the scroller settles on the
+	 * nearest card so re-enabling snap does not cause a jump.
+	 */
+	function initDragToPan(
+		scroller: HTMLElement,
+		prefersReducedMotion: () => boolean,
+	) {
+		const DRAG_THRESHOLD = 6;
+		let pointerId = -1;
+		let startX = 0;
+		let startScrollLeft = 0;
+		let dragging = false;
+		let suppressClick = false;
+		let restoreTimer = 0;
+
+		const nearestSnapLeft = () => {
+			const styles = getComputedStyle(scroller);
+			const pad =
+				parseFloat(
+					styles.scrollPaddingInlineStart || styles.scrollPaddingLeft,
+				) || 0;
+			const max = scroller.scrollWidth - scroller.clientWidth;
+			const current = scroller.scrollLeft;
+			const scrollerLeft = scroller.getBoundingClientRect().left;
+			let best = Math.min(Math.max(current, 0), max);
+			let bestDist = Infinity;
+			for (const card of scroller.querySelectorAll<HTMLElement>(
+				".project-card",
+			)) {
+				const left = Math.min(
+					Math.max(
+						card.getBoundingClientRect().left - scrollerLeft + current - pad,
+						0,
+					),
+					max,
+				);
+				const dist = Math.abs(left - current);
+				if (dist < bestDist) {
+					bestDist = dist;
+					best = left;
+				}
+			}
+			return best;
+		};
+
+		const restoreSnap = () => {
+			clearTimeout(restoreTimer);
+			scroller.classList.remove("is-snapless");
+		};
+
+		const settle = () => {
+			const target = nearestSnapLeft();
+			if (prefersReducedMotion() || Math.abs(target - scroller.scrollLeft) < 1) {
+				scroller.scrollLeft = target;
+				restoreSnap();
+				return;
+			}
+			scroller.scrollTo({ left: target, behavior: "smooth" });
+			scroller.addEventListener("scrollend", restoreSnap, { once: true });
+			// Fallback for browsers without the scrollend event
+			restoreTimer = window.setTimeout(restoreSnap, 700);
+		};
+
+		scroller.addEventListener("pointerdown", (e) => {
+			if (e.pointerType !== "mouse" || e.button !== 0) return;
+			pointerId = e.pointerId;
+			startX = e.clientX;
+			startScrollLeft = scroller.scrollLeft;
+			dragging = false;
+			suppressClick = false;
+		});
+
+		scroller.addEventListener("pointermove", (e) => {
+			if (e.pointerId !== pointerId) return;
+			const dx = e.clientX - startX;
+			if (!dragging) {
+				if (Math.abs(dx) < DRAG_THRESHOLD) return;
+				dragging = true;
+				clearTimeout(restoreTimer);
+				scroller.classList.add("is-dragging", "is-snapless");
+				scroller.setPointerCapture(pointerId);
+			}
+			scroller.scrollLeft = startScrollLeft - dx;
+		});
+
+		const endDrag = () => {
+			if (pointerId === -1) return;
+			pointerId = -1;
+			if (!dragging) return;
+			dragging = false;
+			suppressClick = true;
+			scroller.classList.remove("is-dragging");
+			settle();
+		};
+
+		scroller.addEventListener("pointerup", endDrag);
+		scroller.addEventListener("pointercancel", endDrag);
+
+		// A completed drag should not open the card link under the cursor
+		scroller.addEventListener(
+			"click",
+			(e) => {
+				if (!suppressClick) return;
+				suppressClick = false;
+				e.preventDefault();
+				e.stopPropagation();
+			},
+			true,
+		);
+
+		// Stop native image/link dragging from hijacking the pan gesture
+		scroller.addEventListener("dragstart", (e) => {
+			if (pointerId !== -1 || dragging) e.preventDefault();
+		});
 	}
 
 	document.querySelectorAll<HTMLElement>(".projects").forEach(initProjectsNav);
@@ -180,6 +299,29 @@ const projects = (await getCollection("projects")).sort(
 
 	.projects__scroller::-webkit-scrollbar {
 		display: none;
+	}
+
+	/* Mouse drag-to-pan: "hand" cursor on fine pointers only.
+	   Selection is off entirely — it starts during the pre-drag
+	   threshold and fights the pan gesture. */
+	@media (hover: hover) and (pointer: fine) {
+		.projects__scroller {
+			cursor: grab;
+			-webkit-user-select: none;
+			user-select: none;
+		}
+	}
+
+	.projects__scroller.is-dragging {
+		cursor: grabbing;
+	}
+
+	.projects__scroller.is-dragging :global(a) {
+		pointer-events: none;
+	}
+
+	.projects__scroller.is-snapless {
+		scroll-snap-type: none;
 	}
 
 	.projects__nav {
