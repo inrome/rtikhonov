@@ -9,6 +9,16 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+Agent shells often lack Node on PATH. Prefix npm/astro/wrangler with:
+
+```
+export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
+```
+
+## Deploy
+
+When asked to deploy / ship / publish: `git status`, then (if clean or docs already updated) `cd rtikhonov.com && npm run deploy`. See `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/`. Do not TodoWrite or diff against `main` for a clean-tree deploy.
+
 ## Security and privacy (public repo)
 
 This repository is public. Everything committed is visible on the internet.

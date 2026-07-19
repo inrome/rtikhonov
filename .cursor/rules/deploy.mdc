@@ -1,0 +1,31 @@
+---
+description: Fast path for deploy / ship / publish to Cloudflare Workers
+alwaysApply: true
+---
+
+# Deploy
+
+When the user says **deploy**, **ship**, or **publish** (to prod):
+
+1. Run `git status` only.
+2. If the working tree has notable undocumented user-facing changes, update docs/changelog first (see `maintain-project-docs` skill), then continue.
+3. Otherwise run only:
+
+```bash
+export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
+cd rtikhonov.com && npm run deploy
+```
+
+Use network permissions. Expect ~30–60s. `npm run deploy` already runs `check:docs` and the build.
+
+4. Reply with live URLs and the Wrangler Version ID. Live: `https://rtikhonov.com`, `https://www.rtikhonov.com`, `https://rtikhonov.inrome.workers.dev`.
+
+## Do not
+
+- TodoWrite for deploy
+- `git diff main...HEAD` (or large branch diffs) unless the deploy failed
+- Manual README / `docs/` / CHANGELOG review when `git status` is clean
+- Separate `check:docs` or `astro build` before `npm run deploy`
+- Commit or push unless the user asks
+
+Agent shells often lack Node on PATH. Always export the nvm path above (or `source ~/.nvm/nvm.sh && nvm use`) before npm/astro/wrangler.

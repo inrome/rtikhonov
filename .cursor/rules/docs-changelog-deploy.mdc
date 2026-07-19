@@ -1,5 +1,5 @@
 ---
-description: Keep documentation and changelog current, especially before deployment
+description: Keep documentation and changelog current with site changes
 alwaysApply: true
 ---
 
@@ -23,15 +23,8 @@ Keep public documentation aligned with every user-facing, behavioral, content-st
 - Do not add changelog entries for internal edits with no meaningful effect.
 - Update `rtikhonov.com/public/llms.txt` when its site or documentation summary changes.
 
-## Before every deployment
+## Before deploy (dirty tree only)
 
-Before running `wrangler deploy`:
+If `git status` shows notable undocumented changes, update docs/changelog first, then run `npm run deploy` from `rtikhonov.com/` (see `.cursor/rules/deploy.mdc` and the `deploy-site` skill).
 
-1. Review the pending git diff for changes that need documentation.
-2. Confirm `README.md` links to all current focused guides.
-3. Confirm relevant `docs/` pages match current behavior.
-4. Confirm `CHANGELOG.md` has dated entries for all notable pending changes.
-5. Run `npm --prefix rtikhonov.com run check:docs`.
-6. Run the site build (or use `npm --prefix rtikhonov.com run deploy`, which already runs both).
-
-Do not deploy while documentation or the changelog is stale.
+Do not manually re-check README, `docs/`, and CHANGELOG when the working tree is clean — `npm run deploy` already runs `check:docs`. Do not deploy while documentation or the changelog is stale relative to pending changes.

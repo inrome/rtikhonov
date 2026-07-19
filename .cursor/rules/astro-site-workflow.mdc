@@ -28,13 +28,8 @@ Prefer Astro content collections over inline arrays for growing lists (projects,
 
 ## Deploy
 
-```bash
-cd rtikhonov.com
-npm run deploy
-```
+When the user asks to deploy, follow `.cursor/rules/deploy.mdc` / the `deploy-site` skill (status → `npm run deploy` → URLs). Do not expand this section into a checklist.
 
-`deploy` runs docs checks, builds the site, then Wrangler with `NODE_OPTIONS="--dns-result-order=ipv4first"`. That flag is required on Node 24 + macOS; without it Wrangler often fails with `fetch failed` even when auth looks fine.
+`npm run deploy` runs docs checks, builds, then Wrangler with IPv4-first DNS (required on Node 24 + macOS). Push alone does not ship prod.
 
-Live: `https://rtikhonov.com` (Workers + custom domain). Push alone does not deploy — run `npm run deploy` after commit/push when the user asks for prod.
-
-Do not run Astro or Wrangler from the repository root. There is no root `package.json`.
+Do not run Astro or Wrangler from the repository root. There is no root `package.json`. Agent shells need nvm on PATH before npm.

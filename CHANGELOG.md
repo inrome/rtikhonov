@@ -2,6 +2,11 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-07-19 — Fast As You Can
+
+- “Deploy” chats take a short path: check git status, run `npm run deploy`, report URLs. No docs archaeology when the tree is clean.
+- Agent shells get an explicit nvm Node PATH so npm/wrangler work without a hunt.
+
 ## 2026-07-19 — Everything in Its Right Place
 
 - The projects gallery now covers mentoring, publications, talks, and events, each with a local image and a public link.

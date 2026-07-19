@@ -1,13 +1,17 @@
 ---
 name: maintain-project-docs
-description: Keeps README, focused docs, CHANGELOG, and llms.txt aligned with the site. Use after notable code or content changes, when editing documentation, when rebuilding history from Git, and before a commit, release, or deployment.
+description: >-
+  Keeps README, focused docs, CHANGELOG, and llms.txt aligned with the site.
+  Use after notable code or content changes, when editing documentation, when
+  rebuilding history from Git, or when a dirty tree blocks deploy. For
+  deploy-only requests (deploy / ship / publish), use deploy-site instead.
 ---
 
 # Maintain Project Docs
 
 ## Workflow
 
-1. Read the changed files and `git diff --name-status`.
+1. Read the changed files and `git diff --name-status` (pending work only — not `main...HEAD` unless needed).
 2. Read only the focused docs related to those changes.
 3. Update existing docs before creating a new page.
 4. Update `README.md` when a doc is added, removed, or renamed.
@@ -16,16 +20,11 @@ description: Keeps README, focused docs, CHANGELOG, and llms.txt aligned with th
 7. Run the validator:
 
 ```bash
+export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
 npm --prefix rtikhonov.com run check:docs
 ```
 
-Before deployment, use:
-
-```bash
-npm --prefix rtikhonov.com run deploy
-```
-
-That command checks docs, builds the site, and deploys with IPv4-first DNS.
+If the user also asked to deploy, hand off to `deploy-site` after docs are current. Do not load this skill for a clean-tree deploy-only request.
 
 ## Doc map
 
@@ -61,12 +60,6 @@ Keep each fact in one focused page. Link to it instead of copying it elsewhere.
 - Cut buzzwords, filler, hedging, and forced jokes. Clear beats clever.
 - When rebuilding history, inspect Git dates and diffs. Do not paste commit messages.
 
-## Deployment gate
+## Dirty tree before deploy
 
-Do not deploy until:
-
-- README links resolve.
-- Every focused doc is listed in README.
-- Docs match current behavior.
-- The changelog covers notable pending work.
-- `npm run check:docs` and the site build pass (`npm run deploy` runs both).
+If deploy is blocked by undocumented pending changes, fix docs here first. Then use `deploy-site`. Do not re-run a full manual gate when `git status` is already clean — `npm run deploy` runs `check:docs` and the build.
