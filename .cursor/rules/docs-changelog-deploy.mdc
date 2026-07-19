@@ -13,7 +13,11 @@ Keep public documentation aligned with every user-facing, behavioral, content-st
 - Add a three-to-five-word movie or song title after each date.
 - Pick a title that fits the changes. A playful or self-mocking reference is welcome.
 - Keep only significant changes as short bullet points.
-- Use plain B1 English, active voice, and Hemingway-style sentences.
+- Use a PostHog-like voice: clear, specific, direct, honest, and conversational.
+- Explain the outcome first. Do not lead with “Added”, “Changed”, or implementation details.
+- Write like you are explaining the update to a smart friend.
+- Use plain B1 English, active voice, present tense, and Hemingway-style sentences.
+- Avoid buzzwords, filler, hedging, and forced humor. Clear beats clever.
 - Do not copy raw commit messages or list minor internal work.
 - Keep newest dates and updates first; combine related work.
 - Do not add changelog entries for internal edits with no meaningful effect.

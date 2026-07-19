@@ -16,7 +16,8 @@ Typography: two roles only — system sans (body/UI) and system mono (`--font-mo
 - Full-bleed sections: `width: 100vw; margin-left/right: calc(50% - 50vw)` — do **not** add `max-width: 100%` (it kills breakout)
 - Prefer `overflow-x: clip` on `html`/`body` if a full-bleed scroller would otherwise widen the page
 - Match existing density and tone (short timeline lines, muted secondary text)
-- Reuse the shared tilt utility (`src/scripts/tilt.ts`) via `data-tilt` / `data-tilt-shadow` instead of one-off motion
+- Reuse the shared tilt utility (`src/scripts/tilt.ts`) via `data-tilt` / `data-tilt-shadow` for gallery cards
+- Portrait holographic sheen is CSS-only on `.portrait-frame` — one sweep per hover, no cursor tracking
 
 ## Don’t
 
@@ -26,6 +27,7 @@ Typography: two roles only — system sans (body/UI) and system mono (`--font-mo
 - Don’t invent separate detail routes for content that should stay homepage-only
 - Don’t use squash/squish “jelly” animations
 - Don’t add colored glow/bloom shadows (neutral drop shadow on tilted cards only)
+- Portrait sheen tint uses `--accent` — not cyan/purple AI-slop
 
 ## Responsive scrollers
 

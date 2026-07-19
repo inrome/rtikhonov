@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import linkedinIcon from "@tabler/icons/outline/brand-linkedin.svg?raw";
 import telegramIcon from "@tabler/icons/outline/brand-telegram.svg?raw";
 import ProjectsGallery from "../components/ProjectsGallery.astro";
-import portrait from "../assets/roman.png";
+import portrait from "../assets/roman.jpg";
 
 const name = "Roman Tikhonov";
 const bio =
@@ -108,15 +108,16 @@ const timeline = [
 	<body>
 		<main>
 			<header>
-				<Image
-					src={portrait}
-					alt={`${name} portrait`}
-					width={140}
-					height={140}
-					quality={85}
-					class="portrait"
-					data-tilt
-				/>
+				<span class="portrait-frame">
+					<Image
+						src={portrait}
+						alt={`${name} portrait`}
+						width={140}
+						height={140}
+						quality={85}
+						class="portrait"
+					/>
+				</span>
 				<h1>{name}</h1>
 				<p class="bio">{bio}</p>
 				<nav data-nosnippet aria-label="Contact">
@@ -257,17 +258,87 @@ const timeline = [
 
 	header {
 		margin-bottom: 3rem;
-		perspective: 800px;
+	}
+
+	.portrait-frame {
+		display: block;
+		position: relative;
+		width: 140px;
+		height: 140px;
+		border-radius: 50%;
+		margin: 0 0 1.25rem;
+		overflow: hidden;
+		isolation: isolate;
+	}
+
+	/* Holographic sheen: a diagonal streak that sweeps down once per
+	   hover. No cursor tracking, no glow. */
+	.portrait-frame::before {
+		content: "";
+		position: absolute;
+		inset: -60% 0;
+		z-index: 1;
+		pointer-events: none;
+		opacity: 0;
+		background: linear-gradient(
+			115deg,
+			transparent 38%,
+			color-mix(in srgb, #fff 36%, transparent) 48%,
+			color-mix(in srgb, var(--accent) 26%, transparent) 54%,
+			transparent 64%
+		);
+		mix-blend-mode: soft-light;
+		transform: translateY(-35%);
 	}
 
 	.portrait {
 		display: block;
-		width: 140px;
-		height: 140px;
+		width: 100%;
+		height: 100%;
 		border-radius: 50%;
 		object-fit: cover;
-		margin: 0 0 1.25rem;
-		transform-style: preserve-3d;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		.portrait-frame {
+			transition: transform 200ms ease;
+		}
+
+		.portrait-frame:hover {
+			transform: scale(1.05);
+		}
+
+		.portrait-frame:hover::before {
+			animation: holo-sweep 700ms ease-out;
+		}
+	}
+
+	@keyframes holo-sweep {
+		0% {
+			opacity: 0;
+			transform: translateY(-35%);
+		}
+		35% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+			transform: translateY(35%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.portrait-frame {
+			transition: none;
+		}
+
+		.portrait-frame:hover {
+			transform: none;
+		}
+
+		.portrait-frame:hover::before {
+			animation: none;
+		}
 	}
 
 	h1 {

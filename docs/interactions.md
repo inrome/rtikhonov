@@ -6,11 +6,12 @@ On mouse move, gallery cards tilt in 3D following cursor position (`perspective`
 
 ## Portrait
 
-Same 3D mouse-tracking tilt (rotate up to ~6°, lift 5px, scale 1.015) applied to the circular profile photo — no shadow/glow on it, tilt only.
+The circular profile photo uses a holographic hover sheen, not 3D tilt. On hover, a diagonal streak (`::before`, white plus a touch of `--accent`, `soft-light` blend) sweeps down across the photo once (~700ms) while the frame scales to `1.05`. The effect is CSS-only: no cursor tracking, no glow shadow. No effect on touch/no-hover devices.
 
 ## Constraints
 
 - Enable only when `(hover: hover)` and `(pointer: fine)`
 - Skip when `prefers-reduced-motion: reduce`
 - No squash/squish "jelly" animations
-- No colored glow/bloom shadows
+- No colored glow/bloom shadows anywhere
+- Gallery cards keep a neutral drop shadow only

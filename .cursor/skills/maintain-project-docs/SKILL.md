@@ -54,6 +54,10 @@ Keep each fact in one focused page. Link to it instead of copying it elsewhere.
 - Group work from the same date.
 - Put newest dates first.
 - Use short bullets. Skip minor internal changes.
+- Use a PostHog-like voice: clear, specific, direct, honest, and conversational.
+- Lead with what changed for the reader. Do not start with “Added” or “Changed.”
+- Prefer active voice and present tense. Write like you are talking to a smart friend.
+- Cut buzzwords, filler, hedging, and forced jokes. Clear beats clever.
 - When rebuilding history, inspect Git dates and diffs. Do not paste commit messages.
 
 ## Deployment gate

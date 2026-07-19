@@ -10,7 +10,7 @@ The site lives in `rtikhonov.com/`. Minimal personal one-pager.
 - [Design principles](docs/design-principles.md) — feel, restraint, and decision rules
 - [Content](docs/content.md) — projects collection and timeline data
 - [Visual system](docs/visual-system.md) — tokens, layout, typography, cards, images, icons
-- [Interactions](docs/interactions.md) — card and portrait tilt
+- [Interactions](docs/interactions.md) — card tilt and portrait holographic sheen
 - [Crawling / AI](docs/crawling-ai.md) — robots, portrait opt-out, contact obfuscation
 - [Changelog](CHANGELOG.md) — notable site and documentation changes
 

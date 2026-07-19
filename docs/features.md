@@ -13,6 +13,7 @@ Minimal personal one-pager.
 - Light and dark color schemes based on system preference
 - Local, optimized images with uncropped project media
 - Fluid full-bleed project gallery
-- Mouse-tracking tilt on project cards and portrait
+- Mouse-tracking 3D tilt on project cards
+- Holographic hover sheen on the portrait
 - Data-driven project content
 - Contact-link obfuscation and crawler preferences
