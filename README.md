@@ -2,20 +2,20 @@
 
 Personal site built with [Astro](https://astro.build), hosted on [Cloudflare Workers](https://developers.cloudflare.com/workers/).
 
+The site lives in `rtikhonov.com/`.
+
 ## Commands
 
-| Command | Action |
-| :------ | :----- |
-| `npm install` | Install dependencies |
-| `npm run dev` | Local Astro dev server |
-| `npm run build` | Build static site to `./dist/` |
-| `npm run preview` | Preview production build with Wrangler |
-| `npm run deploy` | Build and deploy to Cloudflare Workers |
+Run these from the repository root:
+
+```sh
+npm --prefix rtikhonov.com install
+npm --prefix rtikhonov.com run dev
+npm --prefix rtikhonov.com run build
+npm --prefix rtikhonov.com run preview
+npm --prefix rtikhonov.com run deploy
+```
 
 ## Deploy
 
-Push to `main` runs the GitHub Actions deploy workflow (needs `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets), or deploy locally:
-
-```sh
-npm run deploy
-```
+Deployment is handled by Cloudflare, not GitHub Actions. `npm run deploy` builds the site and runs `wrangler deploy` from `rtikhonov.com/`. If the repo is connected to Cloudflare Workers Builds, set the build **Root directory** to `rtikhonov.com` in the Cloudflare dashboard.

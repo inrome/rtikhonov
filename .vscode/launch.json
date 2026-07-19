@@ -3,6 +3,7 @@
   "configurations": [
     {
       "command": "./node_modules/.bin/astro dev",
+      "cwd": "${workspaceFolder}/rtikhonov.com",
       "name": "Development server",
       "request": "launch",
       "type": "node-terminal"

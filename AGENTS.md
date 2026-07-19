@@ -1,8 +1,9 @@
 ## Development
 
-When starting the dev server, use background mode:
+The Astro personal site lives in `rtikhonov.com/`. Run Astro commands from that folder. When starting the dev server, use background mode:
 
 ```
+cd rtikhonov.com
 astro dev --background
 ```
 
