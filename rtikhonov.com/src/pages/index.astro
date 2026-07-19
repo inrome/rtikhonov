@@ -1,21 +1,35 @@
 ---
 import { Image } from "astro:assets";
+import videoIcon from "@tabler/icons/outline/video.svg?raw";
 import linkedinIcon from "@tabler/icons/outline/brand-linkedin.svg?raw";
 import telegramIcon from "@tabler/icons/outline/brand-telegram.svg?raw";
 import ProjectsGallery from "../components/ProjectsGallery.astro";
+import {
+	formatTimelineDate,
+	timelineDateTime,
+} from "../lib/format-timeline-date";
 import portrait from "../assets/roman.jpg";
 
 const name = "Roman Tikhonov";
 const bio =
 	"Product Manager leading Onboarding and Identity at payme (TBC Uzbekistan), a payment app with millions of users. Former cognitive science researcher at Carnegie Mellon with a PhD in Cognitive Psychology from St. Petersburg University.";
+const description = `${name} — ${bio}`;
+const canonicalUrl = new URL("/", Astro.site).href;
+// Dedicated public asset so social crawlers are not blocked by the
+// portrait AI-training opt-out on `/_astro/roman*`.
+const ogImageUrl = new URL("/og.jpg", Astro.site).href;
+const ogImageAlt = `${name} portrait`;
 
 /** Tabler Icons (MIT) — https://tabler.io/icons
- *  Contact hrefs are base64-obfuscated so static scrapers / LLM crawls
- *  do not see clear URLs; humans get them via a tiny client script.
+ *  Contact hrefs and handles are base64-obfuscated so static scrapers /
+ *  LLM crawls do not see clear URLs or handles; humans get them via a
+ *  tiny client script.
  */
 const links = [
 	{
+		prefix: "LinkedIn:",
 		label: "LinkedIn",
+		labelEnc: Buffer.from("/in/romantikhonov", "utf8").toString("base64"),
 		hrefEnc: Buffer.from(
 			"https://www.linkedin.com/in/romantikhonov/",
 			"utf8",
@@ -23,11 +37,22 @@ const links = [
 		icon: linkedinIcon,
 	},
 	{
+		prefix: "Telegram:",
 		label: "Telegram",
+		labelEnc: Buffer.from("@rvtikhonov", "utf8").toString("base64"),
 		hrefEnc: Buffer.from("https://t.me/rvtikhonov", "utf8").toString(
 			"base64",
 		),
 		icon: telegramIcon,
+	},
+	{
+		prefix: "Meet:",
+		label: "15 min call",
+		labelEnc: undefined,
+		hrefEnc: Buffer.from("https://cal.com/tikhonov/15-min-chat", "utf8").toString(
+			"base64",
+		),
+		icon: videoIcon,
 	},
 ];
 
@@ -99,9 +124,32 @@ const timeline = [
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="description" content={`${name} — personal website`} />
+		<link rel="icon" href="/favicon.ico" sizes="any" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta
+			name="theme-color"
+			content="#fafafa"
+			media="(prefers-color-scheme: light)"
+		/>
+		<meta
+			name="theme-color"
+			content="#111"
+			media="(prefers-color-scheme: dark)"
+		/>
+		<link rel="canonical" href={canonicalUrl} />
+		<meta property="og:title" content={name} />
+		<meta property="og:description" content={bio} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={ogImageUrl} />
+		<meta property="og:image:alt" content={ogImageAlt} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={name} />
+		<meta name="twitter:description" content={bio} />
+		<meta name="twitter:image" content={ogImageUrl} />
+		<meta name="twitter:image:alt" content={ogImageAlt} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{name}</title>
 	</head>
@@ -111,7 +159,7 @@ const timeline = [
 				<span class="portrait-frame">
 					<Image
 						src={portrait}
-						alt={`${name} portrait`}
+						alt={ogImageAlt}
 						width={140}
 						height={140}
 						densities={[1, 2, 3]}
@@ -127,22 +175,26 @@ const timeline = [
 							<a
 								href="#"
 								data-u={link.hrefEnc}
+								data-l={link.labelEnc}
 								rel="nofollow noopener noreferrer"
-								class="contact-link"
+								class="contact-item contact-link"
 							>
 								<span
 									class="nav-icon"
 									aria-hidden="true"
 									set:html={link.icon}
 								/>
-								{link.label}
+								{link.prefix && (
+									<span class="contact-prefix">{link.prefix}</span>
+								)}
+								<span class="contact-link__label">{link.label}</span>
 							</a>
 						))
 					}
 				</nav>
 				<script is:inline>
 					(() => {
-						const reveal = (a) => {
+						const revealHref = (a) => {
 							const enc = a.getAttribute("data-u");
 							if (!enc) return;
 							try {
@@ -151,15 +203,24 @@ const timeline = [
 								/* ignore */
 							}
 						};
-						document.querySelectorAll("a.contact-link[data-u]").forEach((a) => {
-							a.addEventListener("pointerdown", () => reveal(a), {
+						document.querySelectorAll("a.contact-link").forEach((a) => {
+							const labelEnc = a.getAttribute("data-l");
+							const labelEl = a.querySelector(".contact-link__label");
+							if (labelEnc && labelEl) {
+								try {
+									labelEl.textContent = atob(labelEnc);
+								} catch {
+									/* ignore */
+								}
+							}
+							a.addEventListener("pointerdown", () => revealHref(a), {
 								once: true,
 							});
-							a.addEventListener("focus", () => reveal(a), { once: true });
+							a.addEventListener("focus", () => revealHref(a), { once: true });
 							a.addEventListener(
 								"click",
 								(e) => {
-									reveal(a);
+									revealHref(a);
 									if (a.getAttribute("href") === "#") {
 										e.preventDefault();
 									} else {
@@ -178,12 +239,22 @@ const timeline = [
 			<section class="timeline" aria-label="Timeline">
 				<ol>
 					{
-						timeline.map((entry) => (
-							<li>
-								<span class="year">{entry.year}</span>
-								<span class="event">{entry.text}</span>
-							</li>
-						))
+						timeline.map((entry) => {
+							const label = formatTimelineDate(entry.year);
+							const datetime = timelineDateTime(entry.year);
+							return (
+								<li>
+									<span class="year">
+										{datetime ? (
+											<time datetime={datetime}>{label}</time>
+										) : (
+											label
+										)}
+									</span>
+									<span class="event">{entry.text}</span>
+								</li>
+							);
+						})
 					}
 				</ol>
 			</section>
@@ -245,7 +316,7 @@ const timeline = [
 
 	body {
 		margin: 0;
-		min-height: 100vh;
+		min-height: 100dvh;
 		display: flex;
 		justify-content: center;
 		padding: 3rem 1.5rem;
@@ -303,7 +374,7 @@ const timeline = [
 
 	@media (hover: hover) and (pointer: fine) {
 		.portrait-frame {
-			transition: transform 200ms ease;
+			transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
 		}
 
 		.portrait-frame:hover {
@@ -361,17 +432,76 @@ const timeline = [
 		gap: 1rem;
 	}
 
-	nav a {
+	.contact-item {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.4rem;
+	}
+
+	.contact-prefix {
+		color: var(--muted);
+	}
+
+	/* Prefix sheen: a diagonal highlight sweeps across the text once per
+	   hover, echoing the portrait holo. Gradient is clipped to the glyphs. */
+	@media (hover: hover) and (pointer: fine) {
+		.contact-item:hover .contact-prefix {
+			background: linear-gradient(
+				115deg,
+				var(--muted) 40%,
+				color-mix(in srgb, #fff 45%, var(--muted)) 47%,
+				color-mix(in srgb, var(--accent) 65%, var(--muted)) 53%,
+				var(--muted) 60%
+			);
+			background-size: 300% 100%;
+			background-position: 100% 0;
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			animation: prefix-sheen 700ms ease-out;
+		}
+	}
+
+	@keyframes prefix-sheen {
+		0% {
+			background-position: 0% 0;
+		}
+		100% {
+			background-position: 100% 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.contact-item:hover .contact-prefix {
+			background: none;
+			color: var(--muted);
+			animation: none;
+		}
+	}
+
+	/* The whole row is the anchor; only the label looks like a link. */
+	nav a {
+		color: inherit;
+		text-decoration: none;
+		border-radius: 0.2rem;
+	}
+
+	nav a:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	.contact-link__label {
 		color: var(--accent);
 		text-decoration: underline;
 		text-underline-offset: 0.2em;
+		transition: color 150ms ease;
 	}
 
-	nav a:hover {
+	.contact-item:hover .contact-link__label,
+	.contact-item:focus-visible .contact-link__label {
 		color: color-mix(in srgb, var(--accent) 70%, var(--fg));
+		text-decoration: none;
 	}
 
 	.nav-icon {
@@ -380,9 +510,15 @@ const timeline = [
 		height: 1.1em;
 		flex-shrink: 0;
 		color: var(--muted);
+		transition: color 150ms ease;
 	}
 
-	.nav-icon :global(svg) {
+	.contact-item:hover .nav-icon,
+	.contact-item:focus-visible .nav-icon {
+		color: var(--accent);
+	}
+
+	.nav-icon svg {
 		width: 100%;
 		height: 100%;
 		display: block;

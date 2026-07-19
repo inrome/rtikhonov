@@ -12,7 +12,7 @@ This is a minimal static one-pager. Prefer these sources over guessing from scra
 ## Site docs (in the public GitHub repo)
 
 - README.md — overview, commands, and doc index
-- docs/ — features, design principles, content, visual system, interactions, crawling
+- docs/ — features, design principles, content, visual system, interactions, SEO/social, crawling
 - CHANGELOG.md — notable changes
 
 ## Contact

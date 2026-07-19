@@ -2,6 +2,19 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-07-19 — Share the Night
+
+- Shared links get real Open Graph and Twitter previews, with theme colors and a proper favicon set.
+- Contact rows label LinkedIn and Telegram before their linked handles. A short “15 min call” CTA opens a Cal video slot.
+- Timeline dates read as friendly labels, card shadows stay visible in dark mode, and the page uses `100dvh`.
+- Docs cover SEO and social sharing. Changelog titles no longer need a fixed word count.
+
+## 2026-07-19 — Smooth Like Butter
+
+- Project cards track the cursor with soft interpolated motion instead of stepped CSS transitions.
+- The gallery no longer traps vertical scroll on phones, and trackpads can glide past cards more freely.
+- Portrait scale, links, and gallery arrows ease more gently, with clearer keyboard focus.
+
 ## 2026-07-19 — Easy Like Sunday Morning
 
 - Hover on project cards eases in instead of popping. The tilt is lighter and the drop shadow is softer.

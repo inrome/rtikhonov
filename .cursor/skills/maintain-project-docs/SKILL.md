@@ -35,6 +35,7 @@ That command checks docs, builds the site, and deploys with IPv4-first DNS.
 - `docs/content.md`: project schema and timeline data rules
 - `docs/visual-system.md`: tokens, layout, type, cards, images, icons
 - `docs/interactions.md`: motion and input behavior
+- `docs/seo-social.md`: titles, meta, Open Graph, favicons, sharing rules
 - `docs/crawling-ai.md`: crawler access and privacy preferences
 - `CHANGELOG.md`: dated record of significant changes
 
@@ -43,14 +44,14 @@ Keep each fact in one focused page. Link to it instead of copying it elsewhere.
 ## Changelog format
 
 ```markdown
-## YYYY-MM-DD — Three to Five Words
+## YYYY-MM-DD — Movie Or Song Title
 
 - Significant change in plain, active B1 English.
 ```
 
 - Use a real movie or song title that fits the work.
 - A playful or self-mocking title is welcome.
-- Keep three to five words in the title.
+- There is no word-count limit on the title.
 - Group work from the same date.
 - Put newest dates first.
 - Use short bullets. Skip minor internal changes.

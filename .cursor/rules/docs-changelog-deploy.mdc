@@ -10,8 +10,8 @@ Keep public documentation aligned with every user-facing, behavioral, content-st
 - Update the relevant focused guide under `docs/`.
 - Keep the documentation index in `README.md` accurate.
 - Add notable work under an ISO date heading (`YYYY-MM-DD`).
-- Add a three-to-five-word movie or song title after each date.
-- Pick a title that fits the changes. A playful or self-mocking reference is welcome.
+- Add a movie or song title after each date.
+- Pick a title that fits the changes. A playful or self-mocking reference is welcome. There is no word-count limit.
 - Keep only significant changes as short bullet points.
 - Use a PostHog-like voice: clear, specific, direct, honest, and conversational.
 - Explain the outcome first. Do not lead with “Added”, “Changed”, or implementation details.

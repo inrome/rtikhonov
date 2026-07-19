@@ -34,4 +34,5 @@ order: 3
 ## Timeline
 
 Array in `rtikhonov.com/src/pages/index.astro`. Newest first.  
-Date field uses only: `YYYY` | `YYYY-MM` | `YYYY-MM-DD`.
+Date field uses only: `YYYY` | `YYYY-MM` | `YYYY-MM-DD`.  
+Display via `formatTimelineDate` (for example `2026-04` → `Apr 2026`); keep the raw ISO string in data and on `<time datetime>`.

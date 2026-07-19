@@ -64,6 +64,9 @@ const projects = (await getCollection("projects")).sort(
 		const next = root.querySelector<HTMLButtonElement>("[data-projects-next]");
 		if (!scroller || !prev || !next) return;
 
+		const prefersReducedMotion = () =>
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 		const step = () => {
 			const card = scroller.querySelector<HTMLElement>(".project-card");
 			const styles = getComputedStyle(scroller);
@@ -84,11 +87,18 @@ const projects = (await getCollection("projects")).sort(
 			setDisabled(next, left >= max - 1);
 		};
 
+		const scrollByCard = (direction: -1 | 1) => {
+			scroller.scrollBy({
+				left: direction * step(),
+				behavior: prefersReducedMotion() ? "auto" : "smooth",
+			});
+		};
+
 		prev.addEventListener("click", () => {
-			scroller.scrollBy({ left: -step(), behavior: "smooth" });
+			scrollByCard(-1);
 		});
 		next.addEventListener("click", () => {
-			scroller.scrollBy({ left: step(), behavior: "smooth" });
+			scrollByCard(1);
 		});
 
 		let raf = 0;
@@ -145,11 +155,22 @@ const projects = (await getCollection("projects")).sort(
 		scroll-snap-type: x mandatory;
 		scroll-padding-inline: var(--projects-pad);
 		-webkit-overflow-scrolling: touch;
-		touch-action: pan-x;
+		/* Allow vertical page scroll when the gesture starts on a card */
+		touch-action: pan-x pan-y;
 		scrollbar-width: none;
 		/* Extra vertical padding so tilt lift + shadow are not clipped */
 		padding: 1.25rem var(--projects-pad) 1.75rem;
 		perspective: 800px;
+	}
+
+	.projects__scroller :global(.project-card) {
+		scroll-snap-stop: normal;
+	}
+
+	@media (pointer: coarse) {
+		.projects__scroller :global(.project-card) {
+			scroll-snap-stop: always;
+		}
 	}
 
 	.projects__scroller::-webkit-scrollbar {
@@ -182,11 +203,26 @@ const projects = (await getCollection("projects")).sort(
 		background: var(--bg);
 		color: var(--muted);
 		cursor: pointer;
+		transition:
+			color 150ms ease,
+			border-color 150ms ease,
+			transform 120ms ease;
 	}
 
 	.projects__arrow:hover:not(:disabled) {
 		color: var(--accent);
 		border-color: var(--accent);
+	}
+
+	.projects__arrow:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	.projects__arrow:active:not(:disabled) {
+		transform: scale(0.95);
 	}
 
 	.projects__arrow:disabled,
@@ -210,6 +246,14 @@ const projects = (await getCollection("projects")).sort(
 	@media (prefers-reduced-motion: reduce) {
 		.projects__scroller {
 			scroll-behavior: auto;
+		}
+
+		.projects__arrow {
+			transition: none;
+		}
+
+		.projects__arrow:active:not(:disabled) {
+			transform: none;
 		}
 	}
 </style>

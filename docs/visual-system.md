@@ -19,7 +19,7 @@ Hero name/heading gets a noticeably larger size and heavier weight than the rest
 
 ## Gallery cards
 
-Fluid width on all viewports (`min(20rem, viewport − pads − peek)`); date → title → summary → link; solid filled accent label over the image; date renders in mono. Desktop shows prev/next chevrons under the scroller; the scrollbar stays hidden.
+Fluid width on all viewports (`min(20rem, viewport − pads − peek)`); date → title → summary → link; solid filled accent label over the image; date renders in mono. Desktop shows prev/next chevrons under the scroller; the scrollbar stays hidden. Links and arrows share short hover/focus transitions and an accent `:focus-visible` outline.
 
 ## Images
 
@@ -27,4 +27,6 @@ Host locally, keep uncropped; show full image on a blurred self-backdrop; no CDN
 
 ## Icons
 
-[Tabler Icons](https://tabler.io/icons) (MIT), muted gray (`--muted`), left of the link text.
+[Tabler Icons](https://tabler.io/icons) (MIT), muted gray (`--muted`), left of each contact item. All contact rows use non-linked prefixes (`LinkedIn:`, `Telegram:`, `Meet:`) followed by a linked handle or CTA; the Cal row uses a video icon with the short “15 min call” CTA. Project card links get a gray external-link icon that turns accent on hover.
+
+Site chrome icons: `/favicon.svg` (primary, light/dark), real multi-size `/favicon.ico`, and `/apple-touch-icon.png` (180×180 on `#fafafa`). See [seo-social.md](seo-social.md).

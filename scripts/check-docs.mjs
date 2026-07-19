@@ -56,9 +56,8 @@ for (const [, date, title] of headings) {
 		errors.push(`Invalid changelog date: ${date}`);
 	}
 
-	const words = title.trim().split(/\s+/).length;
-	if (words < 3 || words > 5) {
-		errors.push(`Changelog title must have 3–5 words: ${title}`);
+	if (!title.trim()) {
+		errors.push(`Changelog title is empty for date: ${date}`);
 	}
 }
 
