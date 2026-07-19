@@ -115,6 +115,7 @@ const timeline = [
 					height={140}
 					quality={85}
 					class="portrait"
+					data-tilt
 				/>
 				<h1>{name}</h1>
 				<p class="bio">{bio}</p>
@@ -185,6 +186,9 @@ const timeline = [
 				</ol>
 			</section>
 		</main>
+		<script>
+			import "../scripts/tilt";
+		</script>
 	</body>
 </html>
 
@@ -205,6 +209,7 @@ const timeline = [
 		--link-hover: #555;
 		--accent: #e35d05;
 		--accent-fg: #fff;
+		--font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	}
 
 	@media (prefers-color-scheme: dark) {
@@ -252,6 +257,7 @@ const timeline = [
 
 	header {
 		margin-bottom: 3rem;
+		perspective: 800px;
 	}
 
 	.portrait {
@@ -261,11 +267,12 @@ const timeline = [
 		border-radius: 50%;
 		object-fit: cover;
 		margin: 0 0 1.25rem;
+		transform-style: preserve-3d;
 	}
 
 	h1 {
-		font-size: 1.75rem;
-		font-weight: 600;
+		font-size: 2.4rem;
+		font-weight: 700;
 		letter-spacing: -0.02em;
 		margin: 0 0 0.75rem;
 	}
@@ -339,6 +346,7 @@ const timeline = [
 	}
 
 	.year {
+		font-family: var(--font-mono);
 		font-variant-numeric: tabular-nums;
 		font-size: 0.875rem;
 		color: var(--muted);

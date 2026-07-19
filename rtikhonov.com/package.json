@@ -7,9 +7,10 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "check:docs": "node ../scripts/check-docs.mjs",
     "build": "astro build",
-    "preview": "astro build && wrangler dev",
-    "deploy": "astro build && wrangler deploy",
+    "preview": "astro build && NODE_OPTIONS=\"--dns-result-order=ipv4first\" wrangler dev",
+    "deploy": "npm run check:docs && astro build && NODE_OPTIONS=\"--dns-result-order=ipv4first\" wrangler deploy",
     "astro": "astro"
   },
   "dependencies": {

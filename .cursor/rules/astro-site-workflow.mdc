@@ -30,10 +30,11 @@ Prefer Astro content collections over inline arrays for growing lists (projects,
 
 ```bash
 cd rtikhonov.com
-npm run build
-NODE_OPTIONS="--dns-result-order=ipv4first" npx wrangler deploy
+npm run deploy
 ```
 
-On Node 24 + macOS, wrangler often fails with `fetch failed` unless IPv4-first DNS is set. Auth may still look fine (`whoami` without the flag can also fail). Always retry deploy with `NODE_OPTIONS="--dns-result-order=ipv4first"` before blaming credentials.
+`deploy` runs docs checks, builds the site, then Wrangler with `NODE_OPTIONS="--dns-result-order=ipv4first"`. That flag is required on Node 24 + macOS; without it Wrangler often fails with `fetch failed` even when auth looks fine.
 
-Live: `https://rtikhonov.com` (Workers + custom domain). Push alone does not deploy — run wrangler after commit/push when the user asks for prod.
+Live: `https://rtikhonov.com` (Workers + custom domain). Push alone does not deploy — run `npm run deploy` after commit/push when the user asks for prod.
+
+Do not run Astro or Wrangler from the repository root. There is no root `package.json`.

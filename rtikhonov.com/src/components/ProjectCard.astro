@@ -24,7 +24,7 @@ const linkText = hrefLabel ?? "Open";
 const placeholder = placeholderSvg(id || title);
 ---
 
-<article class="project-card">
+<article class="project-card" data-tilt data-tilt-shadow>
 	<div class="project-card__media">
 		{
 			image ? (
@@ -101,6 +101,7 @@ const placeholder = placeholderSvg(id || title);
 		border-radius: 0.75rem;
 		overflow: hidden;
 		background: var(--bg);
+		transform-style: preserve-3d;
 	}
 
 	.project-card__media {
@@ -146,6 +147,7 @@ const placeholder = placeholderSvg(id || title);
 		top: 0.5rem;
 		right: 0.5rem;
 		z-index: 1;
+		font-family: var(--font-mono);
 		font-size: 0.7rem;
 		font-weight: 500;
 		letter-spacing: 0.02em;
@@ -182,6 +184,7 @@ const placeholder = placeholderSvg(id || title);
 
 	.project-card__date {
 		margin: 0;
+		font-family: var(--font-mono);
 		font-size: 0.7rem;
 		color: var(--muted);
 		font-variant-numeric: tabular-nums;

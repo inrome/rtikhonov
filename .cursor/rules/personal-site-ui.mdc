@@ -1,6 +1,6 @@
 ---
 description: Visual and layout conventions for the personal one-pager
-globs: rtikhonov.com/src/pages/index.astro,rtikhonov.com/src/components/**/*.astro
+globs: rtikhonov.com/src/pages/index.astro,rtikhonov.com/src/components/**/*.astro,rtikhonov.com/src/scripts/**/*.ts
 alwaysApply: false
 ---
 
@@ -8,12 +8,15 @@ alwaysApply: false
 
 Preserve the minimal one-pager: system fonts, light/dark tokens (`--bg`, `--fg`, `--muted`, `--border`, `--accent`, `--accent-fg`), centered `main` max-width `38rem`.
 
+Typography: two roles only — system sans (body/UI) and system mono (`--font-mono`) for dates and labels. Hero name is larger and heavier. No web fonts.
+
 ## Do
 
 - Extract reusable UI into `src/components/` once a section has real structure (gallery, cards)
 - Full-bleed sections: `width: 100vw; margin-left/right: calc(50% - 50vw)` — do **not** add `max-width: 100%` (it kills breakout)
 - Prefer `overflow-x: clip` on `html`/`body` if a full-bleed scroller would otherwise widen the page
 - Match existing density and tone (short timeline lines, muted secondary text)
+- Reuse the shared tilt utility (`src/scripts/tilt.ts`) via `data-tilt` / `data-tilt-shadow` instead of one-off motion
 
 ## Don’t
 
@@ -21,6 +24,8 @@ Preserve the minimal one-pager: system fonts, light/dark tokens (`--bg`, `--fg`,
 - Don’t use purple/glow/AI-slop defaults; accent is orange
 - Don’t put cards in the hero or turn the page into a dashboard
 - Don’t invent separate detail routes for content that should stay homepage-only
+- Don’t use squash/squish “jelly” animations
+- Don’t add colored glow/bloom shadows (neutral drop shadow on tilted cards only)
 
 ## Responsive scrollers
 

@@ -1,0 +1,33 @@
+---
+description: Keep documentation and changelog current, especially before deployment
+alwaysApply: true
+---
+
+# Documentation and changelog
+
+Keep public documentation aligned with every user-facing, behavioral, content-structure, deployment, or agent-workflow change.
+
+- Update the relevant focused guide under `docs/`.
+- Keep the documentation index in `README.md` accurate.
+- Add notable work under an ISO date heading (`YYYY-MM-DD`).
+- Add a three-to-five-word movie or song title after each date.
+- Pick a title that fits the changes. A playful or self-mocking reference is welcome.
+- Keep only significant changes as short bullet points.
+- Use plain B1 English, active voice, and Hemingway-style sentences.
+- Do not copy raw commit messages or list minor internal work.
+- Keep newest dates and updates first; combine related work.
+- Do not add changelog entries for internal edits with no meaningful effect.
+- Update `rtikhonov.com/public/llms.txt` when its site or documentation summary changes.
+
+## Before every deployment
+
+Before running `wrangler deploy`:
+
+1. Review the pending git diff for changes that need documentation.
+2. Confirm `README.md` links to all current focused guides.
+3. Confirm relevant `docs/` pages match current behavior.
+4. Confirm `CHANGELOG.md` has dated entries for all notable pending changes.
+5. Run `npm --prefix rtikhonov.com run check:docs`.
+6. Run the site build (or use `npm --prefix rtikhonov.com run deploy`, which already runs both).
+
+Do not deploy while documentation or the changelog is stale.

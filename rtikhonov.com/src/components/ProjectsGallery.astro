@@ -65,7 +65,9 @@ const projects = (await getCollection("projects")).sort(
 		-webkit-overflow-scrolling: touch;
 		touch-action: pan-x;
 		scrollbar-width: thin;
-		padding: 0.15rem var(--projects-pad) 0.5rem;
+		/* Extra vertical padding so tilt lift + shadow are not clipped */
+		padding: 1.25rem var(--projects-pad) 1.75rem;
+		perspective: 800px;
 	}
 
 	.projects__scroller::-webkit-scrollbar {
