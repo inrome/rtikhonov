@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import chevronLeftIcon from "@tabler/icons/outline/chevron-left.svg?raw";
+import chevronRightIcon from "@tabler/icons/outline/chevron-right.svg?raw";
 import ProjectCard from "./ProjectCard.astro";
 
 const projects = (await getCollection("projects")).sort(
@@ -25,9 +27,89 @@ const projects = (await getCollection("projects")).sort(
 					/>
 				))}
 			</div>
+			<div class="projects__nav">
+				<button
+					type="button"
+					class="projects__arrow"
+					data-projects-prev
+					aria-label="Previous projects"
+				>
+					<span
+						class="projects__arrow-icon"
+						aria-hidden="true"
+						set:html={chevronLeftIcon}
+					/>
+				</button>
+				<button
+					type="button"
+					class="projects__arrow"
+					data-projects-next
+					aria-label="Next projects"
+				>
+					<span
+						class="projects__arrow-icon"
+						aria-hidden="true"
+						set:html={chevronRightIcon}
+					/>
+				</button>
+			</div>
 		</section>
 	)
 }
+
+<script>
+	function initProjectsNav(root: HTMLElement) {
+		const scroller = root.querySelector<HTMLElement>(".projects__scroller");
+		const prev = root.querySelector<HTMLButtonElement>("[data-projects-prev]");
+		const next = root.querySelector<HTMLButtonElement>("[data-projects-next]");
+		if (!scroller || !prev || !next) return;
+
+		const step = () => {
+			const card = scroller.querySelector<HTMLElement>(".project-card");
+			const styles = getComputedStyle(scroller);
+			const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+			const width = card?.offsetWidth ?? scroller.clientWidth * 0.8;
+			return width + gap;
+		};
+
+		const setDisabled = (btn: HTMLButtonElement, disabled: boolean) => {
+			btn.disabled = disabled;
+			btn.setAttribute("aria-disabled", disabled ? "true" : "false");
+		};
+
+		const update = () => {
+			const max = scroller.scrollWidth - scroller.clientWidth;
+			const left = scroller.scrollLeft;
+			setDisabled(prev, left <= 1);
+			setDisabled(next, left >= max - 1);
+		};
+
+		prev.addEventListener("click", () => {
+			scroller.scrollBy({ left: -step(), behavior: "smooth" });
+		});
+		next.addEventListener("click", () => {
+			scroller.scrollBy({ left: step(), behavior: "smooth" });
+		});
+
+		let raf = 0;
+		scroller.addEventListener(
+			"scroll",
+			() => {
+				if (raf) return;
+				raf = requestAnimationFrame(() => {
+					raf = 0;
+					update();
+				});
+			},
+			{ passive: true },
+		);
+
+		window.addEventListener("resize", update, { passive: true });
+		update();
+	}
+
+	document.querySelectorAll<HTMLElement>(".projects").forEach(initProjectsNav);
+</script>
 
 <style>
 	.projects {
@@ -64,18 +146,70 @@ const projects = (await getCollection("projects")).sort(
 		scroll-padding-inline: var(--projects-pad);
 		-webkit-overflow-scrolling: touch;
 		touch-action: pan-x;
-		scrollbar-width: thin;
+		scrollbar-width: none;
 		/* Extra vertical padding so tilt lift + shadow are not clipped */
 		padding: 1.25rem var(--projects-pad) 1.75rem;
 		perspective: 800px;
 	}
 
 	.projects__scroller::-webkit-scrollbar {
-		height: 6px;
+		display: none;
 	}
 
-	.projects__scroller::-webkit-scrollbar-thumb {
-		background: var(--border);
-		border-radius: 3px;
+	.projects__nav {
+		display: none;
+		justify-content: flex-end;
+		gap: 0.5rem;
+		padding: 0 var(--projects-pad);
+		margin-top: -0.5rem;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		.projects__nav {
+			display: flex;
+		}
+	}
+
+	.projects__arrow {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		border: 1px solid var(--border);
+		border-radius: 50%;
+		background: var(--bg);
+		color: var(--muted);
+		cursor: pointer;
+	}
+
+	.projects__arrow:hover:not(:disabled) {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	.projects__arrow:disabled,
+	.projects__arrow[aria-disabled="true"] {
+		opacity: 0.35;
+		cursor: default;
+	}
+
+	.projects__arrow-icon {
+		display: inline-flex;
+		width: 1.1rem;
+		height: 1.1rem;
+	}
+
+	.projects__arrow-icon :global(svg) {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.projects__scroller {
+			scroll-behavior: auto;
+		}
 	}
 </style>

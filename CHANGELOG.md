@@ -2,6 +2,13 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-07-19 — Easy Like Sunday Morning
+
+- Hover on project cards eases in instead of popping. The tilt is lighter and the drop shadow is softer.
+- The portrait sheen stays inside the circle, and the photo stays sharp on retina screens.
+- Project labels keep a solid accent badge so they do not flicker while a card tilts.
+- The gallery drops the scrollbar. Desktop gets prev/next arrows; phones still swipe.
+
 ## 2026-07-19 — Everything Everywhere All at Once
 
 - Projects are easier to browse. The new gallery keeps content in Markdown and images on the site.

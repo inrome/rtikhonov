@@ -114,7 +114,8 @@ const timeline = [
 						alt={`${name} portrait`}
 						width={140}
 						height={140}
-						quality={85}
+						densities={[1, 2, 3]}
+						quality={90}
 						class="portrait"
 					/>
 				</span>
@@ -266,6 +267,7 @@ const timeline = [
 		width: 140px;
 		height: 140px;
 		border-radius: 50%;
+		clip-path: circle(50%);
 		margin: 0 0 1.25rem;
 		overflow: hidden;
 		isolation: isolate;
@@ -305,7 +307,7 @@ const timeline = [
 		}
 
 		.portrait-frame:hover {
-			transform: scale(1.05);
+			transform: scale(1.03);
 		}
 
 		.portrait-frame:hover::before {

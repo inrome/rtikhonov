@@ -27,7 +27,8 @@ Frontmatter fields: `title`, `summary` (≤15 words), `date` / `dateEnd` (option
 - Horizontal single-row scroller, full-bleed past the 38rem column
 - Fluid width for **all** viewports — shared CSS vars on `.projects`, **no** hard mobile→desktop breakpoint that swaps formulas
   - `--card-width: min(20rem, 100vw - 2*pad - peek)`
-- Label: filled accent badge, top-right over media, translucent (`color-mix` + light blur), text uses `--accent-fg` (white/black), not accent-colored text
+- Label: solid filled accent badge, top-right over media, text uses `--accent-fg` (white/black), not accent-colored text
+- Desktop/fine-pointer: prev/next chevron buttons under the scroller (no visible scrollbar); touch keeps swipe + peek
 - Order in body: date (if any) → title → summary → link
 
 ## Accent (site-wide)
