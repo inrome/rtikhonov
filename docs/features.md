@@ -6,7 +6,7 @@ Minimal personal one-pager.
 
 1. **Header** — portrait, name, bio, LinkedIn / Telegram handles, and a 15-minute call CTA (Tabler icons; contact targets decoded by JS)
 2. **Projects** — horizontal scroll gallery backed by a content collection
-3. **Timeline** — career history stored as inline data in `index.astro`
+3. **Timeline** — career history stored as inline data in `index.astro`. Years with two or more entries collapse into a short overview; click to expand the individual milestones.
 
 ## Feature summary
 
@@ -19,3 +19,4 @@ Minimal personal one-pager.
 - **Private contacts** — Shows useful handles while keeping clear contact targets out of static HTML.
 - **Video call** — Opens a relaxed 15-minute video call from a short “15 min call” link.
 - **Link previews** — Gives shared pages a clear title, description, portrait, theme color, and proper icons.
+- **Collapsible years** — Busy years open and close with native `<details>`, no JavaScript.

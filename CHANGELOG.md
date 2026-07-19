@@ -2,6 +2,11 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-07-19 — Folding Time
+
+- Busy years on the timeline now start collapsed. You see a short year overview, then click to open the full list of milestones.
+- Only years with two or more entries fold this way. Quiet years stay as single rows.
+
 ## 2026-07-19 — Slow Hands
 
 - You can now grab the projects gallery with the mouse and drag it sideways. The cursor turns into a hand over the cards.

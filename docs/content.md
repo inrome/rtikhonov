@@ -64,4 +64,6 @@ Array in `rtikhonov.com/src/pages/index.astro`. Newest first.
 Date field uses only: `YYYY` | `YYYY-MM` | `YYYY-MM-DD`.  
 Display via `formatTimelineDate` (for example `2026-04` → `Apr 2026`); keep the raw ISO string in data and on `<time datetime>`.
 
+Entries group by calendar year (`YYYY` from the date string). A year with one entry stays a plain row. A year with two or more entries collapses behind a short overview from `yearOverviews` in the same file; expand shows the individual dated lines.
+
 Cover career roles, research programs, and leadership projects. Prefer short public-facing lines. Do not duplicate the same Carnegie Mellon role and its Open Mind publication as two vague “2022/2023 research” rows — keep distinct milestones.

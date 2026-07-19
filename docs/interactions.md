@@ -14,9 +14,13 @@ On fine pointers the scroller also supports mouse drag-to-pan. The cursor shows 
 
 The circular profile photo uses a holographic hover sheen. The image is slightly zoomed inside the frame so the yellow backdrop fills the circle and the pink wall edge stays out of view. On hover, a diagonal streak (`::before`, white plus a touch of `--accent`, `soft-light` blend) sweeps down across the photo once (~700ms) while the frame scales to `1.03` with a soft decelerating ease (~250ms). `clip-path: circle(50%)` keeps the sheen inside the round photo. The effect is CSS-only: no cursor tracking, no glow shadow. No effect on touch/no-hover devices.
 
+## Timeline years
+
+Years with two or more entries use native `<details>` / `<summary>`. Collapsed, the row shows the year, a short overview, and a small chevron. Expanded, nested entries keep the date/event grid with hollow accent dots. Summary hover tints the overview toward `--accent`. The chevron rotates when open (~150ms); `prefers-reduced-motion: reduce` skips that transition. No JavaScript.
+
 ## Focus and micro-feedback
 
-Contact links, project links, and gallery arrows use a short color transition (~150ms) and an accent `:focus-visible` outline. Gallery arrows also scale slightly on press (`0.95`) when motion is allowed. Hovering a contact row colors its icon with the accent and sweeps a one-shot diagonal sheen across the gray prefix text (gradient clipped to the glyphs, ~700ms), echoing the portrait holo.
+Contact links, project links, gallery arrows, and collapsible timeline summaries use a short color transition (~150ms) and an accent `:focus-visible` outline. Gallery arrows also scale slightly on press (`0.95`) when motion is allowed. Hovering a contact row colors its icon with the accent and sweeps a one-shot diagonal sheen across the gray prefix text (gradient clipped to the glyphs, ~700ms), echoing the portrait holo.
 
 ## Constraints
 

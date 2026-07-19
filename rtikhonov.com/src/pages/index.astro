@@ -146,6 +146,29 @@ const timeline = [
 		text: "Born in Kryvyi Rih, Ukraine.",
 	},
 ];
+
+/** Short collapsed copy for years with 2+ timeline entries. */
+const yearOverviews: Record<string, string> = {
+	"2023":
+		"Left academia for product: PM at HumanteQ, plus papers in Cognition, Journal of Cognitive Psychology, and MIT's Open Mind.",
+	"2022":
+		"Postdoc year at Carnegie Mellon, while leading research and internships at St. Petersburg University.",
+	"2021":
+		"PhD defended, teaching awards at HSE, a researcher role at JetBrains Research, and a cognitive hackathon.",
+};
+
+type TimelineEntry = (typeof timeline)[number];
+
+const timelineByYear: { year: string; entries: TimelineEntry[] }[] = [];
+for (const entry of timeline) {
+	const year = entry.year.slice(0, 4);
+	const last = timelineByYear[timelineByYear.length - 1];
+	if (last && last.year === year) {
+		last.entries.push(entry);
+	} else {
+		timelineByYear.push({ year, entries: [entry] });
+	}
+}
 ---
 
 <html lang="en">
@@ -267,19 +290,59 @@ const timeline = [
 			<section class="timeline" aria-label="Timeline">
 				<ol>
 					{
-						timeline.map((entry) => {
-							const label = formatTimelineDate(entry.year);
-							const datetime = timelineDateTime(entry.year);
+						timelineByYear.map((group) => {
+							if (group.entries.length === 1) {
+								const entry = group.entries[0];
+								const label = formatTimelineDate(entry.year);
+								const datetime = timelineDateTime(entry.year);
+								return (
+									<li>
+										<span class="year">
+											{datetime ? (
+												<time datetime={datetime}>{label}</time>
+											) : (
+												label
+											)}
+										</span>
+										<span class="event">{entry.text}</span>
+									</li>
+								);
+							}
+
+							const overview =
+								yearOverviews[group.year] ??
+								group.entries.map((e) => e.text).join(" ");
 							return (
-								<li>
-									<span class="year">
-										{datetime ? (
-											<time datetime={datetime}>{label}</time>
-										) : (
-											label
-										)}
-									</span>
-									<span class="event">{entry.text}</span>
+								<li class="year-group">
+									<details>
+										<summary>
+											<span class="year">
+												<time datetime={group.year}>{group.year}</time>
+											</span>
+											<span class="event overview">
+												{overview}
+												<span class="chevron" aria-hidden="true" />
+											</span>
+										</summary>
+										<ol>
+											{group.entries.map((entry) => {
+												const label = formatTimelineDate(entry.year);
+												const datetime = timelineDateTime(entry.year);
+												return (
+													<li>
+														<span class="year">
+															{datetime ? (
+																<time datetime={datetime}>{label}</time>
+															) : (
+																label
+															)}
+														</span>
+														<span class="event">{entry.text}</span>
+													</li>
+												);
+											})}
+										</ol>
+									</details>
 								</li>
 							);
 						})
@@ -553,14 +616,14 @@ const timeline = [
 		display: block;
 	}
 
-	.timeline ol {
+	.timeline > ol {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		border-left: 1px solid var(--border);
 	}
 
-	.timeline li {
+	.timeline > ol > li {
 		display: grid;
 		grid-template-columns: 5.5rem 1fr;
 		gap: 1rem;
@@ -568,11 +631,11 @@ const timeline = [
 		position: relative;
 	}
 
-	.timeline li:last-child {
+	.timeline > ol > li:last-child {
 		padding-bottom: 0;
 	}
 
-	.timeline li::before {
+	.timeline > ol > li::before {
 		content: "";
 		position: absolute;
 		left: -3.5px;
@@ -581,6 +644,102 @@ const timeline = [
 		height: 6px;
 		border-radius: 50%;
 		background: var(--accent);
+	}
+
+	.timeline .year-group {
+		display: block;
+		padding-bottom: 1.25rem;
+	}
+
+	.timeline .year-group:last-child {
+		padding-bottom: 0;
+	}
+
+	.timeline .year-group::before {
+		top: 0.55em;
+	}
+
+	.timeline details {
+		margin: 0;
+	}
+
+	.timeline summary {
+		display: grid;
+		grid-template-columns: 5.5rem 1fr;
+		gap: 1rem;
+		cursor: pointer;
+		list-style: none;
+		border-radius: 0.2rem;
+	}
+
+	.timeline summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.timeline summary:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	.timeline summary .overview {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5rem;
+		transition: color 150ms ease;
+	}
+
+	.timeline summary:hover .overview,
+	.timeline summary:focus-visible .overview {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	.timeline .chevron {
+		flex-shrink: 0;
+		width: 0.45em;
+		height: 0.45em;
+		margin-top: 0.45em;
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		transform: rotate(45deg);
+		transform-origin: center;
+		transition: transform 150ms ease;
+		opacity: 0.7;
+	}
+
+	.timeline details[open] > summary .chevron {
+		transform: rotate(225deg);
+		margin-top: 0.55em;
+	}
+
+	.timeline .year-group > details > ol {
+		list-style: none;
+		margin: 0.75rem 0 0;
+		padding: 0 0 0 0.75rem;
+	}
+
+	.timeline .year-group > details > ol > li {
+		display: grid;
+		grid-template-columns: 5.5rem 1fr;
+		gap: 1rem;
+		padding: 0 0 1rem 1.25rem;
+		position: relative;
+	}
+
+	.timeline .year-group > details > ol > li:last-child {
+		padding-bottom: 0;
+	}
+
+	.timeline .year-group > details > ol > li::before {
+		content: "";
+		position: absolute;
+		left: -3.5px;
+		top: 0.55em;
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+		background: transparent;
+		border: 1.5px solid var(--accent);
+		box-sizing: border-box;
 	}
 
 	.year {
@@ -596,8 +755,20 @@ const timeline = [
 		line-height: 1.5;
 	}
 
+	@media (prefers-reduced-motion: reduce) {
+		.timeline .chevron {
+			transition: none;
+		}
+
+		.timeline summary .overview {
+			transition: none;
+		}
+	}
+
 	@media (max-width: 480px) {
-		.timeline li {
+		.timeline > ol > li,
+		.timeline summary,
+		.timeline .year-group > details > ol > li {
 			grid-template-columns: 1fr;
 			gap: 0.25rem;
 		}
