@@ -1,0 +1,35 @@
+---
+description: Projects gallery cards, images, dates, and accent styling
+globs: rtikhonov.com/src/content/projects/**,rtikhonov.com/src/components/Project*.astro,rtikhonov.com/src/lib/format-project-date.ts,rtikhonov.com/src/lib/project-placeholder.ts,rtikhonov.com/src/assets/projects/**
+alwaysApply: false
+---
+
+# Projects gallery
+
+## Content schema (keep stable)
+
+Frontmatter fields: `title`, `summary` (≤15 words), `date` / `dateEnd` (optional ISO dates), `label`, `image` (optional local), `href` / `hrefLabel` (optional), `order`.
+
+- Timeline uses `YYYY` | `YYYY-MM` | `YYYY-MM-DD` strings in `index.astro`
+- Project card dates: store real `Date`s; format via `formatProjectDate` (e.g. same-month range → `Apr 10–12, 2026`)
+- Month precision: `YYYY-MM-01`. Year precision: `YYYY-01-01`
+- No project detail pages unless asked. Image is not clickable; only the text link is
+
+## Images
+
+- Host locally under `src/assets/projects/` — never hotlink LinkedIn/CDN (URLs expire; Astro cannot optimize remotes)
+- Keep sources **uncropped**. Card shows full image with `object-fit: contain` over a blurred self-backdrop (tiny second `<Image>` + CSS blur), not a hard crop that cuts faces
+- Optimize with `astro:assets` `<Image>`: WebP, quality ~80, lazy, `widths`/`sizes` matching fluid card width
+- Missing image → SVG placeholder from `project-placeholder.ts` (seeded by id)
+
+## Card UI
+
+- Horizontal single-row scroller, full-bleed past the 38rem column
+- Fluid width for **all** viewports — shared CSS vars on `.projects`, **no** hard mobile→desktop breakpoint that swaps formulas
+  - `--card-width: min(20rem, 100vw - 2*pad - peek)`
+- Label: filled accent badge, top-right over media, translucent (`color-mix` + light blur), text uses `--accent-fg` (white/black), not accent-colored text
+- Order in body: date (if any) → title → summary → link
+
+## Accent (site-wide)
+
+`--accent` / `--accent-fg` on `:root` (orange). Use for project labels, project/nav links, and timeline dots — keep one accent system, don’t invent a second palette per component.

@@ -1,0 +1,39 @@
+---
+description: Astro personal site path, content DB, preview, and Cloudflare deploy
+globs: rtikhonov.com/**
+alwaysApply: false
+---
+
+# Astro site workflow
+
+Site root is `rtikhonov.com/` (not the repo root). Run all Astro/wrangler commands from there.
+
+## Preview
+
+```bash
+cd rtikhonov.com
+astro dev --background   # or: npm run dev -- --host 127.0.0.1 --port 4321
+```
+
+If HMR looks stale (edits not reflected), kill the process on 4321 and restart. Prefer hard-refresh after image asset rewrites.
+
+## Content “DB”
+
+Prefer Astro content collections over inline arrays for growing lists (projects, etc.):
+
+- Schema: `src/content.config.ts` with `glob` loader + Zod
+- Entries: `src/content/<collection>/*.md`
+- Dates for filtering: `z.coerce.date()` (ISO in frontmatter). Optional `dateEnd` for ranges
+- Display formatting lives in `src/lib/` helpers — keep raw `Date` in data
+
+## Deploy
+
+```bash
+cd rtikhonov.com
+npm run build
+NODE_OPTIONS="--dns-result-order=ipv4first" npx wrangler deploy
+```
+
+On Node 24 + macOS, wrangler often fails with `fetch failed` unless IPv4-first DNS is set. Auth may still look fine (`whoami` without the flag can also fail). Always retry deploy with `NODE_OPTIONS="--dns-result-order=ipv4first"` before blaming credentials.
+
+Live: `https://rtikhonov.com` (Workers + custom domain). Push alone does not deploy — run wrangler after commit/push when the user asks for prod.
