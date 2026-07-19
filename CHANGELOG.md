@@ -2,6 +2,12 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-07-19 — Keep It Simple
+
+- Project cards lift a few pixels with a soft shadow on hover. The old 3D tilt is gone.
+- The portrait crop zooms in so the yellow backdrop fills the circle and the halo ring disappears.
+- Gallery arrows hide when every card already fits on screen.
+
 ## 2026-07-19 — Share the Night
 
 - Shared links get real Open Graph and Twitter previews, with theme colors and a proper favicon set.

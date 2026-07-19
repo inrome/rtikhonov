@@ -25,7 +25,7 @@ const linkText = hrefLabel ?? "Open";
 const placeholder = placeholderSvg(id || title);
 ---
 
-<article class="project-card" data-tilt data-tilt-shadow>
+<article class="project-card">
 	<div class="project-card__media">
 		{
 			image ? (
@@ -106,7 +106,36 @@ const placeholder = placeholderSvg(id || title);
 		border-radius: 0.75rem;
 		overflow: hidden;
 		background: var(--bg);
-		transform-style: preserve-3d;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		.project-card {
+			transition:
+				transform 200ms ease,
+				box-shadow 200ms ease;
+		}
+
+		.project-card:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+		}
+	}
+
+	@media (hover: hover) and (pointer: fine) and (prefers-color-scheme: dark) {
+		.project-card:hover {
+			box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.project-card {
+			transition: none;
+		}
+
+		.project-card:hover {
+			transform: none;
+			box-shadow: none;
+		}
 	}
 
 	.project-card__media {

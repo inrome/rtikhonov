@@ -28,7 +28,8 @@ Frontmatter fields: `title`, `summary` (≤15 words), `date` / `dateEnd` (option
 - Fluid width for **all** viewports — shared CSS vars on `.projects`, **no** hard mobile→desktop breakpoint that swaps formulas
   - `--card-width: min(20rem, 100vw - 2*pad - peek)`
 - Label: solid filled accent badge, top-right over media, text uses `--accent-fg` (white/black), not accent-colored text
-- Desktop/fine-pointer: prev/next chevron buttons under the scroller (no visible scrollbar); touch keeps swipe + peek
+- Desktop/fine-pointer: prev/next chevron buttons under the scroller only when cards overflow (no visible scrollbar); touch keeps swipe + peek
+- Fine-pointer hover: plain CSS lift (`translateY(-3px)`) plus a soft neutral shadow — no 3D tilt
 - Order in body: date (if any) → title → summary → link
 
 ## Accent (site-wide)

@@ -19,7 +19,7 @@ Hero name/heading gets a noticeably larger size and heavier weight than the rest
 
 ## Gallery cards
 
-Fluid width on all viewports (`min(20rem, viewport − pads − peek)`); date → title → summary → link; solid filled accent label over the image; date renders in mono. Desktop shows prev/next chevrons under the scroller; the scrollbar stays hidden. Links and arrows share short hover/focus transitions and an accent `:focus-visible` outline.
+Fluid width on all viewports (`min(20rem, viewport − pads − peek)`); date → title → summary → link; solid filled accent label over the image; date renders in mono. Desktop shows prev/next chevrons under the scroller only when cards overflow; the scrollbar stays hidden. Links and arrows share short hover/focus transitions and an accent `:focus-visible` outline.
 
 ## Images
 

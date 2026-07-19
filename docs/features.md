@@ -13,7 +13,7 @@ Minimal personal one-pager.
 - **System themes** — Follows the device’s light or dark preference.
 - **Sharp local media** — Loads optimized project images without cutting off faces or details.
 - **Project gallery** — Uses the full screen width, supports swipe, and adds arrow controls on desktop.
-- **Card tilt** — Tracks the pointer with a light 3D effect, then settles back smoothly.
+- **Card hover** — Lifts the card a few pixels with a soft neutral shadow on fine-pointer hover.
 - **Holographic portrait** — Sweeps a restrained orange sheen across the profile photo on hover.
 - **Markdown projects** — Keeps project content easy to update without adding detail pages.
 - **Private contacts** — Shows useful handles while keeping clear contact targets out of static HTML.

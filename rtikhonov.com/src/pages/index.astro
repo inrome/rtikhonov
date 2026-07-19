@@ -259,9 +259,6 @@ const timeline = [
 				</ol>
 			</section>
 		</main>
-		<script>
-			import "../scripts/tilt";
-		</script>
 	</body>
 </html>
 
@@ -370,6 +367,10 @@ const timeline = [
 		height: 100%;
 		border-radius: 50%;
 		object-fit: cover;
+		/* Zoom so the yellow backdrop fills the circle and the pink wall
+		   edge (halo ring) leaves the frame */
+		transform: scale(1.38);
+		transform-origin: 50% 22%;
 	}
 
 	@media (hover: hover) and (pointer: fine) {

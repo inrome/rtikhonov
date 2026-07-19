@@ -2,15 +2,15 @@
 
 ## Gallery cards
 
-On fine-pointer hover, gallery cards ease into a light 3D tilt toward the cursor. A `requestAnimationFrame` loop interpolates rotation, lift, and scale toward the pointer target, then settles back to rest on leave. Max rotation is ~4°, with `translateY(-5px)` lift and `scale(1.015)`. The drop shadow offset follows the tilt (light: `rgba(0,0,0,0.28)`; dark: `rgba(0,0,0,0.6)`, blur ~22px) without CSS transition churn. No effect on touch/no-hover devices.
+On fine-pointer hover, gallery cards lift `3px` and cast a soft neutral drop shadow (light: `rgba(0,0,0,0.12)`; dark: `rgba(0,0,0,0.45)`, blur ~18px). The effect is plain CSS (`transform` + `box-shadow`, ~200ms ease). No 3D tilt, no cursor tracking, no scale. No effect on touch/no-hover devices. `prefers-reduced-motion: reduce` disables the lift and shadow.
 
 ## Gallery navigation
 
-The horizontal scroller hides its scrollbar. Touch and trackpad scrolling still work. `touch-action: pan-x pan-y` keeps vertical page scroll available when a gesture starts on a card. Cards snap to the start of each item; `scroll-snap-stop: always` applies only on coarse pointers so phone swipes stop per card while desktop trackpads can move freely. On hover-capable devices, prev/next chevron buttons sit under the scroller (aligned to the main column). Each click scrolls by one card width plus gap. Buttons disable at the start and end of the list. Touch devices keep swipe + next-card peek and do not show the arrows.
+The horizontal scroller hides its scrollbar. Touch and trackpad scrolling still work. `touch-action: pan-x pan-y` keeps vertical page scroll available when a gesture starts on a card. Cards snap to the start of each item; `scroll-snap-stop: always` applies only on coarse pointers so phone swipes stop per card while desktop trackpads can move freely. On hover-capable devices, prev/next chevron buttons sit under the scroller (aligned to the main column) only when the gallery can scroll by about half a card or more. Each click scrolls by one card width plus gap. Buttons disable at the start and end of the list. When every card already fits (including tiny leftover overflow from padding math), the nav stays hidden. Touch devices keep swipe + next-card peek and do not show the arrows.
 
 ## Portrait
 
-The circular profile photo uses a holographic hover sheen, not 3D tilt. On hover, a diagonal streak (`::before`, white plus a touch of `--accent`, `soft-light` blend) sweeps down across the photo once (~700ms) while the frame scales to `1.03` with a soft decelerating ease (~250ms). `clip-path: circle(50%)` keeps the sheen inside the round photo. The effect is CSS-only: no cursor tracking, no glow shadow. No effect on touch/no-hover devices.
+The circular profile photo uses a holographic hover sheen. The image is slightly zoomed inside the frame so the yellow backdrop fills the circle and the pink wall edge stays out of view. On hover, a diagonal streak (`::before`, white plus a touch of `--accent`, `soft-light` blend) sweeps down across the photo once (~700ms) while the frame scales to `1.03` with a soft decelerating ease (~250ms). `clip-path: circle(50%)` keeps the sheen inside the round photo. The effect is CSS-only: no cursor tracking, no glow shadow. No effect on touch/no-hover devices.
 
 ## Focus and micro-feedback
 
@@ -18,7 +18,7 @@ Contact links, project links, and gallery arrows use a short color transition (~
 
 ## Constraints
 
-- Enable tilt and portrait motion only when `(hover: hover)` and `(pointer: fine)`
+- Enable card lift and portrait motion only when `(hover: hover)` and `(pointer: fine)`
 - Skip motion when `prefers-reduced-motion: reduce`
 - No squash/squish "jelly" animations
 - No colored glow/bloom shadows anywhere

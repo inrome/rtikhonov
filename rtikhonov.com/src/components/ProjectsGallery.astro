@@ -60,9 +60,10 @@ const projects = (await getCollection("projects")).sort(
 <script>
 	function initProjectsNav(root: HTMLElement) {
 		const scroller = root.querySelector<HTMLElement>(".projects__scroller");
+		const nav = root.querySelector<HTMLElement>(".projects__nav");
 		const prev = root.querySelector<HTMLButtonElement>("[data-projects-prev]");
 		const next = root.querySelector<HTMLButtonElement>("[data-projects-next]");
-		if (!scroller || !prev || !next) return;
+		if (!scroller || !nav || !prev || !next) return;
 
 		const prefersReducedMotion = () =>
 			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -83,6 +84,10 @@ const projects = (await getCollection("projects")).sort(
 		const update = () => {
 			const max = scroller.scrollWidth - scroller.clientWidth;
 			const left = scroller.scrollLeft;
+			/* Ignore tiny leftover overflow from padding/peek math when
+			   every card already fits in view. */
+			const canScroll = max > step() * 0.5;
+			nav.hidden = !canScroll;
 			setDisabled(prev, left <= 1);
 			setDisabled(next, left >= max - 1);
 		};
@@ -158,9 +163,8 @@ const projects = (await getCollection("projects")).sort(
 		/* Allow vertical page scroll when the gesture starts on a card */
 		touch-action: pan-x pan-y;
 		scrollbar-width: none;
-		/* Extra vertical padding so tilt lift + shadow are not clipped */
-		padding: 1.25rem var(--projects-pad) 1.75rem;
-		perspective: 800px;
+		/* Extra vertical padding so card lift + shadow are not clipped */
+		padding: 0.75rem var(--projects-pad) 1.25rem;
 	}
 
 	.projects__scroller :global(.project-card) {
@@ -188,6 +192,10 @@ const projects = (await getCollection("projects")).sort(
 	@media (hover: hover) and (pointer: fine) {
 		.projects__nav {
 			display: flex;
+		}
+
+		.projects__nav[hidden] {
+			display: none;
 		}
 	}
 
