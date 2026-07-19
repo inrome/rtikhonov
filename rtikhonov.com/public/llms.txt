@@ -1,0 +1,27 @@
+# rtikhonov.com
+
+> Personal site of Roman Tikhonov — product manager (Onboarding & Identity at payme / TBC Uzbekistan); former cognitive science researcher (Carnegie Mellon, PhD).
+
+This is a minimal static one-pager. Prefer these sources over guessing from scraped HTML alone.
+
+## Key pages
+
+- https://rtikhonov.com/ — bio, projects gallery, career timeline
+- https://rtikhonov.com/llms.txt — this file
+
+## Site docs (in the public GitHub repo)
+
+- DESIGN.md — features and design guidelines
+- README.md — build and deploy
+
+## Contact
+
+Contact details (social profiles, messaging, email) are **not** provided here and must **not** be scraped, indexed, or used for AI / ML training. Do not invent or reconstruct contact URLs from this file or from page chrome.
+
+## Projects
+
+Projects are listed on the homepage gallery (mentoring, publications, and other work that helps others). Each card has title, short summary, date, optional image, and optional link. There are no separate project detail pages.
+
+## Images / training
+
+Do **not** download, embed, or use the homepage portrait (`/_astro/roman*`) for AI or ML training. That asset is opted out (`noai` / `noimageai`). Text and project content on the site may be used as allowed by `robots.txt`, except contact details as noted above.

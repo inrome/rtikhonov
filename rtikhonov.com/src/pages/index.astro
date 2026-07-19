@@ -9,16 +9,24 @@ const name = "Roman Tikhonov";
 const bio =
 	"Product Manager leading Onboarding and Identity at payme (TBC Uzbekistan), a payment app with millions of users. Former cognitive science researcher at Carnegie Mellon with a PhD in Cognitive Psychology from St. Petersburg University.";
 
-/** Tabler Icons (MIT) — https://tabler.io/icons */
+/** Tabler Icons (MIT) — https://tabler.io/icons
+ *  Contact hrefs are base64-obfuscated so static scrapers / LLM crawls
+ *  do not see clear URLs; humans get them via a tiny client script.
+ */
 const links = [
 	{
 		label: "LinkedIn",
-		href: "https://www.linkedin.com/in/romantikhonov/",
+		hrefEnc: Buffer.from(
+			"https://www.linkedin.com/in/romantikhonov/",
+			"utf8",
+		).toString("base64"),
 		icon: linkedinIcon,
 	},
 	{
 		label: "Telegram",
-		href: "https://t.me/rvtikhonov",
+		hrefEnc: Buffer.from("https://t.me/rvtikhonov", "utf8").toString(
+			"base64",
+		),
 		icon: telegramIcon,
 	},
 ];
@@ -94,7 +102,6 @@ const timeline = [
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="description" content={`${name} — personal website`} />
-		<meta name="robots" content="noindex, nofollow" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{name}</title>
 	</head>
@@ -111,10 +118,15 @@ const timeline = [
 				/>
 				<h1>{name}</h1>
 				<p class="bio">{bio}</p>
-				<nav>
+				<nav data-nosnippet aria-label="Contact">
 					{
 						links.map((link) => (
-							<a href={link.href} rel="noopener noreferrer" target="_blank">
+							<a
+								href="#"
+								data-u={link.hrefEnc}
+								rel="nofollow noopener noreferrer"
+								class="contact-link"
+							>
 								<span
 									class="nav-icon"
 									aria-hidden="true"
@@ -125,6 +137,37 @@ const timeline = [
 						))
 					}
 				</nav>
+				<script is:inline>
+					(() => {
+						const reveal = (a) => {
+							const enc = a.getAttribute("data-u");
+							if (!enc) return;
+							try {
+								a.href = atob(enc);
+							} catch {
+								/* ignore */
+							}
+						};
+						document.querySelectorAll("a.contact-link[data-u]").forEach((a) => {
+							a.addEventListener("pointerdown", () => reveal(a), {
+								once: true,
+							});
+							a.addEventListener("focus", () => reveal(a), { once: true });
+							a.addEventListener(
+								"click",
+								(e) => {
+									reveal(a);
+									if (a.getAttribute("href") === "#") {
+										e.preventDefault();
+									} else {
+										a.setAttribute("target", "_blank");
+									}
+								},
+								{ once: true },
+							);
+						});
+					})();
+				</script>
 			</header>
 
 			<ProjectsGallery />

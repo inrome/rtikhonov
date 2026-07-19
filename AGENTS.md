@@ -24,7 +24,9 @@ See also `.cursor/rules/public-repo-security.mdc`.
 
 ## Documentation
 
-Full documentation: https://docs.astro.build
+Design and features: see [DESIGN.md](DESIGN.md).
+
+Full Astro documentation: https://docs.astro.build
 
 Consult these guides before working on related tasks:
 

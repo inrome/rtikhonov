@@ -2,7 +2,13 @@
 
 Personal site built with [Astro](https://astro.build), hosted on [Cloudflare Workers](https://developers.cloudflare.com/workers/).
 
-The site lives in `rtikhonov.com/`.
+The site lives in `rtikhonov.com/`. See [DESIGN.md](DESIGN.md) for features and design guidelines.
+
+## Features
+
+- Header with bio and LinkedIn / Telegram links
+- Horizontal projects gallery (content collection)
+- Career timeline
 
 ## Commands
 
