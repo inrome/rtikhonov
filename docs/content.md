@@ -60,9 +60,18 @@ order: 3
 
 ## Timeline
 
-Array in `rtikhonov.com/src/pages/index.astro`. Newest first.  
-Date field uses only: `YYYY` | `YYYY-MM` | `YYYY-MM-DD`.  
-Display via `formatTimelineDate` (for example `2026-04` → `Apr 2026`); keep the raw ISO string in data and on `<time datetime>`.
+Typed array in `rtikhonov.com/src/data/timeline.ts` (imported by `index.astro`). Newest first.
+
+| Field | Notes |
+|--------|--------|
+| `id` | Required stable slug (e.g. `payme-2025`) for anchors and future post links |
+| `date` | Required. Only: `YYYY` \| `YYYY-MM` \| `YYYY-MM-DD` |
+| `text` | Required. Short public-facing line |
+| `category` | Optional: `work` \| `education` \| `research` \| `community` \| `life`. Data-only for now — no timeline filters yet |
+| `marker` | Optional. Emoji (`🇺🇿`) or raw Tabler SVG string (`import … from "@tabler/icons/…svg?raw"`). Detected by `<svg` prefix |
+| `href` | Optional. Absolute URL or root-relative path when a related post exists |
+
+Display dates via `formatTimelineDate` (for example `2026-04` → `Apr 2026`); keep the raw ISO string in data and on `<time datetime>`. When `marker` is set, it renders before the text (`aria-hidden`). When `href` is set, the event text is a muted underline link.
 
 Entries group by calendar year (`YYYY` from the date string), then into eras:
 
@@ -73,9 +82,11 @@ Entries group by calendar year (`YYYY` from the date string), then into eras:
 | Undergrad | 2009–2013 | Closed |
 | Earlier | before 2009 | Closed |
 
-A year with one entry stays a plain row inside its era. A year with two or more entries collapses behind a short overview from `yearOverviews` in the same file; expand shows the individual dated lines. Nested entries dated with only `YYYY` (same as the group year) display an em dash in the date column so the parent year is not repeated; keep the real ISO string on `<time datetime>`.
+A year with one entry stays a plain row inside its era. A year with two or more entries collapses behind a short overview from `yearOverviews` in the same data file; expand shows the individual dated lines. Nested entries dated with only `YYYY` (same as the group year) display an em dash in the date column so the parent year is not repeated; keep the real ISO string on `<time datetime>`.
 
 Cover career roles, research programs, and leadership projects. Prefer short public-facing lines. Do not duplicate the same Carnegie Mellon role and its Open Mind publication as two vague “2022/2023 research” rows — keep distinct milestones.
+
+Blog or note pages are a later step: add a post collection when the first long-form piece ships, then set `href` on the matching timeline entry.
 
 ### Work filter chips
 

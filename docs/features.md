@@ -6,7 +6,7 @@ Minimal personal one-pager.
 
 1. **Header** — portrait, name, short two-line bio, outlined 15-minute call CTA, and quieter LinkedIn / Telegram handles (Tabler icons; contact targets decoded by JS)
 2. **Work** — horizontal scroll gallery with filter chips (All / Product / Research / Teaching), backed by a content collection
-3. **Timeline** — career history stored as inline data in `index.astro`, grouped into eras (Product, Academia, Undergrad, Earlier). Product starts open; the others start closed. Years with two or more entries still collapse into a short overview inside an era.
+3. **Timeline** — career history stored in `src/data/timeline.ts`, grouped into eras (Product, Academia, Undergrad, Earlier). Product starts open; the others start closed. Years with two or more entries still collapse into a short overview inside an era. Entries can carry an optional marker (emoji or icon) and a link to a future post.
 
 ## Feature summary
 

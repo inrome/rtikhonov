@@ -2,6 +2,12 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-07-21 — Separate Tables
+
+- Timeline events live in one typed data file instead of the homepage. You add a life event by appending an object with a stable id, date, and short line.
+- Each entry can carry a category, an optional marker (flag emoji or Tabler icon), and an optional link for a future post. Relocation rows already show country flags.
+- The timeline now notes moves to Georgia (2022), Armenia (2023), and Uzbekistan (2025), each with a country flag.
+
 ## 2026-07-21 — Jump Then Filter
 
 - The homepage is easier to scan: a short two-line bio, outlined call CTA, filterable Work gallery, and era-grouped timeline.

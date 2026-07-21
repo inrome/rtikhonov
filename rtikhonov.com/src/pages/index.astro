@@ -8,7 +8,16 @@ import {
 	formatTimelineDate,
 	timelineDateTime,
 } from "../lib/format-timeline-date";
+import {
+	timeline,
+	yearOverviews,
+	type TimelineEntry,
+} from "../data/timeline";
 import portrait from "../assets/roman.jpg";
+
+function isSvgMarker(marker: string): boolean {
+	return marker.trimStart().startsWith("<svg");
+}
 
 const name = "Roman Tikhonov";
 const bioLines = [
@@ -63,117 +72,11 @@ const links = [
 	},
 ];
 
-const timeline = [
-	{
-		year: "2026-04",
-		text: "Mentored teams at the Cursor hackathon (TBC Uzbekistan / payme). Helped choose and validate product ideas.",
-	},
-	{
-		year: "2025",
-		text: "Joined payme (TBC Uzbekistan) as Product Owner, later Product Manager. Own Onboarding and Identity. Tashkent.",
-	},
-	{
-		year: "2024",
-		text: "Co-founded ReviewLab.app, a product feedback platform. Shipped MVP in 2.5 months.",
-	},
-	{
-		year: "2023-11",
-		text: "Published in MIT's Open Mind: Prediction, Explanation, and Control — mental models in dynamic environments.",
-	},
-	{
-		year: "2023",
-		text: "Moved into product management: PM at HumanteQ (mental health tech). Published Cognition and Journal of Cognitive Psychology papers.",
-	},
-	{
-		year: "2022-07",
-		text: "Postdoctoral Fellow at Carnegie Mellon University (to Aug 2023). Studied prediction, explanation, and control in dynamic systems.",
-	},
-	{
-		year: "2022",
-		text: "Led Verbalization and Dynamic System Control research and launched research internships at St. Petersburg University.",
-	},
-	{
-		year: "2021-11",
-		text: "Gave an open JetBrains Research lecture on evidence-based learning strategies (100+ attendees).",
-	},
-	{
-		year: "2021-09",
-		text: "Researcher at JetBrains Research (to Mar 2022). Advised the Learning Research App on cognitive ability metrics.",
-	},
-	{
-		year: "2021-02",
-		text: "Organized the Cognitive Hackathon for Online Experiments at St. Petersburg University (40+ researchers).",
-	},
-	{
-		year: "2021",
-		text: 'PhD in Psychology, St. Petersburg University. "Best Teacher" and Best Academic Advisor awards at HSE University. Led Online Communication and Trust research.',
-	},
-	{
-		year: "2019",
-		text: "Organized Paradoxes of Consciousness, a scientific conference at St. Petersburg University.",
-	},
-	{
-		year: "2018",
-		text: "Lecturer, then Senior Lecturer at HSE University. Designed award-winning courses. Began Teaching Categories research with Moskvichev and Steyvers.",
-	},
-	{
-		year: "2017",
-		text: "Launched Experiments Week, a science festival that later drew 800+ volunteer participants (through 2020).",
-	},
-	{
-		year: "2016",
-		text: "Market Research Analyst at UsabilityLab: Kano ranking of 700+ features across 16 mobile banking apps (survey n≈1900).",
-	},
-	{
-		year: "2015",
-		text: "Master's in Cognitive Psychology (with distinction). Started PhD on social verification of implicit knowledge and Stress & Well-Being research; co-authored 20+ peer-reviewed papers.",
-	},
-	{
-		year: "2014",
-		text: "Led a student satisfaction climate survey (n=124) for the Faculty of Psychology Student Council.",
-	},
-	{
-		year: "2013",
-		text: "Bachelor's in Psychology, St. Petersburg University. Master's thesis work on implicit learning in dyads (to 2015).",
-	},
-	{
-		year: "2012",
-		text: "Exchange semester at the University of Eastern Finland. Bachelor's thesis on gamification of group problem-solving.",
-	},
-	{
-		year: "2010",
-		text: "Led a human rights education project at AIESEC with 14 international volunteers (to 2011).",
-	},
-	{
-		year: "2009",
-		text: "Finished vocational training in web development; started studying psychology.",
-	},
-	{
-		year: "1994",
-		text: "Moved to St. Petersburg, Russia.",
-	},
-	{
-		year: "1992-05",
-		text: "Born in Kryvyi Rih, Ukraine.",
-	},
-];
-
-/** Short collapsed copy for years with 2+ timeline entries. */
-const yearOverviews: Record<string, string> = {
-	"2023":
-		"Left academia for product: PM at HumanteQ, plus papers in Cognition, Journal of Cognitive Psychology, and MIT's Open Mind.",
-	"2022":
-		"Postdoc year at Carnegie Mellon, while leading research and internships at St. Petersburg University.",
-	"2021":
-		"PhD defended, teaching awards at HSE, a researcher role at JetBrains Research, and a cognitive hackathon.",
-};
-
-type TimelineEntry = (typeof timeline)[number];
 type YearGroup = { year: string; entries: TimelineEntry[] };
 
 const timelineByYear: YearGroup[] = [];
 for (const entry of timeline) {
-	const year = entry.year.slice(0, 4);
+	const year = entry.date.slice(0, 4);
 	const last = timelineByYear[timelineByYear.length - 1];
 	if (last && last.year === year) {
 		last.entries.push(entry);
@@ -347,10 +250,10 @@ for (const group of timelineByYear) {
 								{era.years.map((group) => {
 									if (group.entries.length === 1) {
 										const entry = group.entries[0];
-										const label = formatTimelineDate(entry.year);
-										const datetime = timelineDateTime(entry.year);
+										const label = formatTimelineDate(entry.date);
+										const datetime = timelineDateTime(entry.date);
 										return (
-											<li>
+											<li id={entry.id}>
 												<span class="year">
 													{datetime ? (
 														<time datetime={datetime}>{label}</time>
@@ -358,7 +261,27 @@ for (const group of timelineByYear) {
 														label
 													)}
 												</span>
-												<span class="event">{entry.text}</span>
+												<span class="event">
+													{entry.marker &&
+														(isSvgMarker(entry.marker) ? (
+															<span
+																class="event-marker event-marker--icon"
+																aria-hidden="true"
+																set:html={entry.marker}
+															/>
+														) : (
+															<span class="event-marker" aria-hidden="true">
+																{entry.marker}
+															</span>
+														))}
+													{entry.href ? (
+														<a class="event-link" href={entry.href}>
+															{entry.text}
+														</a>
+													) : (
+														entry.text
+													)}
+												</span>
 											</li>
 										);
 									}
@@ -380,15 +303,15 @@ for (const group of timelineByYear) {
 												</summary>
 												<ol>
 													{group.entries.map((entry) => {
-														const datetime = timelineDateTime(entry.year);
+														const datetime = timelineDateTime(entry.date);
 														/* Year-only rows under the same year header
 														   repeat the parent label — show an em dash. */
 														const label =
-															entry.year === group.year
+															entry.date === group.year
 																? "—"
-																: formatTimelineDate(entry.year);
+																: formatTimelineDate(entry.date);
 														return (
-															<li>
+															<li id={entry.id}>
 																<span class="year">
 																	{datetime ? (
 																		<time datetime={datetime}>{label}</time>
@@ -396,7 +319,30 @@ for (const group of timelineByYear) {
 																		label
 																	)}
 																</span>
-																<span class="event">{entry.text}</span>
+																<span class="event">
+																	{entry.marker &&
+																		(isSvgMarker(entry.marker) ? (
+																			<span
+																				class="event-marker event-marker--icon"
+																				aria-hidden="true"
+																				set:html={entry.marker}
+																			/>
+																		) : (
+																			<span
+																				class="event-marker"
+																				aria-hidden="true"
+																			>
+																				{entry.marker}
+																			</span>
+																		))}
+																	{entry.href ? (
+																		<a class="event-link" href={entry.href}>
+																			{entry.text}
+																		</a>
+																	) : (
+																		entry.text
+																	)}
+																</span>
 															</li>
 														);
 													})}
@@ -984,6 +930,42 @@ for (const group of timelineByYear) {
 	.event {
 		font-size: 0.95rem;
 		line-height: 1.5;
+	}
+
+	.event-marker {
+		margin-right: 0.35em;
+	}
+
+	.event-marker--icon {
+		display: inline-flex;
+		width: 1em;
+		height: 1em;
+		vertical-align: -0.125em;
+		color: var(--muted);
+	}
+
+	.event-marker--icon svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	.event-link {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+		text-decoration-color: color-mix(in srgb, var(--muted) 55%, transparent);
+		transition: color 150ms ease, text-decoration-color 150ms ease;
+	}
+
+	.event-link:hover,
+	.event-link:focus-visible {
+		color: var(--accent);
+		text-decoration-color: var(--accent);
+	}
+
+	.event-link:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
