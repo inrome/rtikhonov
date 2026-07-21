@@ -11,8 +11,11 @@ import {
 import portrait from "../assets/roman.jpg";
 
 const name = "Roman Tikhonov";
-const bio =
-	"Product Manager leading Onboarding and Identity at payme (TBC Uzbekistan), a payment app with millions of users. Former cognitive science researcher at Carnegie Mellon with a PhD in Cognitive Psychology from St. Petersburg University.";
+const bioLines = [
+	"Product Manager leading Onboarding and Identity at payme (TBC Uzbekistan).",
+	"Former cognitive science researcher at Carnegie Mellon with a PhD from St. Petersburg University.",
+];
+const bio = bioLines.join(" ");
 const description = `${name} — ${bio}`;
 const canonicalUrl = new URL("/", Astro.site).href;
 // Dedicated public asset so social crawlers are not blocked by the
@@ -24,8 +27,19 @@ const ogImageAlt = `${name} portrait`;
  *  Contact hrefs and handles are base64-obfuscated so static scrapers /
  *  LLM crawls do not see clear URLs or handles; humans get them via a
  *  tiny client script.
+ *  Call is first (primary CTA); LinkedIn / Telegram stay secondary.
  */
 const links = [
+	{
+		prefix: undefined as string | undefined,
+		label: "15 min call",
+		labelEnc: undefined as string | undefined,
+		hrefEnc: Buffer.from("https://cal.com/tikhonov/15-min-chat", "utf8").toString(
+			"base64",
+		),
+		icon: videoIcon,
+		primary: true,
+	},
 	{
 		prefix: "LinkedIn:",
 		label: "LinkedIn",
@@ -35,6 +49,7 @@ const links = [
 			"utf8",
 		).toString("base64"),
 		icon: linkedinIcon,
+		primary: false,
 	},
 	{
 		prefix: "Telegram:",
@@ -44,15 +59,7 @@ const links = [
 			"base64",
 		),
 		icon: telegramIcon,
-	},
-	{
-		prefix: "Meet:",
-		label: "15 min call",
-		labelEnc: undefined,
-		hrefEnc: Buffer.from("https://cal.com/tikhonov/15-min-chat", "utf8").toString(
-			"base64",
-		),
-		icon: videoIcon,
+		primary: false,
 	},
 ];
 
@@ -142,6 +149,10 @@ const timeline = [
 		text: "Finished vocational training in web development; started studying psychology.",
 	},
 	{
+		year: "1994",
+		text: "Moved to St. Petersburg, Russia.",
+	},
+	{
 		year: "1992-05",
 		text: "Born in Kryvyi Rih, Ukraine.",
 	},
@@ -158,8 +169,9 @@ const yearOverviews: Record<string, string> = {
 };
 
 type TimelineEntry = (typeof timeline)[number];
+type YearGroup = { year: string; entries: TimelineEntry[] };
 
-const timelineByYear: { year: string; entries: TimelineEntry[] }[] = [];
+const timelineByYear: YearGroup[] = [];
 for (const entry of timeline) {
 	const year = entry.year.slice(0, 4);
 	const last = timelineByYear[timelineByYear.length - 1];
@@ -168,6 +180,33 @@ for (const entry of timeline) {
 	} else {
 		timelineByYear.push({ year, entries: [entry] });
 	}
+}
+
+type EraId = "product" | "research" | "undergrad" | "earlier";
+
+function eraForYear(year: string): EraId {
+	const n = Number(year);
+	if (n >= 2023) return "product";
+	if (n >= 2014) return "research";
+	if (n >= 2009 && n <= 2013) return "undergrad";
+	return "earlier";
+}
+
+const eras: {
+	id: EraId;
+	title: string;
+	open: boolean;
+	years: YearGroup[];
+}[] = [
+	{ id: "product", title: "Product", open: true, years: [] },
+	{ id: "research", title: "Academia", open: false, years: [] },
+	{ id: "undergrad", title: "Undergrad", open: false, years: [] },
+	{ id: "earlier", title: "Earlier", open: false, years: [] },
+];
+
+for (const group of timelineByYear) {
+	const era = eras.find((e) => e.id === eraForYear(group.year));
+	if (era) era.years.push(group);
 }
 ---
 
@@ -219,8 +258,12 @@ for (const entry of timeline) {
 					/>
 				</span>
 				<h1>{name}</h1>
-				<p class="bio">{bio}</p>
-				<nav data-nosnippet aria-label="Contact">
+				{
+					bioLines.map((line) => (
+						<p class="bio">{line}</p>
+					))
+				}
+				<nav id="contact" data-nosnippet aria-label="Contact">
 					{
 						links.map((link) => (
 							<a
@@ -228,7 +271,11 @@ for (const entry of timeline) {
 								data-u={link.hrefEnc}
 								data-l={link.labelEnc}
 								rel="nofollow noopener noreferrer"
-								class="contact-item contact-link"
+								class:list={[
+									"contact-item",
+									"contact-link",
+									link.primary && "contact-link--primary",
+								]}
 							>
 								<span
 									class="nav-icon"
@@ -287,67 +334,81 @@ for (const entry of timeline) {
 
 			<ProjectsGallery />
 
-			<section class="timeline" aria-label="Timeline">
-				<ol>
-					{
-						timelineByYear.map((group) => {
-							if (group.entries.length === 1) {
-								const entry = group.entries[0];
-								const label = formatTimelineDate(entry.year);
-								const datetime = timelineDateTime(entry.year);
-								return (
-									<li>
-										<span class="year">
-											{datetime ? (
-												<time datetime={datetime}>{label}</time>
-											) : (
-												label
-											)}
-										</span>
-										<span class="event">{entry.text}</span>
-									</li>
-								);
-							}
+			<section class="timeline" id="timeline" aria-label="Timeline">
+				<h2 class="section-title">Timeline</h2>
+				{
+					eras.map((era) => (
+						<details class="timeline-era" open={era.open || undefined}>
+							<summary class="timeline-era__summary">
+								<span class="timeline-era__title">{era.title}</span>
+								<span class="chevron" aria-hidden="true" />
+							</summary>
+							<ol>
+								{era.years.map((group) => {
+									if (group.entries.length === 1) {
+										const entry = group.entries[0];
+										const label = formatTimelineDate(entry.year);
+										const datetime = timelineDateTime(entry.year);
+										return (
+											<li>
+												<span class="year">
+													{datetime ? (
+														<time datetime={datetime}>{label}</time>
+													) : (
+														label
+													)}
+												</span>
+												<span class="event">{entry.text}</span>
+											</li>
+										);
+									}
 
-							const overview =
-								yearOverviews[group.year] ??
-								group.entries.map((e) => e.text).join(" ");
-							return (
-								<li class="year-group">
-									<details>
-										<summary>
-											<span class="year">
-												<time datetime={group.year}>{group.year}</time>
-											</span>
-											<span class="event overview">
-												{overview}
-												<span class="chevron" aria-hidden="true" />
-											</span>
-										</summary>
-										<ol>
-											{group.entries.map((entry) => {
-												const label = formatTimelineDate(entry.year);
-												const datetime = timelineDateTime(entry.year);
-												return (
-													<li>
-														<span class="year">
-															{datetime ? (
-																<time datetime={datetime}>{label}</time>
-															) : (
-																label
-															)}
-														</span>
-														<span class="event">{entry.text}</span>
-													</li>
-												);
-											})}
-										</ol>
-									</details>
-								</li>
-							);
-						})
-					}
-				</ol>
+									const overview =
+										yearOverviews[group.year] ??
+										group.entries.map((e) => e.text).join(" ");
+									return (
+										<li class="year-group">
+											<details>
+												<summary>
+													<span class="year">
+														<time datetime={group.year}>{group.year}</time>
+													</span>
+													<span class="event overview">
+														{overview}
+														<span class="chevron" aria-hidden="true" />
+													</span>
+												</summary>
+												<ol>
+													{group.entries.map((entry) => {
+														const datetime = timelineDateTime(entry.year);
+														/* Year-only rows under the same year header
+														   repeat the parent label — show an em dash. */
+														const label =
+															entry.year === group.year
+																? "—"
+																: formatTimelineDate(entry.year);
+														return (
+															<li>
+																<span class="year">
+																	{datetime ? (
+																		<time datetime={datetime}>{label}</time>
+																	) : (
+																		label
+																	)}
+																</span>
+																<span class="event">{entry.text}</span>
+															</li>
+														);
+													})}
+												</ol>
+											</details>
+										</li>
+									);
+								})}
+							</ol>
+						</details>
+					))
+				}
 			</section>
 		</main>
 	</body>
@@ -400,6 +461,13 @@ for (const entry of timeline) {
 		background: var(--bg);
 		color: var(--fg);
 		overflow-x: clip;
+		scroll-behavior: smooth;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
 	}
 
 	body {
@@ -514,13 +582,34 @@ for (const entry of timeline) {
 	}
 
 	.bio {
-		margin: 0 0 1.5rem;
+		margin: 0 0 0.4rem;
 		color: var(--muted);
 	}
 
-	nav {
+	.bio:last-of-type {
+		margin-bottom: 1.5rem;
+	}
+
+	.section-title {
+		margin: 0 0 1rem;
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--muted);
+		font-family: var(--font-mono);
+	}
+
+	#work,
+	#timeline,
+	#contact {
+		scroll-margin-top: 1.25rem;
+	}
+
+	nav#contact {
 		display: flex;
 		flex-wrap: wrap;
+		align-items: center;
 		gap: 1rem;
 	}
 
@@ -572,13 +661,13 @@ for (const entry of timeline) {
 	}
 
 	/* The whole row is the anchor; only the label looks like a link. */
-	nav a {
+	nav#contact a {
 		color: inherit;
 		text-decoration: none;
 		border-radius: 0.2rem;
 	}
 
-	nav a:focus-visible {
+	nav#contact a:focus-visible {
 		outline: 2px solid var(--accent);
 		outline-offset: 3px;
 	}
@@ -590,10 +679,53 @@ for (const entry of timeline) {
 		transition: color 150ms ease;
 	}
 
-	.contact-item:hover .contact-link__label,
-	.contact-item:focus-visible .contact-link__label {
-		color: color-mix(in srgb, var(--accent) 70%, var(--fg));
+	.contact-link--primary {
+		padding: 0.35rem 0.85rem;
+		background: transparent;
+		color: var(--fg);
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		gap: 0.45rem;
+		transition:
+			color 150ms ease,
+			border-color 150ms ease,
+			background 150ms ease;
+	}
+
+	.contact-link--primary .nav-icon {
+		color: var(--muted);
+	}
+
+	.contact-link--primary .contact-link__label {
+		color: var(--fg);
 		text-decoration: none;
+		font-weight: 500;
+	}
+
+	.contact-link--primary:hover,
+	.contact-link--primary:focus-visible {
+		border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+	}
+
+	/* Same accent icon + label as LinkedIn / Telegram rows */
+	.contact-link--primary:hover .nav-icon,
+	.contact-link--primary:focus-visible .nav-icon {
+		color: var(--accent);
+	}
+
+	.contact-link--primary:hover .contact-link__label,
+	.contact-link--primary:focus-visible .contact-link__label {
+		color: var(--accent);
+	}
+
+	.contact-item:not(.contact-link--primary) .contact-link__label {
+		color: var(--muted);
+		text-decoration: underline;
+	}
+
+	.contact-item:not(.contact-link--primary):hover .contact-link__label,
+	.contact-item:not(.contact-link--primary):focus-visible .contact-link__label {
+		color: var(--accent);
 	}
 
 	.nav-icon {
@@ -616,14 +748,84 @@ for (const entry of timeline) {
 		display: block;
 	}
 
-	.timeline > ol {
+	.timeline {
+		margin-top: 0.5rem;
+	}
+
+	.timeline-era {
+		margin: 0 0 1.25rem;
+	}
+
+	.timeline-era:last-child {
+		margin-bottom: 0;
+	}
+
+	.timeline-era__summary {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		cursor: pointer;
+		list-style: none;
+		margin: 0 0 0.85rem;
+		padding: 0.15rem 0;
+		border-radius: 0.2rem;
+	}
+
+	.timeline-era__summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.timeline-era__summary:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	.timeline-era__title {
+		font-family: var(--font-mono);
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--fg);
+	}
+
+	.timeline-era__summary:hover .timeline-era__title,
+	.timeline-era__summary:focus-visible .timeline-era__title {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	.timeline-era[open] > .timeline-era__summary .timeline-era__title {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	.timeline-era > .timeline-era__summary .chevron {
+		flex-shrink: 0;
+		width: 0.45em;
+		height: 0.45em;
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		transform: rotate(45deg);
+		transform-origin: center;
+		transition:
+			transform 150ms ease,
+			color 150ms ease,
+			opacity 150ms ease;
+		opacity: 0.7;
+		color: var(--muted);
+	}
+
+	.timeline-era[open] > .timeline-era__summary .chevron {
+		transform: rotate(225deg);
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+		opacity: 1;
+	}
+
+	.timeline-era > ol {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		border-left: 1px solid var(--border);
 	}
 
-	.timeline > ol > li {
+	.timeline-era > ol > li {
 		display: grid;
 		grid-template-columns: 5.5rem 1fr;
 		gap: 1rem;
@@ -631,11 +833,11 @@ for (const entry of timeline) {
 		position: relative;
 	}
 
-	.timeline > ol > li:last-child {
+	.timeline-era > ol > li:last-child {
 		padding-bottom: 0;
 	}
 
-	.timeline > ol > li::before {
+	.timeline-era > ol > li::before {
 		content: "";
 		position: absolute;
 		left: -3.5px;
@@ -659,11 +861,11 @@ for (const entry of timeline) {
 		top: 0.55em;
 	}
 
-	.timeline details {
+	.timeline .year-group > details {
 		margin: 0;
 	}
 
-	.timeline summary {
+	.timeline .year-group > details > summary {
 		display: grid;
 		grid-template-columns: 5.5rem 1fr;
 		gap: 1rem;
@@ -672,11 +874,11 @@ for (const entry of timeline) {
 		border-radius: 0.2rem;
 	}
 
-	.timeline summary::-webkit-details-marker {
+	.timeline .year-group > details > summary::-webkit-details-marker {
 		display: none;
 	}
 
-	.timeline summary:focus-visible {
+	.timeline .year-group > details > summary:focus-visible {
 		outline: 2px solid var(--accent);
 		outline-offset: 3px;
 	}
@@ -688,12 +890,36 @@ for (const entry of timeline) {
 		transition: color 150ms ease;
 	}
 
-	.timeline summary:hover .overview,
-	.timeline summary:focus-visible .overview {
+	/* Closed year-groups: quieter overview so expandability reads clearly */
+	.timeline .year-group > details:not([open]) > summary .overview {
+		color: var(--muted);
+	}
+
+	.timeline .year-group > details:not([open]) > summary .chevron {
+		opacity: 0.9;
+		color: var(--muted);
+	}
+
+	.timeline .year-group > details > summary:hover .overview,
+	.timeline .year-group > details > summary:focus-visible .overview {
 		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
 	}
 
-	.timeline .chevron {
+	.timeline .year-group > details > summary:hover .year,
+	.timeline .year-group > details > summary:focus-visible .year {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	/* Open: accent the year + chevron only; overview stays body text */
+	.timeline .year-group > details[open] > summary .year {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	.timeline .year-group > details[open] > summary .overview {
+		color: var(--fg);
+	}
+
+	.timeline .year-group .chevron {
 		flex-shrink: 0;
 		width: 0.45em;
 		height: 0.45em;
@@ -702,19 +928,24 @@ for (const entry of timeline) {
 		border-bottom: 1.5px solid currentColor;
 		transform: rotate(45deg);
 		transform-origin: center;
-		transition: transform 150ms ease;
+		transition:
+			transform 150ms ease,
+			color 150ms ease,
+			opacity 150ms ease;
 		opacity: 0.7;
 	}
 
-	.timeline details[open] > summary .chevron {
+	.timeline .year-group > details[open] > summary .chevron {
 		transform: rotate(225deg);
 		margin-top: 0.55em;
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+		opacity: 1;
 	}
 
 	.timeline .year-group > details > ol {
 		list-style: none;
-		margin: 0.75rem 0 0;
-		padding: 0 0 0 0.75rem;
+		margin: 0.75rem 0 0 -1.25rem;
+		padding: 0;
 	}
 
 	.timeline .year-group > details > ol > li {
@@ -766,8 +997,8 @@ for (const entry of timeline) {
 	}
 
 	@media (max-width: 480px) {
-		.timeline > ol > li,
-		.timeline summary,
+		.timeline-era > ol > li,
+		.timeline .year-group > details > summary,
 		.timeline .year-group > details > ol > li {
 			grid-template-columns: 1fr;
 			gap: 0.25rem;

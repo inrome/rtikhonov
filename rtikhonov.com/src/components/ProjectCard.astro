@@ -283,7 +283,7 @@ const artifactLinks: ProjectLink[] = [
 	}
 
 	.project-card__link-label {
-		color: var(--accent);
+		color: var(--muted);
 		text-decoration: underline;
 		text-underline-offset: 0.15em;
 		transition: color 150ms ease;
@@ -296,8 +296,7 @@ const artifactLinks: ProjectLink[] = [
 
 	.project-card__link a:hover .project-card__link-label,
 	.project-card__link a:focus-visible .project-card__link-label {
-		color: color-mix(in srgb, var(--accent) 70%, var(--fg));
-		text-decoration: none;
+		color: var(--accent);
 	}
 
 	.project-card__link a:focus-visible {

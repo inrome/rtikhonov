@@ -16,11 +16,17 @@ The circular profile photo uses a holographic hover sheen. The image is slightly
 
 ## Timeline years
 
-Years with two or more entries use native `<details>` / `<summary>`. Collapsed, the row shows the year, a short overview, and a small chevron. Expanded, nested entries keep the date/event grid with hollow accent dots. Summary hover tints the overview toward `--accent`. The chevron rotates when open (~150ms); `prefers-reduced-motion: reduce` skips that transition. No JavaScript.
+The timeline splits into era blocks (`Product`, `Academia`, `Undergrad`, `Earlier`) with native `<details>` / `<summary>`. Product starts open; the others start closed. Each era summary shows a mono title and a small chevron. When an era is open, its title and chevron tint toward `--accent`.
+
+Inside an era, years with two or more entries use a nested `<details>` / `<summary>`. Collapsed, the overview and chevron stay muted so expandable rows read quieter than leaf rows. Expanded, only the year label and chevron tint toward `--accent`; the overview stays normal foreground. Nested entries stay on the same vertical rail and date column. Year-only nested dates that would repeat the parent year show an em dash (`—`) instead. Hierarchy is hollow accent dots vs solid ones, not indentation. Summary hover tints year and overview toward `--accent`. Chevrons rotate when open (~150ms); `prefers-reduced-motion: reduce` skips that transition. No JavaScript for the folds.
+
+## Work filters
+
+Filter chips are plain buttons with `aria-pressed`. The active chip uses a stronger accent-tinted border and foreground text on a transparent fill. Clicking a chip hides non-matching gallery items, resets scroll to the start, and refreshes arrow disabled state. No page reload.
 
 ## Focus and micro-feedback
 
-Contact links, project links, gallery arrows, and collapsible timeline summaries use a short color transition (~150ms) and an accent `:focus-visible` outline. Gallery arrows also scale slightly on press (`0.95`) when motion is allowed. Hovering a contact row colors its icon with the accent and sweeps a one-shot diagonal sheen across the gray prefix text (gradient clipped to the glyphs, ~700ms), echoing the portrait holo.
+Contact links, project links, gallery arrows, filter chips, and collapsible timeline summaries use a short color transition (~150ms) and an accent `:focus-visible` outline. Gallery arrows also scale slightly on press (`0.95`) when motion is allowed. The call CTA and active Work chips stay outlined (no orange fill). Hovering the call pill warms its border and turns icon + label accent (no label sheen — that caused a blink on hover-out). Hovering a secondary contact row colors its icon with the accent and sweeps a one-shot diagonal sheen across the gray prefix text only (gradient clipped to the glyphs, ~700ms), echoing the portrait holo. Link underlines stay on through hover so color can transition without a flash.
 
 ## Constraints
 

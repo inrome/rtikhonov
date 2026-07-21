@@ -24,6 +24,9 @@ Frontmatter fields: `title`, `summary` (≤15 words), `date` / `dateEnd` (option
 
 ## Card UI
 
+- Section id `work`, title “Work”, filter chips: All / Product / Research / Teaching
+- Filter groups from `label`: Product ← `product`|`mentoring`; Research ← `publication`|`research`; Teaching ← `talk`|`event`
+- Each card sits in `.projects__item[data-group]`; chips toggle `hidden` and reset scroll
 - Horizontal single-row scroller, full-bleed past the 38rem column
 - Fluid width for **all** viewports — shared CSS vars on `.projects`, **no** hard mobile→desktop breakpoint that swaps formulas
   - `--card-width: min(20rem, 100vw - 2*pad - peek)`
@@ -35,4 +38,4 @@ Frontmatter fields: `title`, `summary` (≤15 words), `date` / `dateEnd` (option
 
 ## Accent (site-wide)
 
-`--accent` / `--accent-fg` on `:root` (orange). Use for project labels, project/nav links, and timeline dots — keep one accent system, don’t invent a second palette per component.
+`--accent` / `--accent-fg` on `:root` (orange). Use for project label badges, link hover, and timeline dots — keep one accent system, don’t invent a second palette per component. Card artifact links are muted + underlined at rest (same as contact handles).

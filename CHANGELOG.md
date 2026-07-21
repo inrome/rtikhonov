@@ -2,6 +2,13 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-07-21 — Jump Then Filter
+
+- The homepage is easier to scan: a short two-line bio, outlined call CTA, filterable Work gallery, and era-grouped timeline.
+- The bio is two short lines. The 15-minute call is an outlined pill next to quieter LinkedIn and Telegram links — no orange fill.
+- Work chips filter the gallery (All / Product / Research / Teaching) without leaving the page. The active chip is outlined too, not filled.
+- The timeline opens as eras — Product first, then Academia, Undergrad, and Earlier behind a click. Open eras and open multi-entry years accent the title/year and chevron only; collapsed year overviews stay muted. Nested year-only dates use an em dash so they do not repeat the parent year.
+
 ## 2026-07-19 — Folding Time
 
 - Busy years on the timeline now start collapsed. You see a short year overview, then click to open the full list of milestones.

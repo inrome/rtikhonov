@@ -64,6 +64,25 @@ Array in `rtikhonov.com/src/pages/index.astro`. Newest first.
 Date field uses only: `YYYY` | `YYYY-MM` | `YYYY-MM-DD`.  
 Display via `formatTimelineDate` (for example `2026-04` → `Apr 2026`); keep the raw ISO string in data and on `<time datetime>`.
 
-Entries group by calendar year (`YYYY` from the date string). A year with one entry stays a plain row. A year with two or more entries collapses behind a short overview from `yearOverviews` in the same file; expand shows the individual dated lines.
+Entries group by calendar year (`YYYY` from the date string), then into eras:
+
+| Era | Years | Default |
+|-----|-------|---------|
+| Product | 2023 and later | Open |
+| Academia | 2014–2022 | Closed |
+| Undergrad | 2009–2013 | Closed |
+| Earlier | before 2009 | Closed |
+
+A year with one entry stays a plain row inside its era. A year with two or more entries collapses behind a short overview from `yearOverviews` in the same file; expand shows the individual dated lines. Nested entries dated with only `YYYY` (same as the group year) display an em dash in the date column so the parent year is not repeated; keep the real ISO string on `<time datetime>`.
 
 Cover career roles, research programs, and leadership projects. Prefer short public-facing lines. Do not duplicate the same Carnegie Mellon role and its Open Mind publication as two vague “2022/2023 research” rows — keep distinct milestones.
+
+### Work filter chips
+
+Gallery chips group card `label` values:
+
+| Chip | Labels |
+|------|--------|
+| Product | `product`, `mentoring` |
+| Research | `publication`, `research` |
+| Teaching | `talk`, `event` |

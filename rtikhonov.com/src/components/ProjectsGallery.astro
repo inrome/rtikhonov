@@ -7,25 +7,70 @@ import ProjectCard from "./ProjectCard.astro";
 const projects = (await getCollection("projects")).sort(
 	(a, b) => a.data.order - b.data.order,
 );
+
+/** Map card `label` values onto the Work filter chips. */
+const filterGroup = (label: string): "product" | "research" | "teaching" => {
+	switch (label) {
+		case "product":
+		case "mentoring":
+			return "product";
+		case "publication":
+		case "research":
+			return "research";
+		default:
+			return "teaching";
+	}
+};
+
+const filters = [
+	{ id: "all", label: "All" },
+	{ id: "product", label: "Product" },
+	{ id: "research", label: "Research" },
+	{ id: "teaching", label: "Teaching" },
+] as const;
 ---
 
 {
 	projects.length > 0 && (
-		<section class="projects" aria-label="Projects">
+		<section class="projects" id="work" aria-label="Work">
+			<div class="projects__head">
+				<h2 class="projects__title">Work</h2>
+				<div
+					class="projects__filters"
+					role="group"
+					aria-label="Filter projects"
+				>
+					{filters.map((filter) => (
+						<button
+							type="button"
+							class="projects__chip"
+							data-filter={filter.id}
+							aria-pressed={filter.id === "all" ? "true" : "false"}
+						>
+							{filter.label}
+						</button>
+					))}
+				</div>
+			</div>
 			<div class="projects__scroller">
 				{projects.map((project) => (
-					<ProjectCard
-						id={project.id}
-						title={project.data.title}
-						summary={project.data.summary}
-						label={project.data.label}
-						date={project.data.date}
-						dateEnd={project.data.dateEnd}
-						image={project.data.image}
-						href={project.data.href}
-						hrefLabel={project.data.hrefLabel}
-						links={project.data.links}
-					/>
+					<div
+						class="projects__item"
+						data-group={filterGroup(project.data.label)}
+					>
+						<ProjectCard
+							id={project.id}
+							title={project.data.title}
+							summary={project.data.summary}
+							label={project.data.label}
+							date={project.data.date}
+							dateEnd={project.data.dateEnd}
+							image={project.data.image}
+							href={project.data.href}
+							hrefLabel={project.data.hrefLabel}
+							links={project.data.links}
+						/>
+					</div>
 				))}
 			</div>
 			<div class="projects__nav">
@@ -70,12 +115,41 @@ const projects = (await getCollection("projects")).sort(
 			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 		const step = () => {
-			const card = scroller.querySelector<HTMLElement>(".project-card");
+			const card = scroller.querySelector<HTMLElement>(
+				".projects__item:not([hidden]) .project-card, .projects__item:not([hidden])",
+			);
 			const styles = getComputedStyle(scroller);
 			const gap = parseFloat(styles.columnGap || styles.gap) || 0;
 			const width = card?.offsetWidth ?? scroller.clientWidth * 0.8;
 			return width + gap;
 		};
+
+		const applyFilter = (filter: string) => {
+			const items =
+				scroller.querySelectorAll<HTMLElement>(".projects__item");
+			for (const item of items) {
+				const group = item.getAttribute("data-group") ?? "";
+				const show = filter === "all" || group === filter;
+				item.hidden = !show;
+			}
+			scroller.scrollLeft = 0;
+			update();
+		};
+
+		root.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach((btn) => {
+			btn.addEventListener("click", () => {
+				const filter = btn.getAttribute("data-filter") ?? "all";
+				root.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach(
+					(other) => {
+						other.setAttribute(
+							"aria-pressed",
+							other === btn ? "true" : "false",
+						);
+					},
+				);
+				applyFilter(filter);
+			});
+		});
 
 		const setDisabled = (btn: HTMLButtonElement, disabled: boolean) => {
 			btn.disabled = disabled;
@@ -154,7 +228,7 @@ const projects = (await getCollection("projects")).sort(
 			let best = Math.min(Math.max(current, 0), max);
 			let bestDist = Infinity;
 			for (const card of scroller.querySelectorAll<HTMLElement>(
-				".project-card",
+				".projects__item:not([hidden]) .project-card",
 			)) {
 				const left = Math.min(
 					Math.max(
@@ -272,6 +346,60 @@ const projects = (await getCollection("projects")).sort(
 		margin-bottom: 3rem;
 	}
 
+	.projects__head {
+		padding: 0 var(--projects-pad);
+		margin-bottom: 0.75rem;
+	}
+
+	.projects__title {
+		margin: 0 0 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--muted);
+		font-family: var(--font-mono);
+	}
+
+	.projects__filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+	}
+
+	.projects__chip {
+		appearance: none;
+		margin: 0;
+		padding: 0.3rem 0.7rem;
+		font: inherit;
+		font-size: 0.8rem;
+		color: var(--muted);
+		background: transparent;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		cursor: pointer;
+		transition:
+			color 150ms ease,
+			border-color 150ms ease,
+			background 150ms ease;
+	}
+
+	.projects__chip:hover {
+		color: var(--fg);
+		border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+	}
+
+	.projects__chip:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	.projects__chip[aria-pressed="true"] {
+		color: var(--fg);
+		background: transparent;
+		border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+	}
+
 	.projects__scroller {
 		display: flex;
 		gap: var(--card-gap);
@@ -285,6 +413,23 @@ const projects = (await getCollection("projects")).sort(
 		scrollbar-width: none;
 		/* Extra vertical padding so card lift + shadow are not clipped */
 		padding: 0.75rem var(--projects-pad) 1.25rem;
+	}
+
+	.projects__item {
+		flex: 0 0 var(--card-width);
+		min-width: 0;
+		scroll-snap-align: start;
+	}
+
+	.projects__item[hidden] {
+		display: none;
+	}
+
+	.projects__item :global(.project-card) {
+		flex: none;
+		width: 100%;
+		max-width: none;
+		scroll-snap-align: unset;
 	}
 
 	.projects__scroller :global(.project-card) {
@@ -400,6 +545,10 @@ const projects = (await getCollection("projects")).sort(
 		}
 
 		.projects__arrow {
+			transition: none;
+		}
+
+		.projects__chip {
 			transition: none;
 		}
 

@@ -6,7 +6,7 @@ This is a minimal static one-pager. Prefer these sources over guessing from scra
 
 ## Key pages
 
-- https://rtikhonov.com/ — bio, projects gallery, career timeline
+- https://rtikhonov.com/ — bio, work gallery (filterable), era-grouped career timeline
 - https://rtikhonov.com/llms.txt — this file
 
 ## Site docs (in the public GitHub repo)
@@ -21,7 +21,7 @@ Contact details (social profiles, messaging, email) are **not** provided here an
 
 ## Projects
 
-Projects are listed on the homepage gallery (mentoring, publications, talks, events, and other work that helps others). Each card has a title, short summary, date, local image, and one or more public links. There are no separate project detail pages.
+Projects are listed on the homepage Work gallery (mentoring, publications, talks, events, and other work that helps others). Filter chips group cards into Product, Research, and Teaching. Each card has a title, short summary, date, local image, and one or more public links. There are no separate project detail pages.
 
 ## Images / training
 
