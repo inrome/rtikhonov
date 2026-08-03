@@ -33,3 +33,20 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+## Design inspiration (agents only)
+
+Reference site for future design work: [ambrosino.io](https://ambrosino.io).
+
+Do not copy it wholesale or surface this list on the public site. Use it as inspiration when the owner asks for layout or interaction updates.
+
+Key features to notice:
+
+- Name + short tagline header (no portrait required in the first viewport)
+- Sectioned lists with muted labels (e.g. Latest / Earlier / Misc)
+- Work rows: org mark or logo, company, role (+ optional note), tabular dates
+- Linked rows with hover expand, title underline, and a small arrow cue
+- Sticky bottom social dock with a fade into the page background
+- Staggered entrance motion (blur + fade + slight rise); respect `prefers-reduced-motion`
+- System light/dark theme and a clean variable sans (e.g. Geist)
+- Narrow centered column, hairline separators, restrained color
