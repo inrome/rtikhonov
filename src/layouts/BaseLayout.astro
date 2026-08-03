@@ -1,0 +1,55 @@
+---
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description?: string;
+	currentPath?: string;
+}
+
+const { title, description = "Roman Tikhonov — personal website", currentPath = "/" } =
+	Astro.props;
+
+const nav = [
+	{ label: "Home", href: "/" },
+	{ label: "Inspiration", href: "/inspiration" },
+];
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="description" content={description} />
+		<meta name="robots" content="noindex, nofollow" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<main>
+			<nav class="site-nav" aria-label="Site">
+				{
+					nav.map((item) => (
+						<a
+							href={item.href}
+							aria-current={
+								item.href === "/"
+									? currentPath === "/"
+										? "page"
+										: undefined
+									: currentPath.startsWith(item.href)
+										? "page"
+										: undefined
+							}
+						>
+							{item.label}
+						</a>
+					))
+				}
+			</nav>
+			<slot />
+		</main>
+	</body>
+</html>

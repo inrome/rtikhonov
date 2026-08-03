@@ -1,0 +1,153 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+	const posts = await getCollection("inspiration");
+	return posts.map((post) => ({
+		params: { id: post.id },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+function formatDate(date: Date) {
+	return date.toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	});
+}
+
+function youtubeEmbedUrl(url: string) {
+	try {
+		const parsed = new URL(url);
+		let id = parsed.searchParams.get("v");
+		if (!id && parsed.hostname.includes("youtu.be")) {
+			id = parsed.pathname.replace(/^\//, "");
+		}
+		if (!id) return null;
+		return `https://www.youtube-nocookie.com/embed/${id}`;
+	} catch {
+		return null;
+	}
+}
+
+const embedUrl = post.data.sourceUrl ? youtubeEmbedUrl(post.data.sourceUrl) : null;
+---
+
+<BaseLayout
+	title={`${post.data.title} — Inspiration`}
+	description={post.data.description}
+	currentPath={`/inspiration/${post.id}`}
+>
+	<article>
+		<header>
+			<p class="back"><a href="/inspiration">← Inspiration</a></p>
+			<h1>{post.data.title}</h1>
+			<p class="meta">
+				<time datetime={post.data.pubDate.toISOString()}>
+					{formatDate(post.data.pubDate)}
+				</time>
+			</p>
+		</header>
+
+		{
+			post.data.sourceUrl && (
+				<figure class="source">
+					{embedUrl ? (
+						<div class="video">
+							<iframe
+								src={embedUrl}
+								title={post.data.sourceTitle ?? post.data.title}
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+								allowfullscreen
+								loading="lazy"
+								referrerpolicy="strict-origin-when-cross-origin"
+							/>
+						</div>
+					) : null}
+					<figcaption>
+						Source:{" "}
+						<a href={post.data.sourceUrl} rel="noopener noreferrer" target="_blank">
+							{post.data.sourceTitle ?? post.data.sourceUrl}
+						</a>
+					</figcaption>
+				</figure>
+			)
+		}
+
+		<div class="body">
+			<Content />
+		</div>
+	</article>
+</BaseLayout>
+
+<style>
+	.back {
+		margin: 0 0 1.25rem;
+		font-size: 0.95rem;
+	}
+
+	h1 {
+		font-size: 1.75rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		margin: 0 0 0.5rem;
+	}
+
+	.meta {
+		margin: 0 0 2rem;
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+
+	.source {
+		margin: 0 0 2rem;
+	}
+
+	.video {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		background: var(--border);
+		overflow: hidden;
+	}
+
+	.video iframe {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+
+	.source figcaption {
+		margin-top: 0.75rem;
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+
+	.body :global(p) {
+		margin: 0 0 1.25rem;
+		font-size: 1.05rem;
+		line-height: 1.65;
+	}
+
+	.body :global(p:last-child) {
+		margin-bottom: 0;
+	}
+
+	.body :global(ul),
+	.body :global(ol) {
+		margin: 0 0 1.25rem;
+		padding-left: 1.25rem;
+	}
+
+	.body :global(li) {
+		margin-bottom: 0.5rem;
+		line-height: 1.65;
+	}
+</style>
