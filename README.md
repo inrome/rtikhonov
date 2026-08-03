@@ -1,43 +1,60 @@
-# Astro Starter Kit: Minimal
+# rtikhonov.com
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Personal website of Roman Tikhonov. Built with [Astro](https://astro.build) and deployed to GitHub Pages.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Commands
 
-## 🚀 Project Structure
+| Command           | Action                                          |
+| :---------------- | :---------------------------------------------- |
+| `npm install`     | Install dependencies                            |
+| `npm run dev`     | Start the dev server at `localhost:4321`        |
+| `npm run check`   | Type-check pages, components, and content       |
+| `npm run build`   | Build the production site to `./dist/`          |
+| `npm run preview` | Preview the build before you deploy             |
 
-Inside of your Astro project, you'll see the following folders and files:
+## Project structure
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+├── components/   # Small shared pieces (head tags, date, video embed)
+├── content/
+│   └── inspiration/   # Blog posts as Markdown files
+├── layouts/      # Page shell with nav and metadata
+├── lib/          # Content queries and helpers
+├── pages/        # Routes
+├── styles/       # Global CSS
+├── consts.ts     # Site title, description, nav items
+└── content.config.ts  # Content collection schema
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Add an Inspiration post
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+1. Create a Markdown file in `src/content/inspiration/`. The file name becomes the URL,
+   so `language-ai-and-power.md` is served at `/inspiration/language-ai-and-power/`.
+2. Fill in the frontmatter:
 
-Any static assets, like images, can be placed in the `public/` directory.
+```yaml
+---
+title: "Post title"
+description: "One or two sentences for the list page and RSS feed."
+pubDate: 2026-08-03
+# Optional:
+updatedDate: 2026-08-10
+sourceUrl: "https://www.youtube.com/watch?v=VIDEO_ID"
+sourceTitle: "Talk or article title"
+draft: true
+---
+Your notes in Markdown.
+```
 
-## 🧞 Commands
+3. Write the notes below the frontmatter.
 
-All commands are run from the root of the project, from a terminal:
+Notes on the fields:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- `sourceUrl` renders a link to the source. YouTube links also render a privacy-friendly
+  embed, so strip tracking parameters such as `?si=` before you paste a link.
+- `draft: true` hides the post from builds. You still see it on the dev server, marked
+  as a draft.
+- `npm run check` validates the frontmatter against the schema in `src/content.config.ts`.
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+The list page lives at `/inspiration/`, and the feed at `/inspiration/rss.xml`.

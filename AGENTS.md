@@ -8,6 +8,18 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+Run `npm run check` before you commit. It type-checks components and validates post
+frontmatter against the content collection schema.
+
+## Content
+
+Blog posts live in the `inspiration` content collection (`src/content/inspiration/*.md`).
+The schema is in `src/content.config.ts`, and shared queries are in
+`src/lib/inspiration.ts` — use `getInspirationPosts()` instead of calling
+`getCollection()` directly, so drafts and sorting stay consistent everywhere.
+
+See the README for the post frontmatter fields and the steps to add a post.
+
 ## Security and privacy (public repo)
 
 This repository is public. Everything committed is visible on the internet.

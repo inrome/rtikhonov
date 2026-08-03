@@ -1,0 +1,39 @@
+---
+import "../styles/global.css";
+import { INSPIRATION_TITLE, SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = SITE_DESCRIPTION } = Astro.props;
+
+const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} — ${SITE_TITLE}`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+<link
+	rel="alternate"
+	type="application/rss+xml"
+	title={`${SITE_TITLE} — ${INSPIRATION_TITLE}`}
+	href={new URL("inspiration/rss.xml", Astro.site)}
+/>
+<meta name="generator" content={Astro.generator} />
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="canonical" href={canonicalUrl} />
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta name="twitter:card" content="summary" />

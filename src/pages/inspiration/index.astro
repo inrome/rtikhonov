@@ -1,0 +1,101 @@
+---
+import FormattedDate from "../../components/FormattedDate.astro";
+import { INSPIRATION_DESCRIPTION, INSPIRATION_TITLE } from "../../consts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getInspirationPostPath, getInspirationPosts } from "../../lib/inspiration";
+
+const posts = await getInspirationPosts();
+---
+
+<BaseLayout title={INSPIRATION_TITLE} description={INSPIRATION_DESCRIPTION}>
+	<header>
+		<h1>{INSPIRATION_TITLE}</h1>
+		<p class="lede">{INSPIRATION_DESCRIPTION}</p>
+	</header>
+
+	{
+		posts.length === 0 ? (
+			<p class="empty">No posts yet.</p>
+		) : (
+			<ul class="posts">
+				{posts.map((post) => (
+					<li>
+						<a href={getInspirationPostPath(post)}>{post.data.title}</a>
+						<p class="meta">
+							<FormattedDate date={post.data.pubDate} />
+							{post.data.draft && <span class="draft">Draft</span>}
+						</p>
+						<p>{post.data.description}</p>
+					</li>
+				))}
+			</ul>
+		)
+	}
+</BaseLayout>
+
+<style>
+	header {
+		margin-bottom: 2.5rem;
+	}
+
+	h1 {
+		font-size: 1.75rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		margin: 0 0 0.5rem;
+	}
+
+	.lede {
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.empty {
+		color: var(--muted);
+	}
+
+	.posts {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.posts li {
+		padding: 0 0 1.75rem;
+		border-bottom: 1px solid var(--border);
+		margin-bottom: 1.75rem;
+	}
+
+	.posts li:last-child {
+		border-bottom: none;
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	.posts a {
+		font-size: 1.125rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	.meta {
+		margin: 0.35rem 0 0.5rem;
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+
+	.draft {
+		margin-left: 0.5rem;
+		border: 1px solid var(--border);
+		padding: 0.05rem 0.35rem;
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+
+	.posts p:last-child {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+</style>
