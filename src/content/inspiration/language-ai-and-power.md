@@ -14,4 +14,4 @@ Editors were once among the most powerful people. They shaped discussions, belie
 
 Fiction is cheap and interesting. Truth is costly and often unattractive. Some people believe that AI will bring us truth. But it is more likely that AI will make our lives and the world around us harder to grasp. It will create more complex systems that are impossible to understand or control — and pull us further from truth and understanding.
 
-And if thinking is putting words in order —
+And if thinking is putting words in order — then LLMs are already ahead of most humans.
