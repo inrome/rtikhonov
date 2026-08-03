@@ -2,7 +2,7 @@
 title: "Language, AI, and power"
 description: "Notes from Yuval Noah Harari on language, algorithms as editors, and how AI may pull us further from truth."
 pubDate: 2026-08-03
-sourceUrl: "https://youtu.be/_V_ed5fuexA?si=t_H8kbNkcjFx9Qos"
+sourceUrl: "https://www.youtube.com/watch?v=_V_ed5fuexA"
 sourceTitle: "The next 50 years: humanity, AI, power | Yuval Noah Harari"
 ---
 

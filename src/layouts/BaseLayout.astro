@@ -1,49 +1,29 @@
 ---
-import "../styles/global.css";
+import BaseHead from "../components/BaseHead.astro";
+import { NAV_ITEMS } from "../consts";
 
 interface Props {
 	title: string;
 	description?: string;
-	currentPath?: string;
 }
 
-const { title, description = "Roman Tikhonov — personal website", currentPath = "/" } =
-	Astro.props;
+const { title, description } = Astro.props;
 
-const nav = [
-	{ label: "Home", href: "/" },
-	{ label: "Inspiration", href: "/inspiration" },
-];
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
 ---
 
+<!doctype html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="description" content={description} />
-		<meta name="robots" content="noindex, nofollow" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+		<BaseHead title={title} description={description} />
 	</head>
 	<body>
 		<main>
 			<nav class="site-nav" aria-label="Site">
 				{
-					nav.map((item) => (
-						<a
-							href={item.href}
-							aria-current={
-								item.href === "/"
-									? currentPath === "/"
-										? "page"
-										: undefined
-									: currentPath.startsWith(item.href)
-										? "page"
-										: undefined
-							}
-						>
+					NAV_ITEMS.map((item) => (
+						<a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>
 							{item.label}
 						</a>
 					))

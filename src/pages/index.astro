@@ -1,9 +1,10 @@
 ---
 import { Image } from "astro:assets";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import portrait from "../assets/roman.png";
 
-const name = "Roman Tikhonov";
+const name = SITE_TITLE;
 const bio =
 	"Product Manager leading Onboarding and Identity at payme (TBC Uzbekistan), a payment app with millions of users. Former cognitive science researcher at Carnegie Mellon with a PhD in Cognitive Psychology from St. Petersburg University.";
 
@@ -68,7 +69,7 @@ const timeline = [
 ];
 ---
 
-<BaseLayout title={name} description={`${name} — personal website`} currentPath="/">
+<BaseLayout title={name} description={SITE_DESCRIPTION}>
 	<header>
 		<Image
 			src={portrait}

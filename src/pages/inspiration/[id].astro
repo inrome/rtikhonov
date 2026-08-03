@@ -1,78 +1,51 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
+import FormattedDate from "../../components/FormattedDate.astro";
+import YouTubeEmbed from "../../components/YouTubeEmbed.astro";
+import { INSPIRATION_TITLE } from "../../consts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getInspirationPosts, type InspirationPost } from "../../lib/inspiration";
 
 export async function getStaticPaths() {
-	const posts = await getCollection("inspiration");
+	const posts = await getInspirationPosts();
 	return posts.map((post) => ({
 		params: { id: post.id },
-		props: { post },
+		props: post,
 	}));
 }
 
-const { post } = Astro.props;
+type Props = InspirationPost;
+
+const post = Astro.props;
+const { title, description, pubDate, updatedDate, sourceUrl, sourceTitle } = post.data;
 const { Content } = await render(post);
-
-function formatDate(date: Date) {
-	return date.toLocaleDateString("en-US", {
-		year: "numeric",
-		month: "short",
-		day: "numeric",
-	});
-}
-
-function youtubeEmbedUrl(url: string) {
-	try {
-		const parsed = new URL(url);
-		let id = parsed.searchParams.get("v");
-		if (!id && parsed.hostname.includes("youtu.be")) {
-			id = parsed.pathname.replace(/^\//, "");
-		}
-		if (!id) return null;
-		return `https://www.youtube-nocookie.com/embed/${id}`;
-	} catch {
-		return null;
-	}
-}
-
-const embedUrl = post.data.sourceUrl ? youtubeEmbedUrl(post.data.sourceUrl) : null;
 ---
 
-<BaseLayout
-	title={`${post.data.title} — Inspiration`}
-	description={post.data.description}
-	currentPath={`/inspiration/${post.id}`}
->
+<BaseLayout title={title} description={description}>
 	<article>
 		<header>
-			<p class="back"><a href="/inspiration">← Inspiration</a></p>
-			<h1>{post.data.title}</h1>
+			<p class="back"><a href="/inspiration/">← {INSPIRATION_TITLE}</a></p>
+			<h1>{title}</h1>
 			<p class="meta">
-				<time datetime={post.data.pubDate.toISOString()}>
-					{formatDate(post.data.pubDate)}
-				</time>
+				<FormattedDate date={pubDate} />
+				{
+					updatedDate && (
+						<span class="updated">
+							Updated <FormattedDate date={updatedDate} />
+						</span>
+					)
+				}
 			</p>
 		</header>
 
 		{
-			post.data.sourceUrl && (
+			sourceUrl && (
 				<figure class="source">
-					{embedUrl ? (
-						<div class="video">
-							<iframe
-								src={embedUrl}
-								title={post.data.sourceTitle ?? post.data.title}
-								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-								allowfullscreen
-								loading="lazy"
-								referrerpolicy="strict-origin-when-cross-origin"
-							/>
-						</div>
-					) : null}
+					<YouTubeEmbed url={sourceUrl} title={sourceTitle ?? title} />
 					<figcaption>
 						Source:{" "}
-						<a href={post.data.sourceUrl} rel="noopener noreferrer" target="_blank">
-							{post.data.sourceTitle ?? post.data.sourceUrl}
+						<a href={sourceUrl} rel="noopener noreferrer" target="_blank">
+							{sourceTitle ?? sourceUrl}
 						</a>
 					</figcaption>
 				</figure>
@@ -104,24 +77,12 @@ const embedUrl = post.data.sourceUrl ? youtubeEmbedUrl(post.data.sourceUrl) : nu
 		color: var(--muted);
 	}
 
+	.updated {
+		margin-left: 0.5rem;
+	}
+
 	.source {
 		margin: 0 0 2rem;
-	}
-
-	.video {
-		position: relative;
-		width: 100%;
-		aspect-ratio: 16 / 9;
-		background: var(--border);
-		overflow: hidden;
-	}
-
-	.video iframe {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		border: 0;
 	}
 
 	.source figcaption {
@@ -130,14 +91,25 @@ const embedUrl = post.data.sourceUrl ? youtubeEmbedUrl(post.data.sourceUrl) : nu
 		color: var(--muted);
 	}
 
+	.body :global(h2),
+	.body :global(h3) {
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		margin: 2rem 0 0.75rem;
+	}
+
+	.body :global(h2) {
+		font-size: 1.25rem;
+	}
+
+	.body :global(h3) {
+		font-size: 1.05rem;
+	}
+
 	.body :global(p) {
 		margin: 0 0 1.25rem;
 		font-size: 1.05rem;
 		line-height: 1.65;
-	}
-
-	.body :global(p:last-child) {
-		margin-bottom: 0;
 	}
 
 	.body :global(ul),
@@ -149,5 +121,27 @@ const embedUrl = post.data.sourceUrl ? youtubeEmbedUrl(post.data.sourceUrl) : nu
 	.body :global(li) {
 		margin-bottom: 0.5rem;
 		line-height: 1.65;
+	}
+
+	.body :global(blockquote) {
+		margin: 0 0 1.25rem;
+		padding-left: 1rem;
+		border-left: 2px solid var(--border);
+		color: var(--muted);
+	}
+
+	.body :global(hr) {
+		margin: 2rem 0;
+		border: none;
+		border-top: 1px solid var(--border);
+	}
+
+	.body :global(img) {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.body :global(:last-child) {
+		margin-bottom: 0;
 	}
 </style>
