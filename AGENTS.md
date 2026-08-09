@@ -45,3 +45,22 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+## Cursor Cloud specific instructions
+
+This is a single, fully static Astro site — one service, no backend, database,
+env vars, or secrets. The startup update script already runs `npm ci`, so
+dependencies are installed when a session starts.
+
+- Standard commands live in the README and the `## Development` section above
+  (`npm run dev`, `npm run check`, `npm run build`, `npm run preview`).
+- The dev server listens on `http://localhost:4321/`. It is bound to localhost
+  only; pass `--host` if you need to reach it from outside the VM.
+- `astro dev --background` is a real daemon mode in this Astro version (manage it
+  with `astro dev stop|status|logs`). It refuses to start a second server if one
+  is already running and reports the existing pid, so check `astro dev status`
+  before starting another. In cloud you can also just run `npm run dev` in a
+  tmux session.
+- Adding or editing a Markdown file under `src/content/inspiration/` is picked up
+  by the running dev server via hot reload — no restart needed. Posts with
+  `draft: true` show on the dev server (marked DRAFT) but are excluded from builds.
