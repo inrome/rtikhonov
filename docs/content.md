@@ -90,9 +90,14 @@ When a timeline row has a related Inspiration post, set `href` to that post path
 
 ## Inspiration
 
+Feature flag: `INSPIRATION_ENABLED` in `rtikhonov.com/src/consts.ts`.
+
+- `false` (current) — nav, homepage list, `/inspiration/` routes, and RSS stay off. Post Markdown can still live in the repo.
+- `true` — set the flag, then redeploy to show the section.
+
 Content collection: `rtikhonov.com/src/content/inspiration/*.md`  
 Schema: `rtikhonov.com/src/content.config.ts`  
-Queries: `rtikhonov.com/src/lib/inspiration.ts` — always use `getInspirationPosts()` so drafts and sort stay consistent.
+Queries: `rtikhonov.com/src/lib/inspiration.ts` — always use `getInspirationPosts()` so drafts, the flag, and sort stay consistent.
 
 The file name is the URL: `language-ai-and-power.md` → `/inspiration/language-ai-and-power/`.
 

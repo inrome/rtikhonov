@@ -5,7 +5,16 @@ export const SITE_DESCRIPTION =
 export const INSPIRATION_TITLE = "Inspiration";
 export const INSPIRATION_DESCRIPTION = "Notes and ideas that stay with me.";
 
+/**
+ * Flip to `true` and redeploy to show Inspiration in the nav, homepage,
+ * `/inspiration/` routes, and RSS. Keep `false` to ship the code without
+ * surfacing the section.
+ */
+export const INSPIRATION_ENABLED = false;
+
 export const NAV_ITEMS = [
 	{ label: "Home", href: "/" },
-	{ label: "Inspiration", href: "/inspiration/" },
+	...(INSPIRATION_ENABLED
+		? [{ label: "Inspiration", href: "/inspiration/" }]
+		: []),
 ];

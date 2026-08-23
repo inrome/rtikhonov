@@ -2,6 +2,11 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Hide And Seek
+
+- Inspiration ships in the codebase but stays off. Flip `INSPIRATION_ENABLED` in `src/consts.ts` and redeploy when you want it public.
+- With the flag off, the one-pager has no Inspiration nav, homepage list, or public feed.
+
 ## 2026-08-23 — Arrival
 
 - Inspiration notes are on the live site. Home, `/inspiration/`, and the RSS feed at `/inspiration/rss.xml` share the same posts.

@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import {
+	INSPIRATION_ENABLED,
 	INSPIRATION_TITLE,
 	SITE_DESCRIPTION,
 	SITE_TITLE,
@@ -36,12 +37,16 @@ const ogImageAlt = `${SITE_TITLE} portrait`;
 <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#111" media="(prefers-color-scheme: dark)" />
 <link rel="canonical" href={canonicalUrl} />
-<link
-	rel="alternate"
-	type="application/rss+xml"
-	title={`${SITE_TITLE} — ${INSPIRATION_TITLE}`}
-	href={new URL("inspiration/rss.xml", Astro.site)}
-/>
+{
+	INSPIRATION_ENABLED && (
+		<link
+			rel="alternate"
+			type="application/rss+xml"
+			title={`${SITE_TITLE} — ${INSPIRATION_TITLE}`}
+			href={new URL("inspiration/rss.xml", Astro.site)}
+		/>
+	)
+}
 <meta property="og:title" content={ogTitle} />
 <meta property="og:description" content={ogDescription} />
 <meta property="og:type" content={ogType} />

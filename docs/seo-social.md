@@ -11,7 +11,7 @@ Source of truth for titles, meta tags, icons, and link-preview behavior.
 - Meta description: name plus bio on the homepage; post description on notes
 - Canonical `<link>` matches the current page URL
 - Browser chrome: `theme-color` `#fafafa` (light) and `#111` (dark)
-- RSS: every page links to `/inspiration/rss.xml`
+- RSS: when `INSPIRATION_ENABLED` is true, every page links to `/inspiration/rss.xml`
 
 `BaseHead.astro` is the shared implementation. Do not hand-roll a second set of tags.
 
