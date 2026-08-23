@@ -19,8 +19,8 @@ These are **not** published:
 Never deploy with GitHub Pages or GitHub Actions. Ship only on Cloudflare
 Workers. GitHub is version control only.
 
-Inspiration stays gated by `INSPIRATION_ENABLED`. Check the live URL; do not
-assume `/inspiration/` is public.
+`/inspiration/` and `/weeks/` can exist as unlisted URLs. Check the live
+URL; do not assume they are linked from Home or the nav.
 
 When asked about unpublished / live / public changes, check the live URL first.
 Then report git status as "in this repo" only if the URL does not show it.

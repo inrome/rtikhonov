@@ -28,8 +28,8 @@ The schema is in `src/content.config.ts`, and shared queries are in
 `src/lib/inspiration.ts` — use `getInspirationPosts()` instead of
 calling `getCollection()` directly, so drafts and sorting stay consistent.
 
-Public display is gated by `INSPIRATION_ENABLED` in `src/consts.ts`.
-Set it to `true` and merge to `main` (Cloudflare Workers Builds ships it).
+`/inspiration/` routes always work. `INSPIRATION_ENABLED` in `src/consts.ts`
+only controls the homepage list, nav link, and RSS `<link>` in `<head>`.
 
 See [docs/content.md](docs/content.md) for frontmatter fields and how to add a post.
 

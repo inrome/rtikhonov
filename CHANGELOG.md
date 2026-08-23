@@ -2,6 +2,11 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Off The Menu
+
+- `/weeks/` and `/inspiration/` stay reachable by URL. They are not in the nav and not on the homepage.
+- `INSPIRATION_ENABLED` only puts Inspiration in the nav, the homepage list, and the RSS `<link>` in `<head>`.
+
 ## 2026-08-23 — Life In Weeks
 
 - `/weeks/` shows 80 years as a grid of weeks. The current week uses the orange accent. Hover, click, or tab opens a short comment.

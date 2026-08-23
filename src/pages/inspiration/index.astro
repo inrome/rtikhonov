@@ -1,16 +1,8 @@
 ---
 import FormattedDate from "../../components/FormattedDate.astro";
-import {
-	INSPIRATION_DESCRIPTION,
-	INSPIRATION_ENABLED,
-	INSPIRATION_TITLE,
-} from "../../consts";
+import { INSPIRATION_DESCRIPTION, INSPIRATION_TITLE } from "../../consts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getInspirationPostPath, getInspirationPosts } from "../../lib/inspiration";
-
-if (!INSPIRATION_ENABLED) {
-	return Astro.redirect("/");
-}
 
 const posts = await getInspirationPosts();
 ---

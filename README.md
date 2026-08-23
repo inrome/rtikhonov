@@ -56,8 +56,9 @@ Exact dashboard settings: [docs/deploy.md](docs/deploy.md). Cursor:
 
 ## Add a week on /weeks
 
-The life calendar is `/weeks/`. Each square is one week from 16 May 1992. Colors
-update in the browser: past, this week (orange), and future.
+The life calendar is `/weeks/`. It is not in the nav. Each square is one week
+from 16 May 1992. Colors update in the browser: past, this week (orange), and
+future.
 
 To mark a week, add an object to `WEEK_ANNOTATIONS` in `src/lib/weeks.ts`:
 
