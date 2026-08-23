@@ -29,9 +29,12 @@ git push. Confirm settings in Worker → **Settings** → **Builds**:
 | Repository | `inrome/rtikhonov` |
 | Production branch | `main` |
 | Root directory | `/` |
-| Build command | `npm ci && npm run build` |
+| Build command | `npm run build` |
 | Deploy command | `npx wrangler deploy` |
-| Other branches | `npx wrangler versions upload` (PR preview URLs) |
+| Version command | `npx wrangler versions upload` |
+| Non-production builds | On |
+| Include paths | `*` |
+| Exclude paths | `node_modules/**`, `.git/` |
 
 A merge to `main` publishes. A push to another branch only creates a preview
 if **Builds for non-production branches** is on. Connecting Git does not

@@ -4,6 +4,8 @@ Notable updates to rtikhonov.com. Newest entries come first.
 
 ## 2026-08-23 — Hello, Goodbye
 
+- Workers Builds settings now match the live dashboard: `npm run build`, then `npx wrangler deploy`, with preview versions on other branches.
+
 - `/hello` is live so we can see if a merge to `main` reaches https://rtikhonov.com/hello through Workers Builds.
 
 ## 2026-08-23 — One Way Or Another
