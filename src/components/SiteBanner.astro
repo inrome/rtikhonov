@@ -112,7 +112,8 @@ const dismissible = announcement?.dismissible !== false;
 		};
 
 		updateCountdown();
-		const intervalMs = untilValue && parseUntilDate(untilValue).getTime() - Date.now() < 86400000 ? 1000 : 30000;
+		const intervalMs =
+			untilValue && parseUntilDate(untilValue).getTime() - Date.now() < 86400000 ? 1000 : 30000;
 		window.setInterval(updateCountdown, intervalMs);
 		window.addEventListener("resize", setOffset);
 		closeButton?.addEventListener("click", () => hide(true));
@@ -176,7 +177,7 @@ const dismissible = announcement?.dismissible !== false;
 	}
 
 	.site-banner__close:focus-visible {
-		outline: 2px solid var(--fg);
+		outline: 2px solid var(--accent);
 		outline-offset: 2px;
 	}
 </style>

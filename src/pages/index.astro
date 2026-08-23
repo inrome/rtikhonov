@@ -1,151 +1,750 @@
 ---
 import { Image } from "astro:assets";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import portrait from "../assets/roman.png";
+import videoIcon from "@tabler/icons/outline/video.svg?raw";
+import linkedinIcon from "@tabler/icons/outline/brand-linkedin.svg?raw";
+import telegramIcon from "@tabler/icons/outline/brand-telegram.svg?raw";
+import BaseHead from "../components/BaseHead.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import ProjectsGallery from "../components/ProjectsGallery.astro";
+import SiteBanner from "../components/SiteBanner.astro";
+import SiteNav from "../components/SiteNav.astro";
+import {
+	getInspirationPostPath,
+	getInspirationPosts,
+} from "../lib/inspiration";
+import {
+	formatTimelineDate,
+	timelineDateTime,
+} from "../lib/format-timeline-date";
+import {
+	timeline,
+	yearOverviews,
+	type TimelineEntry,
+} from "../data/timeline";
+import portrait from "../assets/roman.jpg";
 
-const name = SITE_TITLE;
-const bio =
-	"Product Manager leading Onboarding and Identity at payme (TBC Uzbekistan), a payment app with millions of users. Former cognitive science researcher at Carnegie Mellon with a PhD in Cognitive Psychology from St. Petersburg University.";
+function isSvgMarker(marker: string): boolean {
+	return marker.trimStart().startsWith("<svg");
+}
 
+const name = "Roman Tikhonov";
+const bioLines = [
+	"Product Manager leading Onboarding and Identity at payme (TBC Uzbekistan).",
+	"Former cognitive science researcher at Carnegie Mellon with a PhD from St. Petersburg University.",
+];
+const bio = bioLines.join(" ");
+const description = `${name} — ${bio}`;
+const ogImageAlt = `${name} portrait`;
+
+/** Tabler Icons (MIT) — https://tabler.io/icons
+ *  Contact hrefs and handles are base64-obfuscated so static scrapers /
+ *  LLM crawls do not see clear URLs or handles; humans get them via a
+ *  tiny client script.
+ *  Call is first (primary CTA); LinkedIn / Telegram stay secondary.
+ */
 const links = [
-	{ label: "LinkedIn", href: "https://www.linkedin.com/in/romantikhonov/" },
-	{ label: "Telegram", href: "https://t.me/rvtikhonov" },
+	{
+		prefix: undefined as string | undefined,
+		label: "15 min call",
+		labelEnc: undefined as string | undefined,
+		hrefEnc: Buffer.from("https://cal.com/tikhonov/15-min-chat", "utf8").toString(
+			"base64",
+		),
+		icon: videoIcon,
+		primary: true,
+	},
+	{
+		prefix: "LinkedIn:",
+		label: "LinkedIn",
+		labelEnc: Buffer.from("/in/romantikhonov", "utf8").toString("base64"),
+		hrefEnc: Buffer.from(
+			"https://www.linkedin.com/in/romantikhonov/",
+			"utf8",
+		).toString("base64"),
+		icon: linkedinIcon,
+		primary: false,
+	},
+	{
+		prefix: "Telegram:",
+		label: "Telegram",
+		labelEnc: Buffer.from("@rvtikhonov", "utf8").toString("base64"),
+		hrefEnc: Buffer.from("https://t.me/rvtikhonov", "utf8").toString(
+			"base64",
+		),
+		icon: telegramIcon,
+		primary: false,
+	},
 ];
 
-const timeline = [
-	{
-		year: "2025",
-		text: "Joined payme (TBC Uzbekistan) as Product Owner, later Product Manager. Own Onboarding and Identity. Tashkent.",
-	},
-	{
-		year: "2024",
-		text: "Co-founded ReviewLab.app, a product feedback platform. Shipped MVP in 2.5 months.",
-	},
-	{
-		year: "2023",
-		text: "Moved into product management: PM at HumanteQ (mental health tech).",
-	},
-	{
-		year: "2022",
-		text: "Postdoctoral Fellow at Carnegie Mellon University, Pittsburgh. Studied how people learn complex patterns; published in MIT's Open Mind.",
-	},
-	{
-		year: "2021",
-		text: 'Researcher at JetBrains Research. PhD in Psychology, St. Petersburg University. "Best Teacher" award at HSE University.',
-	},
-	{
-		year: "2018",
-		text: "Lecturer, then Senior Lecturer at HSE University, St. Petersburg. Designed 4 award-winning courses.",
-	},
-	{
-		year: "2016",
-		text: "Market Research Analyst at UsabilityLab: ranked 700+ features across 16 mobile banking apps.",
-	},
-	{
-		year: "2015",
-		text: "Master's in Cognitive Psychology (with distinction). Started 7 years as a researcher at St. Petersburg University; co-authored 20+ peer-reviewed papers.",
-	},
-	{
-		year: "2013",
-		text: "Bachelor's in Psychology, St. Petersburg University.",
-	},
-	{
-		year: "2012",
-		text: "Exchange semester at the University of Eastern Finland.",
-	},
-	{
-		year: "2010",
-		text: "Led a human rights education project at AIESEC with 14 international volunteers.",
-	},
-	{
-		year: "2009",
-		text: "Finished vocational training in web development; started studying psychology.",
-	},
-	{
-		year: "May 1992",
-		text: "Born in Kryvyi Rih, Ukraine.",
-	},
+type YearGroup = { year: string; entries: TimelineEntry[] };
+
+const timelineByYear: YearGroup[] = [];
+for (const entry of timeline) {
+	const year = entry.date.slice(0, 4);
+	const last = timelineByYear[timelineByYear.length - 1];
+	if (last && last.year === year) {
+		last.entries.push(entry);
+	} else {
+		timelineByYear.push({ year, entries: [entry] });
+	}
+}
+
+type EraId = "product" | "research" | "undergrad" | "earlier";
+
+function eraForYear(year: string): EraId {
+	const n = Number(year);
+	if (n >= 2023) return "product";
+	if (n >= 2014) return "research";
+	if (n >= 2009 && n <= 2013) return "undergrad";
+	return "earlier";
+}
+
+const eras: {
+	id: EraId;
+	title: string;
+	open: boolean;
+	years: YearGroup[];
+}[] = [
+	{ id: "product", title: "Product", open: true, years: [] },
+	{ id: "research", title: "Academia", open: false, years: [] },
+	{ id: "undergrad", title: "Undergrad", open: false, years: [] },
+	{ id: "earlier", title: "Earlier", open: false, years: [] },
 ];
+
+for (const group of timelineByYear) {
+	const era = eras.find((e) => e.id === eraForYear(group.year));
+	if (era) era.years.push(group);
+}
+
+const posts = await getInspirationPosts();
 ---
 
-<BaseLayout title={name} description={SITE_DESCRIPTION}>
-	<header>
-		<Image
-			src={portrait}
-			alt={`${name} portrait`}
-			width={140}
-			height={140}
-			quality={85}
-			class="portrait"
+<html lang="en">
+	<head>
+		<BaseHead
+			title={name}
+			description={description}
+			ogTitle={name}
+			ogDescription={bio}
 		/>
-		<h1>{name}</h1>
-		<p class="bio">{bio}</p>
-		<nav class="social" aria-label="Social links">
-			{
-				links.map((link) => (
-					<a href={link.href} rel="noopener noreferrer" target="_blank">
-						{link.label}
-					</a>
-				))
-			}
-		</nav>
-	</header>
+	</head>
+	<body>
+		<main>
+			<SiteNav />
+			<header>
+				<span class="portrait-frame">
+					<Image
+						src={portrait}
+						alt={ogImageAlt}
+						width={140}
+						height={140}
+						densities={[1, 2, 3]}
+						quality={90}
+						class="portrait"
+					/>
+				</span>
+				<h1>{name}</h1>
+				{
+					bioLines.map((line) => (
+						<p class="bio">{line}</p>
+					))
+				}
+				<nav id="contact" data-nosnippet aria-label="Contact">
+					{
+						links.map((link) => (
+							<a
+								href="#"
+								data-u={link.hrefEnc}
+								data-l={link.labelEnc}
+								rel="nofollow noopener noreferrer"
+								class:list={[
+									"contact-item",
+									"contact-link",
+									link.primary && "contact-link--primary",
+								]}
+							>
+								<span
+									class="nav-icon"
+									aria-hidden="true"
+									set:html={link.icon}
+								/>
+								{link.prefix && (
+									<span class="contact-prefix">{link.prefix}</span>
+								)}
+								<span class="contact-link__label">{link.label}</span>
+							</a>
+						))
+					}
+				</nav>
+				<script is:inline>
+					(() => {
+						const revealHref = (a) => {
+							const enc = a.getAttribute("data-u");
+							if (!enc) return;
+							try {
+								a.href = atob(enc);
+							} catch {
+								/* ignore */
+							}
+						};
+						document.querySelectorAll("a.contact-link").forEach((a) => {
+							const labelEnc = a.getAttribute("data-l");
+							const labelEl = a.querySelector(".contact-link__label");
+							if (labelEnc && labelEl) {
+								try {
+									labelEl.textContent = atob(labelEnc);
+								} catch {
+									/* ignore */
+								}
+							}
+							a.addEventListener("pointerdown", () => revealHref(a), {
+								once: true,
+							});
+							a.addEventListener("focus", () => revealHref(a), { once: true });
+							a.addEventListener(
+								"click",
+								(e) => {
+									revealHref(a);
+									if (a.getAttribute("href") === "#") {
+										e.preventDefault();
+									} else {
+										a.setAttribute("target", "_blank");
+									}
+								},
+								{ once: true },
+							);
+						});
+					})();
+				</script>
+			</header>
 
-	<section class="timeline" aria-label="Timeline">
-		<ol>
-			{
-				timeline.map((entry) => (
-					<li>
-						<span class="year">{entry.year}</span>
-						<span class="event">{entry.text}</span>
-					</li>
-				))
-			}
-		</ol>
-	</section>
-</BaseLayout>
+			<ProjectsGallery />
 
-<style>
+			{
+				posts.length > 0 && (
+					<section class="notes" id="inspiration" aria-label="Inspiration">
+						<h2 class="section-title">
+							<a href="/inspiration/">Inspiration</a>
+						</h2>
+						<ul>
+							{posts.map((post) => (
+								<li>
+									<a href={getInspirationPostPath(post)}>{post.data.title}</a>
+									<p class="notes-meta">
+										<FormattedDate date={post.data.pubDate} />
+										{post.data.draft && <span class="notes-draft">Draft</span>}
+									</p>
+									<p class="notes-desc">{post.data.description}</p>
+								</li>
+							))}
+						</ul>
+					</section>
+				)
+			}
+
+			<section class="timeline" id="timeline" aria-label="Timeline">
+				<h2 class="section-title">Timeline</h2>
+				{
+					eras.map((era) => (
+						<details class="timeline-era" open={era.open || undefined}>
+							<summary class="timeline-era__summary">
+								<span class="timeline-era__title">{era.title}</span>
+								<span class="chevron" aria-hidden="true" />
+							</summary>
+							<ol>
+								{era.years.map((group) => {
+									if (group.entries.length === 1) {
+										const entry = group.entries[0];
+										const label = formatTimelineDate(entry.date);
+										const datetime = timelineDateTime(entry.date);
+										return (
+											<li id={entry.id}>
+												<span class="year">
+													{datetime ? (
+														<time datetime={datetime}>{label}</time>
+													) : (
+														label
+													)}
+												</span>
+												<span class="event">
+													{entry.marker &&
+														(isSvgMarker(entry.marker) ? (
+															<span
+																class="event-marker event-marker--icon"
+																aria-hidden="true"
+																set:html={entry.marker}
+															/>
+														) : (
+															<span class="event-marker" aria-hidden="true">
+																{entry.marker}
+															</span>
+														))}
+													{entry.href ? (
+														<a class="event-link" href={entry.href}>
+															{entry.text}
+														</a>
+													) : (
+														entry.text
+													)}
+												</span>
+											</li>
+										);
+									}
+
+									const overview =
+										yearOverviews[group.year] ??
+										group.entries.map((e) => e.text).join(" ");
+									return (
+										<li class="year-group">
+											<details>
+												<summary>
+													<span class="year">
+														<time datetime={group.year}>{group.year}</time>
+													</span>
+													<span class="event overview">
+														{overview}
+														<span class="chevron" aria-hidden="true" />
+													</span>
+												</summary>
+												<ol>
+													{group.entries.map((entry) => {
+														const datetime = timelineDateTime(entry.date);
+														/* Year-only rows under the same year header
+														   repeat the parent label — show an em dash. */
+														const label =
+															entry.date === group.year
+																? "—"
+																: formatTimelineDate(entry.date);
+														return (
+															<li id={entry.id}>
+																<span class="year">
+																	{datetime ? (
+																		<time datetime={datetime}>{label}</time>
+																	) : (
+																		label
+																	)}
+																</span>
+																<span class="event">
+																	{entry.marker &&
+																		(isSvgMarker(entry.marker) ? (
+																			<span
+																				class="event-marker event-marker--icon"
+																				aria-hidden="true"
+																				set:html={entry.marker}
+																			/>
+																		) : (
+																			<span
+																				class="event-marker"
+																				aria-hidden="true"
+																			>
+																				{entry.marker}
+																			</span>
+																		))}
+																	{entry.href ? (
+																		<a class="event-link" href={entry.href}>
+																			{entry.text}
+																		</a>
+																	) : (
+																		entry.text
+																	)}
+																</span>
+															</li>
+														);
+													})}
+												</ol>
+											</details>
+										</li>
+									);
+								})}
+							</ol>
+						</details>
+					))
+				}
+			</section>
+		</main>
+		<SiteBanner />
+	</body>
+</html>
+
+<style is:global>
 	header {
 		margin-bottom: 3rem;
 	}
 
-	.portrait {
+	.portrait-frame {
 		display: block;
+		position: relative;
 		width: 140px;
 		height: 140px;
 		border-radius: 50%;
-		object-fit: cover;
+		clip-path: circle(50%);
 		margin: 0 0 1.25rem;
+		overflow: hidden;
+		isolation: isolate;
+	}
+
+	/* Holographic sheen: a diagonal streak that sweeps down once per
+	   hover. No cursor tracking, no glow. */
+	.portrait-frame::before {
+		content: "";
+		position: absolute;
+		inset: -60% 0;
+		z-index: 1;
+		pointer-events: none;
+		opacity: 0;
+		background: linear-gradient(
+			115deg,
+			transparent 38%,
+			color-mix(in srgb, #fff 36%, transparent) 48%,
+			color-mix(in srgb, var(--accent) 26%, transparent) 54%,
+			transparent 64%
+		);
+		mix-blend-mode: soft-light;
+		transform: translateY(-35%);
+	}
+
+	.portrait {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		object-fit: cover;
+		/* Zoom so the yellow backdrop fills the circle and the pink wall
+		   edge (halo ring) leaves the frame */
+		transform: scale(1.38);
+		transform-origin: 50% 22%;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		.portrait-frame {
+			transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+		}
+
+		.portrait-frame:hover {
+			transform: scale(1.03);
+		}
+
+		.portrait-frame:hover::before {
+			animation: holo-sweep 700ms ease-out;
+		}
+	}
+
+	@keyframes holo-sweep {
+		0% {
+			opacity: 0;
+			transform: translateY(-35%);
+		}
+		35% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+			transform: translateY(35%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.portrait-frame {
+			transition: none;
+		}
+
+		.portrait-frame:hover {
+			transform: none;
+		}
+
+		.portrait-frame:hover::before {
+			animation: none;
+		}
 	}
 
 	h1 {
-		font-size: 1.75rem;
-		font-weight: 600;
+		font-size: 2.4rem;
+		font-weight: 700;
 		letter-spacing: -0.02em;
 		margin: 0 0 0.75rem;
 	}
 
 	.bio {
-		margin: 0 0 1.5rem;
+		margin: 0 0 0.4rem;
 		color: var(--muted);
 	}
 
-	.social {
+	.bio:last-of-type {
+		margin-bottom: 1.5rem;
+	}
+
+	#work,
+	#inspiration,
+	#timeline,
+	#contact {
+		scroll-margin-top: 1.25rem;
+	}
+
+	.notes {
+		margin: 0 0 3rem;
+	}
+
+	.notes ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.notes li {
+		padding: 0 0 1.25rem;
+	}
+
+	.notes li:last-child {
+		padding-bottom: 0;
+	}
+
+	.notes li > a {
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	.notes-meta {
+		margin: 0.3rem 0 0.4rem;
+		font-size: 0.875rem;
+		font-family: var(--font-mono);
+		color: var(--muted);
+	}
+
+	.notes-draft {
+		margin-left: 0.5rem;
+		border: 1px solid var(--border);
+		padding: 0.05rem 0.35rem;
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+
+	.notes-desc {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+
+	nav#contact {
 		display: flex;
 		flex-wrap: wrap;
+		align-items: center;
 		gap: 1rem;
 	}
 
-	.timeline ol {
+	.contact-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	.contact-prefix {
+		color: var(--muted);
+	}
+
+	/* Prefix sheen: a diagonal highlight sweeps across the text once per
+	   hover, echoing the portrait holo. Gradient is clipped to the glyphs. */
+	@media (hover: hover) and (pointer: fine) {
+		.contact-item:hover .contact-prefix {
+			background: linear-gradient(
+				115deg,
+				var(--muted) 40%,
+				color-mix(in srgb, #fff 45%, var(--muted)) 47%,
+				color-mix(in srgb, var(--accent) 65%, var(--muted)) 53%,
+				var(--muted) 60%
+			);
+			background-size: 300% 100%;
+			background-position: 100% 0;
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			animation: prefix-sheen 700ms ease-out;
+		}
+	}
+
+	@keyframes prefix-sheen {
+		0% {
+			background-position: 0% 0;
+		}
+		100% {
+			background-position: 100% 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.contact-item:hover .contact-prefix {
+			background: none;
+			color: var(--muted);
+			animation: none;
+		}
+	}
+
+	/* The whole row is the anchor; only the label looks like a link. */
+	nav#contact a {
+		color: inherit;
+		text-decoration: none;
+		border-radius: 0.2rem;
+	}
+
+	nav#contact a:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	.contact-link__label {
+		color: var(--accent);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+		transition: color 150ms ease;
+	}
+
+	.contact-link--primary {
+		padding: 0.35rem 0.85rem;
+		background: transparent;
+		color: var(--fg);
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		gap: 0.45rem;
+		transition:
+			color 150ms ease,
+			border-color 150ms ease,
+			background 150ms ease;
+	}
+
+	.contact-link--primary .nav-icon {
+		color: var(--muted);
+	}
+
+	.contact-link--primary .contact-link__label {
+		color: var(--fg);
+		text-decoration: none;
+		font-weight: 500;
+	}
+
+	.contact-link--primary:hover,
+	.contact-link--primary:focus-visible {
+		border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+	}
+
+	/* Same accent icon + label as LinkedIn / Telegram rows */
+	.contact-link--primary:hover .nav-icon,
+	.contact-link--primary:focus-visible .nav-icon {
+		color: var(--accent);
+	}
+
+	.contact-link--primary:hover .contact-link__label,
+	.contact-link--primary:focus-visible .contact-link__label {
+		color: var(--accent);
+	}
+
+	.contact-item:not(.contact-link--primary) .contact-link__label {
+		color: var(--muted);
+		text-decoration: underline;
+	}
+
+	.contact-item:not(.contact-link--primary):hover .contact-link__label,
+	.contact-item:not(.contact-link--primary):focus-visible .contact-link__label {
+		color: var(--accent);
+	}
+
+	.nav-icon {
+		display: inline-flex;
+		width: 1.1em;
+		height: 1.1em;
+		flex-shrink: 0;
+		color: var(--muted);
+		transition: color 150ms ease;
+	}
+
+	.contact-item:hover .nav-icon,
+	.contact-item:focus-visible .nav-icon {
+		color: var(--accent);
+	}
+
+	.nav-icon svg {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	.timeline {
+		margin-top: 0.5rem;
+	}
+
+	.timeline-era {
+		margin: 0 0 1.25rem;
+	}
+
+	.timeline-era:last-child {
+		margin-bottom: 0;
+	}
+
+	.timeline-era__summary {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		cursor: pointer;
+		list-style: none;
+		margin: 0 0 0.85rem;
+		padding: 0.15rem 0;
+		border-radius: 0.2rem;
+	}
+
+	.timeline-era__summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.timeline-era__summary:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	.timeline-era__title {
+		font-family: var(--font-mono);
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--fg);
+	}
+
+	.timeline-era__summary:hover .timeline-era__title,
+	.timeline-era__summary:focus-visible .timeline-era__title {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	.timeline-era[open] > .timeline-era__summary .timeline-era__title {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	.timeline-era > .timeline-era__summary .chevron {
+		flex-shrink: 0;
+		width: 0.45em;
+		height: 0.45em;
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		transform: rotate(45deg);
+		transform-origin: center;
+		transition:
+			transform 150ms ease,
+			color 150ms ease,
+			opacity 150ms ease;
+		opacity: 0.7;
+		color: var(--muted);
+	}
+
+	.timeline-era[open] > .timeline-era__summary .chevron {
+		transform: rotate(225deg);
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+		opacity: 1;
+	}
+
+	.timeline-era > ol {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		border-left: 1px solid var(--border);
 	}
 
-	.timeline li {
+	.timeline-era > ol > li {
 		display: grid;
 		grid-template-columns: 5.5rem 1fr;
 		gap: 1rem;
@@ -153,11 +752,11 @@ const timeline = [
 		position: relative;
 	}
 
-	.timeline li:last-child {
+	.timeline-era > ol > li:last-child {
 		padding-bottom: 0;
 	}
 
-	.timeline li::before {
+	.timeline-era > ol > li::before {
 		content: "";
 		position: absolute;
 		left: -3.5px;
@@ -165,10 +764,136 @@ const timeline = [
 		width: 6px;
 		height: 6px;
 		border-radius: 50%;
-		background: var(--muted);
+		background: var(--accent);
+	}
+
+	.timeline .year-group {
+		display: block;
+		padding-bottom: 1.25rem;
+	}
+
+	.timeline .year-group:last-child {
+		padding-bottom: 0;
+	}
+
+	.timeline .year-group::before {
+		top: 0.55em;
+	}
+
+	.timeline .year-group > details {
+		margin: 0;
+	}
+
+	.timeline .year-group > details > summary {
+		display: grid;
+		grid-template-columns: 5.5rem 1fr;
+		gap: 1rem;
+		cursor: pointer;
+		list-style: none;
+		border-radius: 0.2rem;
+	}
+
+	.timeline .year-group > details > summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.timeline .year-group > details > summary:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	.timeline summary .overview {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5rem;
+		transition: color 150ms ease;
+	}
+
+	/* Closed year-groups: quieter overview so expandability reads clearly */
+	.timeline .year-group > details:not([open]) > summary .overview {
+		color: var(--muted);
+	}
+
+	.timeline .year-group > details:not([open]) > summary .chevron {
+		opacity: 0.9;
+		color: var(--muted);
+	}
+
+	.timeline .year-group > details > summary:hover .overview,
+	.timeline .year-group > details > summary:focus-visible .overview {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	.timeline .year-group > details > summary:hover .year,
+	.timeline .year-group > details > summary:focus-visible .year {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	/* Open: accent the year + chevron only; overview stays body text */
+	.timeline .year-group > details[open] > summary .year {
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+	}
+
+	.timeline .year-group > details[open] > summary .overview {
+		color: var(--fg);
+	}
+
+	.timeline .year-group .chevron {
+		flex-shrink: 0;
+		width: 0.45em;
+		height: 0.45em;
+		margin-top: 0.45em;
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		transform: rotate(45deg);
+		transform-origin: center;
+		transition:
+			transform 150ms ease,
+			color 150ms ease,
+			opacity 150ms ease;
+		opacity: 0.7;
+	}
+
+	.timeline .year-group > details[open] > summary .chevron {
+		transform: rotate(225deg);
+		margin-top: 0.55em;
+		color: color-mix(in srgb, var(--accent) 55%, var(--fg));
+		opacity: 1;
+	}
+
+	.timeline .year-group > details > ol {
+		list-style: none;
+		margin: 0.75rem 0 0 -1.25rem;
+		padding: 0;
+	}
+
+	.timeline .year-group > details > ol > li {
+		display: grid;
+		grid-template-columns: 5.5rem 1fr;
+		gap: 1rem;
+		padding: 0 0 1rem 1.25rem;
+		position: relative;
+	}
+
+	.timeline .year-group > details > ol > li:last-child {
+		padding-bottom: 0;
+	}
+
+	.timeline .year-group > details > ol > li::before {
+		content: "";
+		position: absolute;
+		left: -3.5px;
+		top: 0.55em;
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+		background: transparent;
+		border: 1.5px solid var(--accent);
+		box-sizing: border-box;
 	}
 
 	.year {
+		font-family: var(--font-mono);
 		font-variant-numeric: tabular-nums;
 		font-size: 0.875rem;
 		color: var(--muted);
@@ -180,8 +905,56 @@ const timeline = [
 		line-height: 1.5;
 	}
 
+	.event-marker {
+		margin-right: 0.35em;
+	}
+
+	.event-marker--icon {
+		display: inline-flex;
+		width: 1em;
+		height: 1em;
+		vertical-align: -0.125em;
+		color: var(--muted);
+	}
+
+	.event-marker--icon svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	.event-link {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+		text-decoration-color: color-mix(in srgb, var(--muted) 55%, transparent);
+		transition: color 150ms ease, text-decoration-color 150ms ease;
+	}
+
+	.event-link:hover,
+	.event-link:focus-visible {
+		color: var(--accent);
+		text-decoration-color: var(--accent);
+	}
+
+	.event-link:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.timeline .chevron {
+			transition: none;
+		}
+
+		.timeline summary .overview {
+			transition: none;
+		}
+	}
+
 	@media (max-width: 480px) {
-		.timeline li {
+		.timeline-era > ol > li,
+		.timeline .year-group > details > summary,
+		.timeline .year-group > details > ol > li {
 			grid-template-columns: 1fr;
 			gap: 0.25rem;
 		}

@@ -19,7 +19,7 @@ This repo is **public**. Treat every commit, PR, and file as visible to the worl
 
 1. Assume the change will be public.
 2. Prefer placeholders (`hello@example.com`, `YOUR_TOKEN`) over real secrets.
-3. If a secret is needed at build/deploy time, use GitHub Actions secrets / env vars — never hardcode.
+3. If a secret is needed at build/deploy time, use Cloudflare Workers Builds or Cursor environment secrets — never hardcode. Never add a GitHub Actions deploy workflow.
 4. Do not commit `.env*`, key files, or credential dumps even “temporarily”.
 5. If a secret may already be in git history, stop and warn the user — rotating the secret is required; deleting the file alone is not enough.
 
