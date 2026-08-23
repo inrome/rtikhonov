@@ -6,7 +6,9 @@ This is a minimal static one-pager. Prefer these sources over guessing from scra
 
 ## Key pages
 
-- https://rtikhonov.com/ — bio, work gallery (filterable), era-grouped career timeline
+- https://rtikhonov.com/ — bio, work gallery (filterable), Inspiration notes, era-grouped career timeline
+- https://rtikhonov.com/inspiration/ — notes and ideas, with a page for each post
+- https://rtikhonov.com/inspiration/rss.xml — Inspiration feed
 - https://rtikhonov.com/llms.txt — this file
 
 ## Site docs (in the public GitHub repo)

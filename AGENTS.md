@@ -35,7 +35,7 @@ The schema is in `rtikhonov.com/src/content.config.ts`, and shared queries are i
 `getCollection()` directly, so drafts and sorting stay consistent everywhere.
 
 Public display is gated by `INSPIRATION_ENABLED` in `rtikhonov.com/src/consts.ts`
-(currently `false`). Set it to `true` and redeploy to show the section.
+(currently `true`). Set it to `false` and redeploy to hide the section.
 
 See [docs/content.md](docs/content.md) for frontmatter fields and the steps to add a post.
 

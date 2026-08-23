@@ -7,7 +7,7 @@ Minimal personal one-pager.
 1. **Site nav** — Home and Inspiration when `INSPIRATION_ENABLED` is on; hidden when the flag is off
 2. **Header** — portrait, name, short two-line bio, outlined 15-minute call CTA, and quieter LinkedIn / Telegram handles (Tabler icons; contact targets decoded by JS)
 3. **Work** — horizontal scroll gallery with filter chips (All / Product / Research / Teaching), backed by a content collection
-4. **Inspiration** — notes and ideas (off by default). Toggle `INSPIRATION_ENABLED` in `src/consts.ts`. When on: the homepage lists posts; `/inspiration/` is the full index; each note has its own page; RSS lives at `/inspiration/rss.xml`. When off: no nav, no homepage block, and the routes redirect or 404.
+4. **Inspiration** — notes and ideas (on). Toggle `INSPIRATION_ENABLED` in `src/consts.ts`. When on: the homepage lists posts; `/inspiration/` is the full index; each note has its own page; RSS lives at `/inspiration/rss.xml`. When off: no nav, no homepage block, and the routes redirect or 404.
 5. **Timeline** — career history stored in `src/data/timeline.ts`, grouped into eras (Product, Academia, Undergrad, Earlier). Product starts open; the others start closed. Years with two or more entries still collapse into a short overview inside an era. Entries can carry an optional marker (emoji or icon) and a link to a related post.
 6. **Site banner** — a fixed bar at the bottom for short notices. The current notice says the site is a work in progress until 7 September and shows a live countdown. Visitors can close it. Edit `src/lib/announcements.ts` to change the text.
 

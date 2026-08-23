@@ -2,6 +2,11 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Now You See Me
+
+- Inspiration is public again. The nav, homepage list, `/inspiration/`, and the RSS feed all show the notes.
+- A new note looks at Tim Urban’s life-in-weeks chart and counts the days, weeks, and months still left.
+
 ## 2026-08-23 — Off The Air
 
 - GitHub no longer ships the site. There is no GitHub Pages deploy. Cloudflare Workers is the only host.

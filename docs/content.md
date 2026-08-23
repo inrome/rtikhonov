@@ -92,8 +92,8 @@ When a timeline row has a related Inspiration post, set `href` to that post path
 
 Feature flag: `INSPIRATION_ENABLED` in `rtikhonov.com/src/consts.ts`.
 
-- `false` (current) — nav, homepage list, `/inspiration/` routes, and RSS stay off. Post Markdown can still live in the repo.
-- `true` — set the flag, then redeploy to show the section.
+- `true` (current) — nav, homepage list, `/inspiration/` routes, and RSS are public.
+- `false` — set the flag, then redeploy to hide the section. Post Markdown can still live in the repo.
 
 Content collection: `rtikhonov.com/src/content/inspiration/*.md`  
 Schema: `rtikhonov.com/src/content.config.ts`  
