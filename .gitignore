@@ -32,3 +32,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Local agent skill installs (use `npx skills add cloudflare/skills`)
+.agents/

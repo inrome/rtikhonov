@@ -2,6 +2,17 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Hide And Seek
+
+- Inspiration ships in the codebase but stays off. Flip `INSPIRATION_ENABLED` in `src/consts.ts` and redeploy when you want it public.
+- With the flag off, the one-pager has no Inspiration nav, homepage list, or public feed.
+
+## 2026-08-23 — Arrival
+
+- Inspiration notes are on the live site. Home, `/inspiration/`, and the RSS feed at `/inspiration/rss.xml` share the same posts.
+- The first note is from Yuval Noah Harari’s talk on language, AI, and power, with a privacy-friendly YouTube embed.
+- Draft posts stay on the local preview. Production and the feed only show published notes.
+
 ## 2026-07-21 — Separate Tables
 
 - Timeline events live in one typed data file instead of the homepage. You add a life event by appending an object with a stable id, date, and short line.

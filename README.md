@@ -2,13 +2,13 @@
 
 Personal site built with [Astro](https://astro.build), hosted on [Cloudflare Workers](https://developers.cloudflare.com/workers/).
 
-The site lives in `rtikhonov.com/`. Minimal personal one-pager.
+The site lives in `rtikhonov.com/`. Personal one-pager plus Inspiration notes.
 
 ## Documentation
 
 - [Features](docs/features.md) — page structure and feature summary
 - [Design principles](docs/design-principles.md) — feel, restraint, and decision rules
-- [Content](docs/content.md) — projects collection and timeline data
+- [Content](docs/content.md) — projects, inspiration posts, and timeline data
 - [Visual system](docs/visual-system.md) — tokens, layout, typography, cards, images, icons
 - [Interactions](docs/interactions.md) — card hover lift and portrait holographic sheen
 - [SEO / social](docs/seo-social.md) — titles, meta, Open Graph, favicons, sharing rules
