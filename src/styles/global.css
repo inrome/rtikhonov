@@ -12,6 +12,10 @@
 	--border: #ddd;
 	--link: #111;
 	--link-hover: #555;
+	--accent: #f97316;
+	--week-past: #111;
+	--week-present: var(--accent);
+	--week-future: #d4d4d4;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,6 +26,8 @@
 		--border: #333;
 		--link: #f5f5f5;
 		--link-hover: #aaa;
+		--week-past: #f5f5f5;
+		--week-future: #3a3a3a;
 	}
 }
 
@@ -52,6 +58,10 @@ body {
 main {
 	max-width: 38rem;
 	width: 100%;
+}
+
+main.wide {
+	max-width: 50rem;
 }
 
 a {

@@ -88,3 +88,23 @@ Notes on the fields:
 - `npm run check` validates the frontmatter against the schema in `src/content.config.ts`.
 
 The list page lives at `/inspiration/`, and the feed at `/inspiration/rss.xml`.
+
+## Add a week on /weeks
+
+The life calendar is `/weeks/`. Each square is one week from 16 May 1992. Colors
+update in the browser: past, this week (orange), and future.
+
+To mark a week, add an object to `WEEK_ANNOTATIONS` in `src/lib/weeks.ts`:
+
+```ts
+{
+  date: "1992-05-16",
+  emoji: "🇺🇦",
+  title: "The week I was born",
+  location: "Kryvyi Rih, Ukraine",
+}
+```
+
+`date` is any day in that week (`YYYY-MM-DD`). The page derives the week number
+and the date range. Use one color emoji. `location` is optional. Keep the title
+and location factual.

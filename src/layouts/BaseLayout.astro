@@ -6,9 +6,10 @@ import { NAV_ITEMS } from "../consts";
 interface Props {
 	title: string;
 	description?: string;
+	wide?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, wide = false } = Astro.props;
 
 const path = Astro.url.pathname;
 const isCurrent = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
@@ -20,7 +21,7 @@ const isCurrent = (href: string) => (href === "/" ? path === "/" : path.startsWi
 		<BaseHead title={title} description={description} />
 	</head>
 	<body>
-		<main>
+		<main class:list={{ wide }}>
 			<nav class="site-nav" aria-label="Site">
 				{
 					NAV_ITEMS.map((item) => (
