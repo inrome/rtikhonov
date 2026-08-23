@@ -2,6 +2,12 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Look Before You Leap
+
+- Deploy chats now lead with one path: Cloudflare Workers Builds. A second GitHub pipeline is a bad bet — extra secrets and two places that can fail.
+- Large changes look on the local preview first. Small posts and tiny copy skip that and merge.
+- The same-day **Do It Right** note is old. Merge to `main` publishes. There is no nested `rtikhonov.com/` folder.
+
 ## 2026-08-23 — Hello, Goodbye
 
 - Workers Builds settings now match the live dashboard: `npm run build`, then `npx wrangler deploy`, with preview versions on other branches.
@@ -19,7 +25,7 @@ Notable updates to rtikhonov.com. Newest entries come first.
 
 ## 2026-08-23 — Do It Right
 
-- Agent deploy rules now say: use the `rtikhonov.com/` Worker tree, check Wrangler login first, run `npm run deploy`, then curl the live site. A merge to `main` is not a publish.
+- Superseded the same day. This note taught a nested `rtikhonov.com/` tree and said a merge to `main` is not a publish. That is old. Merge to `main` now publishes through Workers Builds.
 
 ## 2026-08-23 — Off The Air
 
