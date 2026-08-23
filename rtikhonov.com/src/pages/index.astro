@@ -4,6 +4,7 @@ import videoIcon from "@tabler/icons/outline/video.svg?raw";
 import linkedinIcon from "@tabler/icons/outline/brand-linkedin.svg?raw";
 import telegramIcon from "@tabler/icons/outline/brand-telegram.svg?raw";
 import ProjectsGallery from "../components/ProjectsGallery.astro";
+import SiteBanner from "../components/SiteBanner.astro";
 import {
 	formatTimelineDate,
 	timelineDateTime,
@@ -357,6 +358,7 @@ for (const group of timelineByYear) {
 				}
 			</section>
 		</main>
+		<SiteBanner />
 	</body>
 </html>
 
@@ -422,6 +424,7 @@ for (const group of timelineByYear) {
 		display: flex;
 		justify-content: center;
 		padding: 3rem 1.5rem;
+		padding-bottom: calc(3rem + var(--banner-offset, 0px));
 		overflow-x: clip;
 	}
 

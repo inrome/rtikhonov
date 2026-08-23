@@ -7,6 +7,7 @@ Minimal personal one-pager.
 1. **Header** — portrait, name, short two-line bio, outlined 15-minute call CTA, and quieter LinkedIn / Telegram handles (Tabler icons; contact targets decoded by JS)
 2. **Work** — horizontal scroll gallery with filter chips (All / Product / Research / Teaching), backed by a content collection
 3. **Timeline** — career history stored in `src/data/timeline.ts`, grouped into eras (Product, Academia, Undergrad, Earlier). Product starts open; the others start closed. Years with two or more entries still collapse into a short overview inside an era. Entries can carry an optional marker (emoji or icon) and a link to a future post.
+4. **Site banner** — a fixed bar at the bottom for short notices. The current notice says the site is a work in progress until 7 September and shows a live countdown. Visitors can close it. Edit `src/lib/announcements.ts` to change the text.
 
 ## Feature summary
 
@@ -21,3 +22,4 @@ Minimal personal one-pager.
 - **Video call** — Opens a relaxed 15-minute video call from an outlined “15 min call” pill (same style as Work chips).
 - **Link previews** — Gives shared pages a clear title, description, portrait, theme color, and proper icons.
 - **Era timeline** — Product / Academia / Undergrad / Earlier eras open and close with native `<details>`. Busy years inside an era still fold the same way.
+- **Bottom banner** — Pins a work-in-progress notice above the page, with a countdown to 7 September and a close button.

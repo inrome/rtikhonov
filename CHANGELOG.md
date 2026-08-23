@@ -2,6 +2,10 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Under Construction
+
+- A bottom banner now says the site is a work in progress until 7 September and counts down the days left. You can close it.
+
 ## 2026-07-21 — Separate Tables
 
 - Timeline events live in one typed data file instead of the homepage. You add a life event by appending an object with a stable id, date, and short line.
