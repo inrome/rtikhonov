@@ -1,33 +1,23 @@
 ---
 name: preview-site
 description: >-
-  Starts or reuses the Astro local preview, picks the correct port, and verifies
-  UI changes with a short path. Use when editing rtikhonov.com UI, checking
-  gallery/card/hover behavior, when HMR looks stale after .astro style edits,
-  or as the look-before-you-ship step for a large change (new page or new UI).
-  Skip for a typo, blog / inspiration note, or tiny copy change.
+  Starts or reuses the Astro local preview on the right port and verifies UI
+  changes with the shortest check that proves the edit. Use when editing
+  rtikhonov.com UI, checking gallery, card, or hover behavior, when HMR looks
+  stale after .astro style edits, or to look at a large change (new page or
+  new UI) before shipping. Skip for a typo, blog note, or tiny copy change.
 ---
 
 # Preview site (fast path)
 
-This is the optional CI look-step. Default for a **large** change (new
-page, new UI, hover/click, layout that can break the homepage). Skip for
-a **small** change (typo, inspiration / blog note, tiny copy). After the
-local look, a branch preview URL from Workers Builds is optional if
-Roman wants to open it on the web. Do not add `test.rtikhonov.com`
-unless he asks.
+This is the look-before-you-ship step. Default for a **large** change
+(new page, new UI, hover or click behavior, layout that can break the
+homepage). Skip it for a **small** change (typo, inspiration or blog
+note, tiny copy).
 
-The site is the repository root (`wrangler.jsonc` here).
-
-## Every shell command
-
-On the owner laptop, export nvm Node if needed. Do not trust a previous turn’s cwd.
-
-```bash
-export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-```
-
-On Cursor Cloud, skip the nvm line if `node` is already >= 22.12.
+The site is the repository root (`wrangler.jsonc` here). Do not trust a
+previous turn's cwd. On the owner laptop only, export nvm Node first:
+`export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"`.
 
 ## Server lifecycle (one server only)
 
@@ -62,11 +52,10 @@ Skip browser automation when the edit is a few lines of CSS and the file content
 
 ## Optional web preview
 
-If Roman wants a link he can open on the web (not only on this machine),
-push the branch. Cloudflare Workers Builds runs
-`npx wrangler versions upload` on non-`main` branches. Use that
-`*.workers.dev` URL. Then merge to `main` only after he says it looks
-good.
+For a link the owner can open himself, push the branch. Workers Builds
+runs `npx wrangler versions upload` on non-`main` branches and returns a
+`*.workers.dev` URL. Merge only after he says it looks good. Do not add
+a custom test domain unless he asks for it as its own task.
 
 ## Don’t
 

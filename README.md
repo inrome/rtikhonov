@@ -16,6 +16,7 @@ Workers Builds is connected.
 - [SEO / social](docs/seo-social.md) — titles, meta, Open Graph, favicons, sharing rules
 - [Crawling / AI](docs/crawling-ai.md) — robots, portrait opt-out, contact obfuscation
 - [Deploy](docs/deploy.md) — Workers Builds (the only CI/CD), preview vs ship, emergency Wrangler
+- [Agent context](docs/agent-context.md) — how rules and skills are written and kept cheap
 - [Changelog](CHANGELOG.md) — notable site and documentation changes
 
 Also see [AGENTS.md](AGENTS.md) and [.cursor/rules/](.cursor/rules/).
@@ -25,7 +26,7 @@ Also see [AGENTS.md](AGENTS.md) and [.cursor/rules/](.cursor/rules/).
 ```sh
 npm install
 npm run dev
-npm run check
+npm run check        # docs + agent context + astro check
 npm run build
 npm run preview
 npm run deploy
@@ -45,7 +46,7 @@ add GitHub Pages or GitHub Actions.
    `npx wrangler deploy`.
 3. Open [rtikhonov.com](https://rtikhonov.com) (or `curl` it) and confirm.
 
-Exact dashboard settings: [docs/deploy.md](docs/deploy.md). Cursor:
-`.cursor/rules/deploy.mdc`, `.cursor/skills/deploy-site/`, and
-`.cursor/skills/workers-builds-ci/`. Preview:
-`.cursor/skills/preview-site/`.
+Exact dashboard settings: [docs/deploy.md](docs/deploy.md). Cursor rules
+live in [.cursor/rules/](.cursor/rules/) and skills in
+[.cursor/skills/](.cursor/skills/) — `deploy-site` to ship,
+`workers-builds-ci` for pipeline questions, `preview-site` to look first.
