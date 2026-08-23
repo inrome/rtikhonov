@@ -137,12 +137,15 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 
 		const placePopover = (cell: HTMLElement) => {
 			const week = Number(cell.getAttribute("data-week"));
-			if (!Number.isFinite(week)) return;
+			if (!Number.isFinite(week) || week < 1) {
+				popover.hidden = true;
+				return;
+			}
 
 			const note = annotations.get(week);
+			metaEl.textContent = formatWeekMeta(week);
 			titleEl.textContent = note?.title ?? "";
 			locationEl.textContent = note?.location ? `Location: ${note.location}` : "";
-			metaEl.textContent = formatWeekMeta(week);
 
 			popover.hidden = false;
 
@@ -215,9 +218,7 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 		document.addEventListener("keydown", (event) => {
 			if (event.key !== "Escape") return;
 			setPinned(null);
-			hovered = null;
-			const focused = document.activeElement;
-			if (focused instanceof HTMLElement && board.contains(focused)) focused.blur();
+			hovered = cellUnderPointer();
 			updatePopover();
 		});
 
@@ -237,7 +238,7 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 	.weeks-scroll {
 		--week-size: 0.875rem;
 		--week-gap: 0.16rem;
-		overflow-x: auto;
+		overflow: visible;
 		padding: 1.35rem 0.4rem 2rem;
 		margin-inline: -0.4rem;
 	}
