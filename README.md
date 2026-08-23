@@ -38,12 +38,14 @@ can close it. The browser remembers that choice until you change the `id`.
 
 ```ts
 {
-  id: "2026-08-inspiration-harari",
-  message: "New notes: Yuval Noah Harari on language, AI, and power.",
-  href: "/inspiration/language-ai-and-power/",
-  linkLabel: "Read",
+  id: "2026-wip-until-sept-7",
+  message: "This site is a work in progress. It is under development until 7 September.",
+  until: "2026-09-07",
 }
 ```
+
+`until` is a local calendar day (`YYYY-MM-DD`). The banner adds a live
+countdown and hides after that day ends.
 
 To post a new announcement, add it at the top of the list with a new `id`. To
 hide the banner, set `enabled: false` or clear the list. Set `dismissible: false`

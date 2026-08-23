@@ -10,12 +10,19 @@ const dismissible = announcement?.dismissible !== false;
 		<aside
 			class="site-banner"
 			data-banner-id={announcement.id}
+			data-until={announcement.until}
 			role="region"
 			aria-label="Site announcement"
 		>
 			<div class="site-banner__inner">
 				<p class="site-banner__message">
 					{announcement.message}
+					{announcement.until && (
+						<>
+							{" "}
+							<span class="site-banner__countdown" aria-live="polite"></span>
+						</>
+					)}
 					{announcement.href && (
 						<>
 							{" "}
@@ -50,16 +57,34 @@ const dismissible = announcement?.dismissible !== false;
 	(() => {
 		const banner = document.querySelector(".site-banner");
 		if (!(banner instanceof HTMLElement)) return;
+		const id = banner.dataset.bannerId;
+		if (!id) return;
+		try {
+			if (localStorage.getItem(`site-banner:${id}`) === "dismissed") {
+				banner.hidden = true;
+			}
+		} catch {
+			// Keep the banner visible if storage is blocked.
+		}
+	})();
+</script>
 
+<script>
+	import { formatRemaining, parseUntilDate } from "../lib/announcements";
+
+	const banner = document.querySelector(".site-banner");
+	if (banner instanceof HTMLElement && !banner.hidden) {
 		const storageKey = `site-banner:${banner.dataset.bannerId ?? ""}`;
 		const closeButton = banner.querySelector(".site-banner__close");
+		const countdown = banner.querySelector(".site-banner__countdown");
+		const untilValue = banner.dataset.until;
 
 		const setOffset = () => {
 			const offset = banner.hidden ? "0px" : `${banner.offsetHeight}px`;
 			document.documentElement.style.setProperty("--banner-offset", offset);
 		};
 
-		const hide = (persist) => {
+		const hide = (persist: boolean) => {
 			banner.hidden = true;
 			setOffset();
 			if (!persist) return;
@@ -70,19 +95,28 @@ const dismissible = announcement?.dismissible !== false;
 			}
 		};
 
-		try {
-			if (storageKey !== "site-banner:" && localStorage.getItem(storageKey) === "dismissed") {
+		const updateCountdown = () => {
+			if (!(countdown instanceof HTMLElement) || !untilValue) {
+				setOffset();
+				return;
+			}
+
+			const remaining = parseUntilDate(untilValue).getTime() - Date.now();
+			if (remaining <= 0) {
 				hide(false);
 				return;
 			}
-		} catch {
-			// Keep the banner visible if storage is blocked.
-		}
 
-		setOffset();
+			countdown.textContent = formatRemaining(remaining);
+			setOffset();
+		};
+
+		updateCountdown();
+		const intervalMs = untilValue && parseUntilDate(untilValue).getTime() - Date.now() < 86400000 ? 1000 : 30000;
+		window.setInterval(updateCountdown, intervalMs);
 		window.addEventListener("resize", setOffset);
 		closeButton?.addEventListener("click", () => hide(true));
-	})();
+	}
 </script>
 
 <style>
@@ -113,6 +147,11 @@ const dismissible = announcement?.dismissible !== false;
 		font-size: 0.95rem;
 		line-height: 1.45;
 		color: var(--fg);
+	}
+
+	.site-banner__countdown {
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
 	}
 
 	.site-banner__close {
