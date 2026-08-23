@@ -22,25 +22,29 @@ See the README for the post frontmatter fields and the steps to add a post.
 
 ## What "published" means
 
-**Published** means a visitor can open it on the live site: https://rtikhonov.com
+**Published** means a visitor can open the change on https://rtikhonov.com
 
-Do **not** treat these as published:
+These are **not** published: a merge to `main`, a green GitHub check, or
+`draft: false` on a post.
 
-- Code on `main`, a clean working tree, or a pushed commit
-- A green GitHub check
-- A post without `draft: true` (`draft` only controls this repo's production *build*)
+This `main` tree (root `package.json`, no `wrangler.jsonc`) is **not** the live
+site. Live code is `rtikhonov.com/` on `cursor/cloudflare-workers-hosting`.
 
-Never deploy with GitHub Pages or GitHub Actions. Ship only with Cloudflare
-Workers (`wrangler` / Workers Builds). GitHub is version control only.
+## Deploy
 
-The public domain is Cloudflare. Inspiration is **not** live:
-`https://rtikhonov.com/inspiration/` is 404 even though the section exists on
-`main`.
+GitHub is version control only. Never GitHub Pages or GitHub Actions deploy.
 
-When the owner asks if something is unpublished, live, or public:
+Follow `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/`:
 
-1. Check the live URL first (`https://rtikhonov.com` and the specific path).
-2. Report git status only as "in this repo", never as "published".
+1. If `rtikhonov.com/wrangler.jsonc` is missing, fetch
+   `origin/cursor/cloudflare-workers-hosting` and work on that line.
+2. `cd rtikhonov.com && npx wrangler whoami` — if it fails, ask for
+   `CLOUDFLARE_API_TOKEN` on the Cursor Cloud environment and stop.
+3. `cd rtikhonov.com && npm run deploy`
+4. `curl` https://rtikhonov.com and confirm the new copy.
+
+When asked if something is live: check the live URL first. Report git only as
+"in this repo".
 
 ## Security and privacy (public repo)
 

@@ -1,0 +1,49 @@
+---
+description: Ship rtikhonov.com on Cloudflare Workers only
+alwaysApply: true
+---
+
+# Deploy
+
+GitHub is version control only. Never GitHub Pages, `actions/deploy-pages`, or
+`withastro/action`. Never treat a merge to `main` or a green GitHub check as
+published.
+
+**Published** = a visitor can see the change at https://rtikhonov.com
+
+## Live tree (read this first)
+
+This `main` checkout is **not** production. Production is Cloudflare Worker
+`rtikhonov`. Source:
+
+- Folder: `rtikhonov.com/` (must contain `wrangler.jsonc`)
+- Git line: `origin/cursor/cloudflare-workers-hosting`
+- Command: `cd rtikhonov.com && npm run deploy`
+
+If this checkout has no `rtikhonov.com/wrangler.jsonc`:
+
+```bash
+git fetch origin cursor/cloudflare-workers-hosting
+git checkout -b cursor/<change>-433e origin/cursor/cloudflare-workers-hosting
+```
+
+Edit `rtikhonov.com/src/`. Do not implement live changes in the root `src/`
+on `main`.
+
+## Auth (before any ship)
+
+```bash
+cd rtikhonov.com && npx wrangler whoami
+```
+
+Cloud Agents need `CLOUDFLARE_API_TOKEN` in the Cursor environment secrets.
+If whoami fails: stop and ask for that token. Do not merge and say it is live.
+
+## Ship
+
+```bash
+cd rtikhonov.com && npm run deploy
+```
+
+Then curl https://rtikhonov.com (no-cache) for the new string. Report the
+Wrangler Version ID. Call it published only if the live page shows the change.

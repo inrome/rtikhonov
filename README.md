@@ -17,9 +17,13 @@ Workers. **Published** means a visitor can open that URL.
 
 ## Deploy
 
-Do not add a GitHub Pages or `actions/deploy-pages` workflow. GitHub does not
-host this site. Publish with Cloudflare Workers (`wrangler deploy` / Workers
-Builds) so visitors see [rtikhonov.com](https://rtikhonov.com).
+Do not add a GitHub Pages or `actions/deploy-pages` workflow.
+
+This `main` tree is not the live site. Production is the Cloudflare Worker in
+`rtikhonov.com/` on `cursor/cloudflare-workers-hosting`. Agents: confirm
+`wrangler.jsonc`, run `npx wrangler whoami` (need `CLOUDFLARE_API_TOKEN` in
+the Cursor environment), then `npm --prefix rtikhonov.com run deploy`, then
+`curl` [rtikhonov.com](https://rtikhonov.com). A merge here is not a publish.
 
 ## Project structure
 

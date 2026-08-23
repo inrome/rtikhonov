@@ -14,8 +14,9 @@ These are **not** published:
 - Inspiration posts without `draft: true`
 
 Never deploy with GitHub Pages or GitHub Actions. Ship only on Cloudflare
-Workers. GitHub is version control only.
+Workers from `rtikhonov.com/` on `cursor/cloudflare-workers-hosting`. Check
+`wrangler whoami` first, then `npm run deploy`, then curl the live URL.
 
-Inspiration is **not** on the live site. `https://rtikhonov.com/inspiration/` returns 404.
+This `main` root app is not production. GitHub is version control only.
 
 When asked about unpublished / live / public changes, check the live URL first. Then report git status as "in this repo" only.
