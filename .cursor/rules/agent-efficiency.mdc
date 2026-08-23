@@ -1,0 +1,76 @@
+---
+description: Cut wasted turns — playbooks from real agent chat failures
+alwaysApply: true
+---
+
+# Agent efficiency (this repo)
+
+Encode lessons from long chats so the next run does not repeat them.
+
+## First 60 seconds on “something is wrong / missing / not live”
+
+1. Curl live HTML and headers (`https://rtikhonov.com/…`) — do not open with a theory about `main` or Pages.
+2. Confirm Cloudflare Worker + `rtikhonov.com/` tree (see `production-source.mdc`).
+3. Check feature flags in `rtikhonov.com/src/consts.ts` (e.g. `INSPIRATION_ENABLED`) before claiming a deploy failed.
+4. Reply with evidence (status codes + one HTML signal), then act.
+
+Do not spend turns re-explaining Pages vs Workers after the first confirmation.
+
+## “Publish but hide” / “ship, don’t show yet”
+
+User intent is clear: land code on prod, keep UI off.
+
+1. Gate with a const flag (pattern: `INSPIRATION_ENABLED`).
+2. Wire nav, routes, RSS, and homepage blocks to the flag.
+3. Deploy once with the flag **off**.
+4. Tell the user the flip: set flag `true` + redeploy.
+
+Do not ask whether to hide after they already said hide. Do not leave the feature fully public “for review” unless they ask.
+
+## Do not build the same feature twice
+
+Before porting from `main` or another branch:
+
+1. Search `rtikhonov.com/` for the feature (collection, routes, consts).
+2. If it already exists there, only flag/deploy/fix — do not re-implement from Pages.
+
+Prefer branching from the Cloudflare hosting lineage, not Pages-only `main`.
+
+## Auth and Cloudflare tools
+
+1. `wrangler whoami` before any API-token tutorial.
+2. OAuth in the VM is enough to deploy; Cursor secret `CLOUDFLARE_API_TOKEN` is for non-interactive / fresh VMs.
+3. Prefer existing Cloudflare MCP (`workers_list`, docs search) over re-running the full agent-setup prompt when `.cursor/mcp.json` and `skills-lock.json` are already present.
+4. Installed skill copies under `.agents/` are gitignored — do not commit them; the lockfile is enough.
+
+## “Did you publish?” / “check now”
+
+Run a short parallel curl checklist, then stop:
+
+- `GET /` — expected chrome present/absent (Work, Inspiration flag).
+- New routes — 200 / redirect / 404 as designed.
+- Optional: Wrangler Version ID from the last deploy log.
+
+Do not restart architecture diagnosis unless curl contradicts the expected flag state.
+
+## Shell
+
+Every npm/astro/wrangler command:
+
+```bash
+export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
+cd rtikhonov.com
+```
+
+Assume cwd resets to the **repo** root between commands.
+
+## Docs vs action
+
+- Clean tree + “deploy” → `deploy-site` skill only (no docs archaeology).
+- User-facing code change → update focused `docs/` + CHANGELOG, then deploy if asked.
+- Keep `AGENTS.md` short; put playbooks in `.cursor/rules/` and `.cursor/skills/`.
+- Keep `CLAUDE.md` identical to `AGENTS.md`.
+
+## After a confusing multi-turn chat
+
+Update rules/skills in the same session (this file, `production-source`, `deploy`) so the next agent inherits the fix. One short CHANGELOG bullet is enough.

@@ -9,9 +9,10 @@ alwaysApply: true
 
 ## Do this first when the user says something is missing / not live
 
-1. `curl -sI` / `curl -sL` the live URL (and the homepage HTML).
+1. `curl -sI` / `curl -sL` the live URL (and the homepage HTML). Prefer the `check-live-site` skill.
 2. Confirm host: Cloudflare (`cf-ray`, `server: cloudflare`) vs GitHub Pages.
-3. Diff live HTML against `rtikhonov.com/` — not against a stale mental model of `main`.
+3. Check feature flags in `rtikhonov.com/src/consts.ts` before blaming deploy.
+4. Diff live HTML against `rtikhonov.com/` — not against a stale mental model of `main`.
 
 Pushing to GitHub does **not** publish. Prod updates only via `npm run deploy` in `rtikhonov.com/` (Wrangler).
 
@@ -22,7 +23,16 @@ Pushing to GitHub does **not** publish. Prod updates only via `npm run deploy` i
 | `rtikhonov.com/` on the Cloudflare hosting lineage | **Live site** (Work gallery, era timeline, Inspiration flag, Wrangler) |
 | Repo-root Astro on `main` / GitHub Pages | **Not** what DNS serves today — do not “fix” live bugs there |
 
-If `main` has a feature but live does not, port it onto the Cloudflare site tree and deploy. Do not spend turns polishing `main` for a Cloudflare DNS site.
+If `main` has a feature but live does not:
+
+1. Search `rtikhonov.com/` first — it may already be ported and only flagged off or not deployed.
+2. Only then port onto the Cloudflare site tree and deploy.
+
+Do not spend turns polishing Pages `main` for a Cloudflare DNS site. Do not re-implement a feature that already exists under `rtikhonov.com/`.
+
+## Ship but hide
+
+When the user wants code on prod without public UI: const flag off → deploy → document the flip. See `agent-efficiency.mdc`.
 
 ## Branching
 

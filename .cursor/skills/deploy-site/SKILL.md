@@ -31,7 +31,7 @@ cd rtikhonov.com && npm run deploy
 
 Need network access. Expect ~30–60s. Do not re-run `check:docs` or `astro build` separately — `deploy` already does both (with IPv4-first DNS for Wrangler).
 
-5. Verify with `curl` on `https://rtikhonov.com` (and new paths). Report Version ID + live URLs.
+5. Verify with the `check-live-site` skill (`curl` + flag expectations). Report Version ID + live URLs.
 
 ## Auth missing
 

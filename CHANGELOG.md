@@ -6,6 +6,7 @@ Notable updates to rtikhonov.com. Newest entries come first.
 
 - Agent docs now state the live site is Cloudflare Workers in `rtikhonov.com/`, not GitHub Pages `main`. Push does not publish.
 - Deploy rules check `wrangler whoami` first (OAuth or API token) and curl prod after ship.
+- New always-on efficiency rule and `check-live-site` skill: curl + flags first, ship-but-hide with a const flag, no double-port from Pages `main`, no token tutorials when OAuth works.
 
 ## 2026-08-23 — Hide And Seek
 

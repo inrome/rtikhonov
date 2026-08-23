@@ -28,7 +28,7 @@ cd rtikhonov.com && npm run deploy
 
 Use network permissions. Expect ~30–60s. `npm run deploy` already runs `check:docs` and the build.
 
-5. Spot-check live: `curl -sI https://rtikhonov.com/` and any new routes. Reply with live URLs and the Wrangler Version ID.
+5. Spot-check live with the `check-live-site` skill (`curl` + flag expectations). Reply with live URLs and the Wrangler Version ID.
 
 Live: `https://rtikhonov.com`, `https://www.rtikhonov.com`, `https://rtikhonov.inrome.workers.dev`.
 

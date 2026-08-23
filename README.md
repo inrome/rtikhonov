@@ -36,4 +36,4 @@ Deployment is handled by Cloudflare Wrangler, not GitHub Actions or GitHub Pages
 
 Inspiration is in the codebase but gated by `INSPIRATION_ENABLED` in `rtikhonov.com/src/consts.ts` (off until flipped and redeployed).
 
-Agent path: `.cursor/rules/production-source.mdc`, `.cursor/rules/deploy.mdc`, `.cursor/skills/deploy-site/` — curl live when something looks missing, `wrangler whoami`, then `npm run deploy`. Local UI preview: `.cursor/skills/preview-site/`.
+Agent path: `.cursor/rules/agent-efficiency.mdc`, `.cursor/rules/production-source.mdc`, `.cursor/rules/deploy.mdc`, `.cursor/skills/deploy-site/`, `.cursor/skills/check-live-site/` — curl live when something looks missing, `wrangler whoami`, then `npm run deploy`. Local UI preview: `.cursor/skills/preview-site/`.

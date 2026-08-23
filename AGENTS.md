@@ -5,6 +5,17 @@ Live site: **https://rtikhonov.com** → Cloudflare Workers → app in `rtikhono
 - `git push` does not publish. Deploy with `cd rtikhonov.com && npm run deploy`.
 - `main` / GitHub Pages is not what DNS serves. For “not live” bugs, curl prod and edit the Workers tree — see `.cursor/rules/production-source.mdc`.
 
+## Efficiency (avoid repeating this chat)
+
+Playbooks live in `.cursor/rules/agent-efficiency.mdc` (always on). Short version:
+
+1. Curl live + read flags before theorizing.
+2. “Publish but hide” → flag off, one deploy, document the flip.
+3. Search `rtikhonov.com/` before porting from `main`.
+4. `wrangler whoami` before API-token tutorials; OAuth is enough when logged in.
+5. “Check now” → `.cursor/skills/check-live-site/`, not another architecture essay.
+6. After a confusing multi-turn thread, update rules in the same session.
+
 ## Development
 
 The Astro personal site lives in `rtikhonov.com/`. Run Astro commands from that folder. When starting the dev server, use background mode:
@@ -64,6 +75,7 @@ Single static Astro app in `rtikhonov.com/` — no backend DB. `npm ci` in that 
 - `astro dev --background` is real daemon mode; check `astro dev status` before starting another.
 - Inspiration Markdown hot-reloads; `draft: true` shows in dev only.
 - Wrangler may already have OAuth in the VM; check `wrangler whoami` before asking for tokens.
+- Cloudflare MCP config: `.cursor/mcp.json`. Skill lockfile: `skills-lock.json`. Do not re-run the full Cloudflare agent-setup prompt unless MCP/skills are missing.
 
 ## Documentation
 
