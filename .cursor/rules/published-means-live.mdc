@@ -16,8 +16,9 @@ These are **not** published:
 - A green GitHub check
 - GitHub Pages (do not use it)
 
-Never deploy with GitHub Pages or GitHub Actions. Ship only on Cloudflare
-Workers. GitHub is version control only.
+Never deploy with GitHub Pages or GitHub Actions. CI/CD is Cloudflare
+Workers Builds. Ship only on Cloudflare Workers. GitHub is version
+control only.
 
 Inspiration stays gated by `INSPIRATION_ENABLED`. Check the live URL; do not
 assume `/inspiration/` is public.

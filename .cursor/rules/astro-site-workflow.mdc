@@ -47,4 +47,5 @@ Prefer Astro content collections over inline arrays for growing lists (projects,
 
 When the user asks to deploy, follow `.cursor/rules/deploy.mdc` / the
 `deploy-site` skill. Everyday: merge to `main`, then curl the live URL.
-`npm run deploy` is emergency only.
+`npm run deploy` is emergency only. Large UI work looks with
+`preview-site` first. Pipeline questions use `workers-builds-ci`.

@@ -5,18 +5,32 @@ alwaysApply: true
 
 # Deploy
 
-GitHub is version control only. Never GitHub Pages, `actions/deploy-pages`, or
-`withastro/action`.
+GitHub is version control only. Never GitHub Pages, GitHub Actions
+deploy, `actions/deploy-pages`, `withastro/action`, or
+`cloudflare/wrangler-action`. Do not add `.github/workflows/` that ships
+the site.
+
+**CI/CD is Cloudflare Workers Builds.** That is the one pipeline. If
+someone asks to set up CI/CD or add a pipeline, load
+`.cursor/skills/workers-builds-ci/`. Do not invent another.
+
+Talk in simple words. Roman is not a professional developer. If a rule
+or plugin skill fights this path, say so, follow this path, and fix the
+stale text. Do not ask him to pick between two setups.
 
 **Published** = a visitor can see the change at https://rtikhonov.com
 
-Production is Cloudflare Worker `rtikhonov`. The live app is the **repository
-root** (`wrangler.jsonc` here). Edit `src/`. Open PRs into `main`.
+Production is Cloudflare Worker `rtikhonov`. The live app is the
+**repository root** (`wrangler.jsonc` here). Edit `src/`. Open PRs into
+`main`.
 
 ## Everyday ship
 
-1. `npm run check`
-2. Merge the PR to `main`
+1. Small change (typo, blog note, tiny copy): `npm run check` if the
+   tree is dirty, then merge.
+2. Large change (new page, new UI): look first with
+   `.cursor/skills/preview-site/`. Optional web link = branch preview
+   from Builds. Then merge.
 3. Cloudflare Workers Builds deploys (`npm run build`, then
    `npx wrangler deploy`). The Worker is already connected to this repo.
 4. Cache-bust curl https://rtikhonov.com and confirm the new string
@@ -36,7 +50,8 @@ npm run deploy
 Cloud Agents need `CLOUDFLARE_API_TOKEN` in Cursor environment secrets
 with **Workers Scripts Edit**. If `whoami` works but deploy returns 403 /
 code 10000, the token is too weak — ask the owner to fix it. Do not run
-`wrangler login` and wait on a localhost OAuth callback.
+`wrangler login` and wait on a localhost OAuth callback. Do not use hand
+deploy to “test CI.”
 
 ## Do not
 
@@ -45,3 +60,4 @@ code 10000, the token is too weak — ask the owner to fix it. Do not run
 - TodoWrite for a clean-tree ship
 - Re-run `check:docs` / `astro build` before `npm run deploy` when the tree is clean
 - Hard-require `/Users/rtikhonov/Desktop/...`
+- Add `test.rtikhonov.com` unless the owner asks for that as its own task

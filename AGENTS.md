@@ -19,7 +19,9 @@ On Cursor Cloud, use the `node` already on PATH if it is >= 22.12. Do not
 require `/Users/rtikhonov/Desktop/...`.
 
 For local UI checks, use `.cursor/skills/preview-site/` — one server, verify on
-the port from `astro dev status`.
+the port from `astro dev status`. That look-step is the default for a
+large change (new page or new UI). Skip it for a typo, blog note, or
+tiny copy change.
 
 ## Content
 
@@ -50,23 +52,26 @@ These are **not** published:
 ## Deploy
 
 GitHub is version control only. Ship only with Cloudflare Workers.
+**CI/CD is Workers Builds.** Do not add GitHub Actions. If asked to set
+up a pipeline, use `.cursor/skills/workers-builds-ci/`.
 
 Default path (Workers Builds):
 
 1. Edit on `main` (or a PR into `main`).
-2. `npm run check`
-3. Open a PR. Preview versions come from Workers Builds on non-`main` branches.
-4. Merge to `main`. Cloudflare builds and deploys Worker `rtikhonov`.
-5. `curl` https://rtikhonov.com (cache-bust) and confirm the new copy.
+2. Large change: look with `.cursor/skills/preview-site/` first.
+3. `npm run check`
+4. Open a PR. Preview versions come from Workers Builds on non-`main` branches.
+5. Merge to `main`. Cloudflare builds and deploys Worker `rtikhonov`.
+6. `curl` https://rtikhonov.com (cache-bust) and confirm the new copy.
 
 Emergency / first cutover only: `npm run deploy` after `npx wrangler whoami`
 works (`CLOUDFLARE_API_TOKEN` in Cursor environment secrets). Do not use this
-as the everyday path.
+as the everyday path or as a CI test.
 
 Do not TodoWrite or `git diff main...HEAD` for a clean-tree ship.
 
-See [docs/deploy.md](docs/deploy.md), `.cursor/rules/deploy.mdc`, and
-`.cursor/skills/deploy-site/`.
+See [docs/deploy.md](docs/deploy.md), `.cursor/rules/deploy.mdc`,
+`.cursor/skills/deploy-site/`, and `.cursor/skills/workers-builds-ci/`.
 
 ## Security and privacy (public repo)
 

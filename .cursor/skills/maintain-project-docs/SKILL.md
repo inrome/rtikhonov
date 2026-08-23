@@ -36,6 +36,7 @@ If the user also asked to deploy, hand off to `deploy-site` after docs are curre
 - `docs/interactions.md`: motion and input behavior
 - `docs/seo-social.md`: titles, meta, Open Graph, favicons, sharing rules
 - `docs/crawling-ai.md`: crawler access and privacy preferences
+- `docs/deploy.md`: Workers Builds settings, small vs large ship, emergency Wrangler
 - `CHANGELOG.md`: dated record of significant changes
 
 Keep each fact in one focused page. Link to it instead of copying it elsewhere.
