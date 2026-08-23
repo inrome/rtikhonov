@@ -6,6 +6,7 @@ import telegramIcon from "@tabler/icons/outline/brand-telegram.svg?raw";
 import BaseHead from "../components/BaseHead.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import ProjectsGallery from "../components/ProjectsGallery.astro";
+import SiteBanner from "../components/SiteBanner.astro";
 import SiteNav from "../components/SiteNav.astro";
 import {
 	getInspirationPostPath,
@@ -361,6 +362,7 @@ const posts = await getInspirationPosts();
 				}
 			</section>
 		</main>
+		<SiteBanner />
 	</body>
 </html>
 

@@ -2,6 +2,18 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Do It Right
+
+- Agent deploy rules now say: use the `rtikhonov.com/` Worker tree, check Wrangler login first, run `npm run deploy`, then curl the live site. A merge to `main` is not a publish.
+
+## 2026-08-23 — Off The Air
+
+- GitHub no longer ships the site. There is no GitHub Pages deploy. Cloudflare Workers is the only host.
+
+## 2026-08-23 — Under Construction
+
+- A bottom banner now says the site is a work in progress until 7 September and counts down the days left. You can close it.
+
 ## 2026-08-23 — Hide And Seek
 
 - Inspiration ships in the codebase but stays off. Flip `INSPIRATION_ENABLED` in `src/consts.ts` and redeploy when you want it public.

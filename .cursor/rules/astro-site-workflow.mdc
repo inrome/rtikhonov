@@ -14,8 +14,11 @@ Agent shells often reset cwd to the **repo** root. Every command must `cd` into 
 
 ```bash
 export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-cd /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
+cd rtikhonov.com
 ```
+
+On Cursor Cloud, skip the nvm line if `node` is already >= 22.12. Do not require
+`/Users/rtikhonov/Desktop/...`.
 
 Do not run Astro, npm, or Wrangler from the repository root. There is no site `package.json` there. Prefer `./node_modules/.bin/astro` over `npx astro` once deps are installed.
 
@@ -43,6 +46,6 @@ Prefer Astro content collections over inline arrays for growing lists (projects,
 
 ## Deploy
 
-When the user asks to deploy, follow `.cursor/rules/deploy.mdc` / the `deploy-site` skill (status → `npm run deploy` → URLs). Do not expand this section into a checklist.
+When the user asks to deploy, follow `.cursor/rules/deploy.mdc` / the `deploy-site` skill (auth → `npm run deploy` → curl the live URL). Do not expand this section into a checklist.
 
-`npm run deploy` runs docs checks, builds, then Wrangler with IPv4-first DNS (required on Node 24 + macOS). Push alone does not ship prod.
+`npm run deploy` runs docs checks, builds, then Wrangler. A git push or merge does not ship prod.

@@ -9,6 +9,7 @@ Minimal personal one-pager.
 3. **Work** — horizontal scroll gallery with filter chips (All / Product / Research / Teaching), backed by a content collection
 4. **Inspiration** — notes and ideas (off by default). Toggle `INSPIRATION_ENABLED` in `src/consts.ts`. When on: the homepage lists posts; `/inspiration/` is the full index; each note has its own page; RSS lives at `/inspiration/rss.xml`. When off: no nav, no homepage block, and the routes redirect or 404.
 5. **Timeline** — career history stored in `src/data/timeline.ts`, grouped into eras (Product, Academia, Undergrad, Earlier). Product starts open; the others start closed. Years with two or more entries still collapse into a short overview inside an era. Entries can carry an optional marker (emoji or icon) and a link to a related post.
+6. **Site banner** — a fixed bar at the bottom for short notices. The current notice says the site is a work in progress until 7 September and shows a live countdown. Visitors can close it. Edit `src/lib/announcements.ts` to change the text.
 
 ## Feature summary
 
@@ -24,3 +25,4 @@ Minimal personal one-pager.
 - **Link previews** — Gives shared pages a clear title, description, portrait, theme color, and proper icons.
 - **Era timeline** — Product / Academia / Undergrad / Earlier eras open and close with native `<details>`. Busy years inside an era still fold the same way.
 - **Inspiration notes** — Markdown posts with optional source links. Gated by `INSPIRATION_ENABLED`. YouTube sources render a privacy-friendly embed. Drafts show in local preview and stay out of production and RSS.
+- **Bottom banner** — Pins a work-in-progress notice above the page, with a countdown to 7 September and a close button.

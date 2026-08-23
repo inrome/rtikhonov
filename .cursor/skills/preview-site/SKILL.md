@@ -8,7 +8,7 @@ description: >-
 
 # Preview site (fast path)
 
-Site root: `/Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com` (never the repo root).
+Site root: `rtikhonov.com/` at the repository root (never the repo root itself).
 
 ## Every shell command
 
@@ -16,8 +16,10 @@ Embed the site root in the command. Do not trust a previous turn’s cwd.
 
 ```bash
 export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-cd /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
+cd rtikhonov.com
 ```
+
+On Cursor Cloud, skip the nvm line if `node` is already >= 22.12.
 
 ## Server lifecycle (one server only)
 
