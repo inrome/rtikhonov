@@ -46,6 +46,7 @@ body {
 	display: flex;
 	justify-content: center;
 	padding: 3rem 1.5rem;
+	padding-bottom: calc(3rem + var(--banner-offset, 0px));
 }
 
 main {
