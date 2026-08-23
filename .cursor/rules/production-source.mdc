@@ -1,0 +1,29 @@
+---
+description: Live site source of truth — avoid working on the wrong branch
+alwaysApply: true
+---
+
+# Production source of truth
+
+`https://rtikhonov.com` is a **Cloudflare Worker** that serves the Astro app in `rtikhonov.com/`.
+
+## Do this first when the user says something is missing / not live
+
+1. `curl -sI` / `curl -sL` the live URL (and the homepage HTML).
+2. Confirm host: Cloudflare (`cf-ray`, `server: cloudflare`) vs GitHub Pages.
+3. Diff live HTML against `rtikhonov.com/` — not against a stale mental model of `main`.
+
+Pushing to GitHub does **not** publish. Prod updates only via `npm run deploy` in `rtikhonov.com/` (Wrangler).
+
+## Wrong tree (common trap)
+
+| Location | Role |
+| :--- | :--- |
+| `rtikhonov.com/` on the Cloudflare hosting lineage | **Live site** (Work gallery, era timeline, Inspiration flag, Wrangler) |
+| Repo-root Astro on `main` / GitHub Pages | **Not** what DNS serves today — do not “fix” live bugs there |
+
+If `main` has a feature but live does not, port it onto the Cloudflare site tree and deploy. Do not spend turns polishing `main` for a Cloudflare DNS site.
+
+## Branching
+
+Prefer branching from the branch that last powered prod (often `cursor/cloudflare-workers-hosting` or the current Workers-based feature branch), not from an outdated Pages-only `main`, unless the user says otherwise.

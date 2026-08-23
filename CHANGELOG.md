@@ -2,6 +2,11 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Lessons Learned
+
+- Agent docs now state the live site is Cloudflare Workers in `rtikhonov.com/`, not GitHub Pages `main`. Push does not publish.
+- Deploy rules check `wrangler whoami` first (OAuth or API token) and curl prod after ship.
+
 ## 2026-08-23 — Hide And Seek
 
 - Inspiration ships in the codebase but stays off. Flip `INSPIRATION_ENABLED` in `src/consts.ts` and redeploy when you want it public.

@@ -32,6 +32,8 @@ npm --prefix rtikhonov.com run deploy
 
 ## Deploy
 
-Deployment is handled by Cloudflare, not GitHub Actions. From the repo root, run `npm --prefix rtikhonov.com run deploy`. That command checks docs, builds the site, and deploys with Wrangler using IPv4-first DNS (needed on Node 24 + macOS). If the repo is connected to Cloudflare Workers Builds, set the build **Root directory** to `rtikhonov.com` in the Cloudflare dashboard.
+Deployment is handled by Cloudflare Wrangler, not GitHub Actions or GitHub Pages. **`git push` does not update the live site.** From the repo root, run `npm --prefix rtikhonov.com run deploy`. That command checks docs, builds the site, and deploys with IPv4-first DNS (needed on Node 24 + macOS).
 
-Agent deploy path (Cursor): `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/` — status check, then `npm run deploy`. Local UI preview: `.cursor/skills/preview-site/` (one server, verify on the port from `astro dev status`). Agent shells need nvm Node on PATH (`~/.nvm/versions/node/v24.18.0/bin`) and must `cd` into `rtikhonov.com/` every command.
+Inspiration is in the codebase but gated by `INSPIRATION_ENABLED` in `rtikhonov.com/src/consts.ts` (off until flipped and redeployed).
+
+Agent path: `.cursor/rules/production-source.mdc`, `.cursor/rules/deploy.mdc`, `.cursor/skills/deploy-site/` — curl live when something looks missing, `wrangler whoami`, then `npm run deploy`. Local UI preview: `.cursor/skills/preview-site/`.

@@ -10,14 +10,18 @@ Site root is `rtikhonov.com/` (not the repo root). Run all Astro/wrangler comman
 
 ## Shell (avoid wasted turns)
 
-Agent shells often reset cwd to the **repo** root. Every command must `cd` into the site first (prefer the absolute path) and export nvm Node:
+Agent shells often reset cwd to the **repo** root. Every command must `cd` into the site first and export nvm Node:
 
 ```bash
 export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-cd /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
+cd rtikhonov.com
+# Cloud: /workspace/rtikhonov.com
+# Roman Mac: /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
 ```
 
 Do not run Astro, npm, or Wrangler from the repository root. There is no site `package.json` there. Prefer `./node_modules/.bin/astro` over `npx astro` once deps are installed.
+
+For “feature missing on the live site”, follow `.cursor/rules/production-source.mdc` (curl prod first; do not debug Pages `main`).
 
 For local preview / HMR / “did my CSS land?”, follow `.cursor/skills/preview-site/` (status → one port → lean verify).
 

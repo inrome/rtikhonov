@@ -1,3 +1,10 @@
+## Production (read this first)
+
+Live site: **https://rtikhonov.com** → Cloudflare Workers → app in `rtikhonov.com/`.
+
+- `git push` does not publish. Deploy with `cd rtikhonov.com && npm run deploy`.
+- `main` / GitHub Pages is not what DNS serves. For “not live” bugs, curl prod and edit the Workers tree — see `.cursor/rules/production-source.mdc`.
+
 ## Development
 
 The Astro personal site lives in `rtikhonov.com/`. Run Astro commands from that folder. When starting the dev server, use background mode:
@@ -9,21 +16,14 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
-Agent shells often lack Node on PATH and often reset cwd to the **repo** root. Every command should `cd` into the site (prefer the absolute path) and export nvm before npm/astro/wrangler:
+Agent shells often lack Node on PATH and often reset cwd to the **repo** root. Every command should `cd` into the site and export nvm before npm/astro/wrangler:
 
 ```
 export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-cd /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
+cd rtikhonov.com
 ```
 
-For local UI checks, use `.cursor/skills/preview-site/` — one server, verify on the port from `astro dev status`, lean verify for CSS.
-
-Agent shells often lack Node on PATH and often reset cwd to the **repo** root. Every command should `cd` into the site (prefer the absolute path) and export nvm before npm/astro/wrangler:
-
-```
-export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-cd /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
-```
+On Roman’s Mac the absolute path is often `/Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com`. In Cursor Cloud use `/workspace/rtikhonov.com`.
 
 For local UI checks, use `.cursor/skills/preview-site/` — one server, verify on the port from `astro dev status`, lean verify for CSS.
 
@@ -41,7 +41,7 @@ See [docs/content.md](docs/content.md) for frontmatter fields and the steps to a
 
 ## Deploy
 
-When asked to deploy / ship / publish: `git status`, then (if clean or docs already updated) `cd rtikhonov.com && npm run deploy`. See `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/`. Do not TodoWrite or diff against `main` for a clean-tree deploy.
+When asked to deploy / ship / publish: follow `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/` — `wrangler whoami`, then `npm run deploy`, then curl live. Do not TodoWrite or diff against `main` for a clean-tree deploy.
 
 ## Security and privacy (public repo)
 
@@ -50,11 +50,20 @@ This repository is public. Everything committed is visible on the internet.
 - Never commit secrets (API keys, tokens, passwords, private keys) or `.env*` files.
 - Never commit private personal data (address, phone, IDs) unless the owner explicitly wants it public.
 - Use placeholders for unpublished contact details; only ship emails/links the owner approved.
-- Put deploy secrets in GitHub Actions secrets / environment variables, not in source.
+- Put deploy secrets in GitHub Actions secrets / Cursor environment secrets / env vars, not in source.
 - If a secret may already be in git history, warn the owner and rotate it — removing the file is not enough.
 - When unsure whether content should be public, ask before adding it.
 
 See also `.cursor/rules/public-repo-security.mdc`.
+
+## Cursor Cloud
+
+Single static Astro app in `rtikhonov.com/` — no backend DB. `npm ci` in that folder if deps are missing.
+
+- Dev: `http://localhost:4321/` (localhost-only unless `--host`).
+- `astro dev --background` is real daemon mode; check `astro dev status` before starting another.
+- Inspiration Markdown hot-reloads; `draft: true` shows in dev only.
+- Wrangler may already have OAuth in the VM; check `wrangler whoami` before asking for tokens.
 
 ## Documentation
 

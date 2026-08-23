@@ -9,7 +9,17 @@ When the user says **deploy**, **ship**, or **publish** (to prod):
 
 1. Run `git status` only.
 2. If the working tree has notable undocumented user-facing changes, update docs/changelog first (see `maintain-project-docs` skill), then continue.
-3. Otherwise run only:
+3. Confirm Wrangler auth (one short check):
+
+```bash
+export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
+cd rtikhonov.com
+NODE_OPTIONS="--dns-result-order=ipv4first" npx wrangler whoami
+```
+
+Accept either a logged-in **OAuth** session or `CLOUDFLARE_API_TOKEN` (+ optional `CLOUDFLARE_ACCOUNT_ID`). Do not start a long API-token tutorial if `whoami` already shows this account.
+
+4. Deploy:
 
 ```bash
 export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
@@ -18,7 +28,18 @@ cd rtikhonov.com && npm run deploy
 
 Use network permissions. Expect ~30–60s. `npm run deploy` already runs `check:docs` and the build.
 
-4. Reply with live URLs and the Wrangler Version ID. Live: `https://rtikhonov.com`, `https://www.rtikhonov.com`, `https://rtikhonov.inrome.workers.dev`.
+5. Spot-check live: `curl -sI https://rtikhonov.com/` and any new routes. Reply with live URLs and the Wrangler Version ID.
+
+Live: `https://rtikhonov.com`, `https://www.rtikhonov.com`, `https://rtikhonov.inrome.workers.dev`.
+
+## Auth blocked
+
+If `whoami` fails and there is no token:
+
+- Prefer Cursor environment secret `CLOUDFLARE_API_TOKEN` (Edit Cloudflare Workers template).
+- Optional: `CLOUDFLARE_ACCOUNT_ID`.
+- Do not paste tokens into chat or the repo.
+- After the user adds a secret, check env / `whoami` again — secrets may only appear on a **new** agent run.
 
 ## Do not
 
@@ -27,5 +48,6 @@ Use network permissions. Expect ~30–60s. `npm run deploy` already runs `check:
 - Manual README / `docs/` / CHANGELOG review when `git status` is clean
 - Separate `check:docs` or `astro build` before `npm run deploy`
 - Commit or push unless the user asks
+- Assume GitHub Actions or Pages ships this site
 
 Agent shells often lack Node on PATH. Always export the nvm path above (or `source ~/.nvm/nvm.sh && nvm use`) before npm/astro/wrangler.
