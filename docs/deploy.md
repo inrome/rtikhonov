@@ -49,9 +49,13 @@ npx wrangler whoami
 npm run deploy
 ```
 
-Cloud Agents need `CLOUDFLARE_API_TOKEN` in Cursor environment secrets
-(Workers Scripts Edit). Desktop can use `wrangler login`. Do not run
-`wrangler login` and wait on a localhost OAuth callback in Cloud.
+Cloud Agents need `CLOUDFLARE_API_TOKEN` in Cursor environment secrets.
+`wrangler whoami` can succeed while `wrangler deploy` still fails. The token
+must include **Account → Workers Scripts → Edit**. Without that, Cloudflare
+returns 403 / code 10000 on `/workers/services/rtikhonov`.
+
+Desktop can use `wrangler login`. Do not run `wrangler login` and wait on a
+localhost OAuth callback in Cloud.
 
 ## GitHub Pages
 

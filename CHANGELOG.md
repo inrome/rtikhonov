@@ -4,6 +4,8 @@ Notable updates to rtikhonov.com. Newest entries come first.
 
 ## 2026-08-23 — One Way Or Another
 
+- A Cloud Agent `whoami` is not enough to ship. The Cursor token must include Workers Scripts Edit, or `wrangler deploy` returns 403.
+
 - The live Worker app now sits at the repo root. There is no second Astro tree and no `rtikhonov.com/` folder to `cd` into.
 - Everyday ship is merge to `main`. Cloudflare Workers Builds should run `npm ci && npm run build`, then `npx wrangler deploy`. `npm run deploy` stays for emergencies only.
 - Connect Builds and turn off GitHub Pages once. Settings are in `docs/deploy.md`.

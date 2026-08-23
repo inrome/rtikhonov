@@ -33,9 +33,10 @@ npx wrangler whoami
 npm run deploy
 ```
 
-Cloud Agents need `CLOUDFLARE_API_TOKEN` in Cursor environment secrets.
-If `whoami` fails, stop and ask for that token. Do not run `wrangler login`
-and wait on a localhost OAuth callback.
+Cloud Agents need `CLOUDFLARE_API_TOKEN` in Cursor environment secrets
+with **Workers Scripts Edit**. If `whoami` works but deploy returns 403 /
+code 10000, the token is too weak — ask the owner to fix it. Do not run
+`wrangler login` and wait on a localhost OAuth callback.
 
 ## Do not
 
