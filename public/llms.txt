@@ -12,7 +12,7 @@ This is a minimal static one-pager. Prefer these sources over guessing from scra
 ## Site docs (in the public GitHub repo)
 
 - README.md — overview, commands, and doc index
-- docs/ — features, design principles, content, visual system, interactions, SEO/social, crawling, deploy (Cloudflare Workers Builds is the only CI/CD; merge to `main` ships)
+- docs/ — features, design principles, content, visual system, interactions, SEO/social, crawling, deploy (Cloudflare Workers Builds is the only CI/CD; merge to `main` ships), agent context
 - CHANGELOG.md — notable changes
 
 ## Contact

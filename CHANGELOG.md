@@ -2,6 +2,13 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Less Is More
+
+- Agent instructions cost about half the context they used to. The always-on set went from four rules plus a long `AGENTS.md` to three short rules and a one-page map.
+- The deploy policy lived in three always-on copies that disagreed with each other. Now it lives in one rule, and `AGENTS.md` points at it.
+- Changelog voice and the doc map live only in the `maintain-project-docs` skill, so they load when you write docs instead of in every chat.
+- `npm run check` now fails if the always-on set grows past its budget or a skill description stops saying when to use it. [docs/agent-context.md](docs/agent-context.md) explains the conventions.
+
 ## 2026-08-23 — Look Before You Leap
 
 - Deploy chats now lead with one path: Cloudflare Workers Builds. A second GitHub pipeline is a bad bet — extra secrets and two places that can fail.

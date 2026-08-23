@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "astro dev",
     "check:docs": "node scripts/check-docs.mjs",
-    "check": "npm run check:docs && astro check",
+    "check:agents": "node scripts/check-agent-context.mjs",
+    "check": "npm run check:docs && npm run check:agents && astro check",
     "build": "astro build",
     "preview": "astro build && NODE_OPTIONS=\"--dns-result-order=ipv4first\" wrangler dev",
     "deploy": "npm run check:docs && astro build && NODE_OPTIONS=\"--dns-result-order=ipv4first\" wrangler deploy",
