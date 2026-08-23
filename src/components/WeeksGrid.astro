@@ -128,13 +128,19 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 			return null;
 		};
 
-		const placePopover = (cell: HTMLElement) => {
-			const week = Number(cell.dataset.week);
-			const note = annotations.get(week);
+		let pointerX = 0;
+		let pointerY = 0;
 
-			titleEl.hidden = !note;
+		const cellUnderPointer = (x = pointerX, y = pointerY) => {
+			return weekFrom(document.elementFromPoint(x, y));
+		};
+
+		const placePopover = (cell: HTMLElement) => {
+			const week = Number(cell.getAttribute("data-week"));
+			if (!Number.isFinite(week)) return;
+
+			const note = annotations.get(week);
 			titleEl.textContent = note?.title ?? "";
-			locationEl.hidden = !note?.location;
 			locationEl.textContent = note?.location ? `Location: ${note.location}` : "";
 			metaEl.textContent = formatWeekMeta(week);
 
@@ -142,8 +148,8 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 
 			const rect = cell.getBoundingClientRect();
 			const tip = popover.getBoundingClientRect();
-			let top = rect.top - tip.height - 8;
-			if (top < 8) top = rect.bottom + 8;
+			let top = rect.top - tip.height - 10;
+			if (top < 8) top = rect.bottom + 10;
 
 			let left = rect.left + rect.width / 2 - tip.width / 2;
 			left = Math.min(Math.max(8, left), window.innerWidth - tip.width - 8);
@@ -168,22 +174,26 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 			updatePopover();
 		};
 
+		const refreshHover = (x: number, y: number) => {
+			pointerX = x;
+			pointerY = y;
+			if (!pinned) hovered = cellUnderPointer(x, y);
+			updatePopover();
+		};
+
 		paint();
 
-		board.addEventListener("mouseover", (event) => {
-			const cell = weekFrom(event.target);
-			if (!cell || cell === hovered) return;
-			hovered = cell;
-			updatePopover();
+		board.addEventListener("pointermove", (event) => {
+			refreshHover(event.clientX, event.clientY);
 		});
 
-		board.addEventListener("mouseleave", () => {
+		board.addEventListener("pointerleave", () => {
 			hovered = null;
-			updatePopover();
+			if (!pinned) updatePopover();
 		});
 
 		board.addEventListener("click", (event) => {
-			const cell = weekFrom(event.target);
+			const cell = weekFrom(event.target) ?? cellUnderPointer(event.clientX, event.clientY);
 			if (!cell) return;
 			event.stopPropagation();
 			setPinned(pinned === cell ? null : cell);
@@ -211,18 +221,25 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 			updatePopover();
 		});
 
-		window.addEventListener("scroll", updatePopover, true);
+		window.addEventListener(
+			"scroll",
+			() => {
+				if (!pinned) hovered = cellUnderPointer();
+				updatePopover();
+			},
+			true,
+		);
 		window.addEventListener("resize", updatePopover);
 	}
 </script>
 
 <style>
 	.weeks-scroll {
-		--week-size: 0.7rem;
-		--week-gap: 0.12rem;
+		--week-size: 0.875rem;
+		--week-gap: 0.16rem;
 		overflow-x: auto;
-		padding: 0.5rem 0.15rem 1.25rem;
-		margin-inline: -0.15rem;
+		padding: 1.35rem 0.4rem 2rem;
+		margin-inline: -0.4rem;
 	}
 
 	.weeks-board {
@@ -234,13 +251,13 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 
 	.weeks-row {
 		display: grid;
-		grid-template-columns: 1.6rem repeat(52, var(--week-size));
+		grid-template-columns: 1.75rem repeat(52, var(--week-size));
 		column-gap: var(--week-gap);
 		align-items: center;
 	}
 
 	.weeks-row__age {
-		font-size: 0.7rem;
+		font-size: 0.75rem;
 		line-height: 1;
 		color: var(--muted);
 		font-variant-numeric: tabular-nums;
@@ -284,16 +301,22 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 	}
 
 	.week__emoji {
-		font-size: 0.58rem;
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		font-size: 0.8rem;
 		line-height: 1;
 		pointer-events: none;
+		filter: drop-shadow(0 0 0.6px #fff);
 	}
 
 	.week:hover,
 	.week:focus-visible,
 	.week.is-open {
-		transform: scale(1.65);
-		z-index: 2;
+		transform: scale(2.15);
+		z-index: 5;
+		box-shadow: 0 0 0 2px var(--bg), 0 8px 18px color-mix(in srgb, var(--fg) 22%, transparent);
 	}
 
 	.week:focus-visible {
@@ -322,6 +345,10 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 		margin: 0;
 	}
 
+	.weeks-popover p:empty {
+		display: none;
+	}
+
 	.weeks-popover__title {
 		font-weight: 600;
 		font-size: 0.95rem;
@@ -337,5 +364,9 @@ const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
 		margin-top: 0.35rem;
 		font-size: 0.8rem;
 		color: var(--muted);
+	}
+
+	.weeks-popover__title:empty + .weeks-popover__location:empty + .weeks-popover__meta {
+		margin-top: 0;
 	}
 </style>
