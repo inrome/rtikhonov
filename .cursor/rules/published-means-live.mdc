@@ -10,8 +10,11 @@ alwaysApply: true
 These are **not** published:
 
 - Files on `main`, a clean tree, or unpushed/pushed commits
-- A green GitHub Pages workflow
+- A green GitHub check
 - Inspiration posts without `draft: true`
+
+Never deploy with GitHub Pages or GitHub Actions. Ship only on Cloudflare
+Workers. GitHub is version control only.
 
 Inspiration is **not** on the live site. `https://rtikhonov.com/inspiration/` returns 404.
 
