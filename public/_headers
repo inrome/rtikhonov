@@ -1,0 +1,3 @@
+# Portrait — do not use for AI / ML training
+/_astro/roman*
+  X-Robots-Tag: noai, noimageai

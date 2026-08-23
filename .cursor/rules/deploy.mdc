@@ -1,0 +1,47 @@
+---
+description: Ship rtikhonov.com on Cloudflare Workers only
+alwaysApply: true
+---
+
+# Deploy
+
+GitHub is version control only. Never GitHub Pages, `actions/deploy-pages`, or
+`withastro/action`.
+
+**Published** = a visitor can see the change at https://rtikhonov.com
+
+Production is Cloudflare Worker `rtikhonov`. The live app is the **repository
+root** (`wrangler.jsonc` here). Edit `src/`. Open PRs into `main`.
+
+## Everyday ship
+
+1. `npm run check`
+2. Merge the PR to `main`
+3. Cloudflare Workers Builds deploys (`npm run build`, then
+   `npx wrangler deploy`). The Worker is already connected to this repo.
+4. Cache-bust curl https://rtikhonov.com and confirm the new string
+
+Dashboard settings live in `docs/deploy.md`. Do not invent a hosting-branch
+checkout. There is no second Astro app.
+
+## Emergency only
+
+If Builds is not connected or failed:
+
+```bash
+npx wrangler whoami
+npm run deploy
+```
+
+Cloud Agents need `CLOUDFLARE_API_TOKEN` in Cursor environment secrets
+with **Workers Scripts Edit**. If `whoami` works but deploy returns 403 /
+code 10000, the token is too weak — ask the owner to fix it. Do not run
+`wrangler login` and wait on a localhost OAuth callback.
+
+## Do not
+
+- Fetch `cursor/cloudflare-workers-hosting` or `cd rtikhonov.com/`
+- Treat a green GitHub check as published (check the live URL)
+- TodoWrite for a clean-tree ship
+- Re-run `check:docs` / `astro build` before `npm run deploy` when the tree is clean
+- Hard-require `/Users/rtikhonov/Desktop/...`

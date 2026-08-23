@@ -1,5 +1,5 @@
 {
-	"$schema": "https://unpkg.com/wrangler@4.125.0/config-schema.json",
+	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "rtikhonov",
 	"compatibility_date": "2026-07-18",
 	"workers_dev": true,

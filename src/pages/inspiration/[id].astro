@@ -2,7 +2,7 @@
 import { render } from "astro:content";
 import FormattedDate from "../../components/FormattedDate.astro";
 import YouTubeEmbed from "../../components/YouTubeEmbed.astro";
-import { INSPIRATION_TITLE } from "../../consts";
+import { INSPIRATION_TITLE, SITE_TITLE } from "../../consts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getInspirationPosts, type InspirationPost } from "../../lib/inspiration";
 
@@ -19,9 +19,16 @@ type Props = InspirationPost;
 const post = Astro.props;
 const { title, description, pubDate, updatedDate, sourceUrl, sourceTitle } = post.data;
 const { Content } = await render(post);
+const pageTitle = `${title} — ${SITE_TITLE}`;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+	title={pageTitle}
+	description={description}
+	ogTitle={title}
+	ogDescription={description}
+	ogType="article"
+>
 	<article>
 		<header>
 			<p class="back"><a href="/inspiration/">← {INSPIRATION_TITLE}</a></p>
@@ -65,8 +72,8 @@ const { Content } = await render(post);
 	}
 
 	h1 {
-		font-size: 1.75rem;
-		font-weight: 600;
+		font-size: 2.4rem;
+		font-weight: 700;
 		letter-spacing: -0.02em;
 		margin: 0 0 0.5rem;
 	}
@@ -74,6 +81,7 @@ const { Content } = await render(post);
 	.meta {
 		margin: 0 0 2rem;
 		font-size: 0.875rem;
+		font-family: var(--font-mono);
 		color: var(--muted);
 	}
 
