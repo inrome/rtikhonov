@@ -39,7 +39,7 @@ ships go through merge to `main`.
 GitHub is version control only. Never add GitHub Pages or `actions/deploy-pages`.
 
 1. Change the site on a PR into `main`.
-2. Merge. Cloudflare Workers Builds runs `npm ci && npm run build`, then
+2. Merge. Cloudflare Workers Builds runs `npm run build`, then
    `npx wrangler deploy`.
 3. Open [rtikhonov.com](https://rtikhonov.com) (or `curl` it) and confirm.
 

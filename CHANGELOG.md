@@ -14,8 +14,8 @@ Notable updates to rtikhonov.com. Newest entries come first.
 - A Cloud Agent `whoami` is not enough to ship by hand. The Cursor token must include Workers Scripts Edit, or `wrangler deploy` returns 403.
 
 - The live Worker app now sits at the repo root. There is no second Astro tree and no `rtikhonov.com/` folder to `cd` into.
-- Everyday ship is merge to `main`. Cloudflare Workers Builds should run `npm ci && npm run build`, then `npx wrangler deploy`. `npm run deploy` stays for emergencies only.
-- Connect Builds and turn off GitHub Pages once. Settings are in `docs/deploy.md`.
+- Everyday ship is merge to `main`. Cloudflare Workers Builds runs `npm run build`, then `npx wrangler deploy`. `npm run deploy` stays for emergencies only.
+- Connecting Git does not rebuild older commits. This commit starts the first Workers Build so the WIP banner can reach https://rtikhonov.com.
 
 ## 2026-08-23 — Do It Right
 
