@@ -19,12 +19,10 @@ curl -sS -H "Cache-Control: no-cache" "https://rtikhonov.com/?t=$(date +%s)"
 
 Do not add GitHub Pages or `actions/deploy-pages`.
 
-## Workers Builds (connect once)
+## Workers Builds
 
-Worker: `rtikhonov` (account Worker id `338389423bd24e0fb56e4ac3451dd4b6`).
-
-In the Cloudflare dashboard: Worker → **Settings** → **Builds**. Connect
-`inrome/rtikhonov`.
+Worker `rtikhonov` is connected to `inrome/rtikhonov`. Cloudflare ships on
+git push. Confirm settings in Worker → **Settings** → **Builds**:
 
 | Setting | Value |
 |---|---|
@@ -35,10 +33,9 @@ In the Cloudflare dashboard: Worker → **Settings** → **Builds**. Connect
 | Deploy command | `npx wrangler deploy` |
 | Other branches | `npx wrangler versions upload` (PR preview URLs) |
 
-Cloudflare generates the API token for Builds. Do not put a token in the repo.
-
-Until Builds is connected, a merge to `main` does **not** update the live
-Worker. Use the emergency command below for the first cutover.
+A merge to `main` publishes. A push to another branch only creates a preview
+if **Builds for non-production branches** is on. Connecting Git does not
+rebuild older commits — push a new commit (or Retry in the dashboard).
 
 ## Emergency Wrangler
 

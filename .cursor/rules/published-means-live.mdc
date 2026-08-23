@@ -7,8 +7,8 @@ alwaysApply: true
 
 **Published** means a visitor can open the page on https://rtikhonov.com.
 
-After Workers Builds is connected, a merge to `main` publishes because
-Cloudflare deploys the Worker. GitHub does not host the site.
+A merge to `main` publishes because Cloudflare Workers Builds deploys the
+Worker. GitHub does not host the site.
 
 These are **not** published:
 

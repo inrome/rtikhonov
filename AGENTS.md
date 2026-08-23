@@ -37,8 +37,8 @@ See [docs/content.md](docs/content.md) for frontmatter fields and how to add a p
 
 **Published** means a visitor can open the change on https://rtikhonov.com.
 
-After Workers Builds is connected to this repo, a merge to `main` publishes
-because **Cloudflare** deploys the Worker. GitHub only stores the code.
+A merge to `main` publishes because **Cloudflare Workers Builds** deploys
+the Worker. GitHub only stores the code.
 
 These are **not** published:
 

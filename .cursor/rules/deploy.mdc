@@ -18,7 +18,7 @@ root** (`wrangler.jsonc` here). Edit `src/`. Open PRs into `main`.
 1. `npm run check`
 2. Merge the PR to `main`
 3. Cloudflare Workers Builds deploys (`npm ci && npm run build`, then
-   `npx wrangler deploy`)
+   `npx wrangler deploy`). The Worker is already connected to this repo.
 4. Cache-bust curl https://rtikhonov.com and confirm the new string
 
 Dashboard settings live in `docs/deploy.md`. Do not invent a hosting-branch
