@@ -1,0 +1,18 @@
+---
+description: Published means live on rtikhonov.com, not in git
+alwaysApply: true
+---
+
+# Published vs in this repo
+
+**Published** means a visitor can open the page on https://rtikhonov.com.
+
+These are **not** published:
+
+- Files on `main`, a clean tree, or unpushed/pushed commits
+- A green GitHub Pages workflow
+- Inspiration posts without `draft: true`
+
+Inspiration is **not** on the live site. `https://rtikhonov.com/inspiration/` returns 404.
+
+When asked about unpublished / live / public changes, check the live URL first. Then report git status as "in this repo" only.
