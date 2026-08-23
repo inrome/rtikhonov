@@ -29,7 +29,7 @@ git push. Confirm settings in Worker → **Settings** → **Builds**:
 | Repository | `inrome/rtikhonov` |
 | Production branch | `main` |
 | Root directory | `/` |
-| Build command | `npm ci && npm run build` |
+| Build command | `npm run build` |
 | Deploy command | `npx wrangler deploy` |
 | Other branches | `npx wrangler versions upload` (PR preview URLs) |
 
