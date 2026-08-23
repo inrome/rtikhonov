@@ -34,6 +34,20 @@ npm --prefix rtikhonov.com run deploy
 
 GitHub is version control only. Never add GitHub Pages or `actions/deploy-pages`.
 
-Deployment is handled by Cloudflare, not GitHub Actions. From the repo root, run `npm --prefix rtikhonov.com run deploy`. That command checks docs, builds the site, and deploys with Wrangler using IPv4-first DNS (needed on Node 24 + macOS). If the repo is connected to Cloudflare Workers Builds, set the build **Root directory** to `rtikhonov.com` in the Cloudflare dashboard.
+The live Worker is this tree (`rtikhonov.com/wrangler.jsonc`), not the root
+Astro app on `main`. Agents must run `npx wrangler whoami` first. Cloud Agents
+need `CLOUDFLARE_API_TOKEN` in the Cursor environment. Then:
 
-Agent deploy path (Cursor): `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/` — status check, then `npm run deploy`. Local UI preview: `.cursor/skills/preview-site/` (one server, verify on the port from `astro dev status`). Agent shells need nvm Node on PATH (`~/.nvm/versions/node/v24.18.0/bin`) and must `cd` into `rtikhonov.com/` every command.
+```sh
+npm --prefix rtikhonov.com run deploy
+```
+
+That checks docs, builds, and deploys with Wrangler. After it finishes, open
+[rtikhonov.com](https://rtikhonov.com) (or `curl` it) and confirm the change.
+A merge is not a publish.
+
+If the repo is connected to Cloudflare Workers Builds, set **Root directory**
+to `rtikhonov.com`.
+
+Cursor: `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/`. Preview:
+`.cursor/skills/preview-site/`.

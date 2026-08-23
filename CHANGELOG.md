@@ -2,6 +2,10 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Do It Right
+
+- Agent deploy rules now say: use the `rtikhonov.com/` Worker tree, check Wrangler login first, run `npm run deploy`, then curl the live site. A merge to `main` is not a publish.
+
 ## 2026-08-23 — Off The Air
 
 - GitHub no longer ships the site. There is no GitHub Pages deploy. Cloudflare Workers is the only host.

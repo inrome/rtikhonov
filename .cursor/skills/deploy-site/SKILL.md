@@ -1,34 +1,45 @@
 ---
 name: deploy-site
 description: >-
-  Deploy rtikhonov.com to Cloudflare Workers when the user says deploy, ship,
-  or publish to prod. Prefer this over maintain-project-docs for deploy-only
-  requests.
+  Deploy the live rtikhonov.com Cloudflare Worker. Use when the user says
+  deploy, ship, publish, or that a change is missing on the live site.
 ---
 
 # Deploy site
 
-Never use GitHub Pages or a GitHub Actions deploy job. GitHub is version
-control only. This skill ships to Cloudflare Workers only.
+Load this instead of inventing a GitHub Pages or `main`-merge publish path.
 
-## Fast path (default)
+## 1. Confirm the live tree
 
-1. `git status` only.
-2. If dirty with notable undocumented user-facing changes → use `maintain-project-docs`, then continue.
-3. Else:
+`rtikhonov.com/wrangler.jsonc` must exist. If it does not, you are on `main`’s
+root site — fetch `origin/cursor/cloudflare-workers-hosting` and work there.
+
+## 2. Confirm Wrangler auth
+
+```bash
+cd rtikhonov.com && npx wrangler whoami
+```
+
+No token / not logged in → stop and ask for `CLOUDFLARE_API_TOKEN` on the
+Cursor Cloud environment. Do not ship.
+
+## 3. Deploy
 
 ```bash
 export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
 cd rtikhonov.com && npm run deploy
 ```
 
-Need network access. Expect ~30–60s. Do not re-run `check:docs` or `astro build` separately — `deploy` already does both (with IPv4-first DNS for Wrangler).
+Skip the PATH export when `node` is already ≥ 22.12.
 
-4. Report: `https://rtikhonov.com`, workers.dev URL, Version ID from Wrangler output.
+## 4. Prove it is live
+
+`curl` https://rtikhonov.com (no-cache) for the new copy. Only then say it is
+published. A GitHub merge is not enough.
 
 ## Do not
 
-- Todo lists for deploy
-- `git diff main...HEAD` unless debugging a failed deploy
-- Manual README / docs / CHANGELOG review when `git status` is clean
-- Commit or push unless asked
+- GitHub Pages, `actions/deploy-pages`, `withastro/action`
+- Treat `main` or GitHub Actions as production
+- Todo lists or `git diff main...HEAD` for a clean deploy
+- Commit unless the user asked

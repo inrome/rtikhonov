@@ -1,34 +1,76 @@
 ---
-description: Fast path for deploy / ship / publish to Cloudflare Workers
+description: Ship rtikhonov.com on Cloudflare Workers only
 alwaysApply: true
 ---
 
 # Deploy
 
-Never deploy with GitHub Pages or GitHub Actions. GitHub is version control
-only. Ship only with Cloudflare Workers (`npm run deploy` / Wrangler).
+GitHub is version control only. Never GitHub Pages, `actions/deploy-pages`, or
+`withastro/action`. Never treat a merge to `main` or a green GitHub check as
+published.
 
-When the user says **deploy**, **ship**, or **publish** (to prod):
+**Published** = a visitor can see the change at https://rtikhonov.com
 
-1. Run `git status` only.
-2. If the working tree has notable undocumented user-facing changes, update docs/changelog first (see `maintain-project-docs` skill), then continue.
-3. Otherwise run only:
+## Live tree (read this first)
+
+Production is Cloudflare Worker `rtikhonov`, custom domains `rtikhonov.com` and
+`www.rtikhonov.com`.
+
+Source of truth:
+
+- Folder: `rtikhonov.com/` (must contain `wrangler.jsonc`)
+- Git line: `cursor/cloudflare-workers-hosting` and PRs based on it
+- Command: `cd rtikhonov.com && npm run deploy` (docs check + build + Wrangler)
+
+The repo-root Astro app on `main` (root `package.json`, no `wrangler.jsonc`) is
+**not** the live site. If this checkout lacks `rtikhonov.com/wrangler.jsonc`:
 
 ```bash
+git fetch origin cursor/cloudflare-workers-hosting
+git checkout -b cursor/<change>-433e origin/cursor/cloudflare-workers-hosting
+```
+
+Edit files under `rtikhonov.com/src/`. Do not implement the live change on the
+root `main` site.
+
+## Auth (before any ship)
+
+Cloud / CI agents need env `CLOUDFLARE_API_TOKEN` (and `CLOUDFLARE_ACCOUNT_ID`
+if Wrangler asks). Desktop can use `npx wrangler login`.
+
+```bash
+cd rtikhonov.com && npx wrangler whoami
+```
+
+If this fails: stop. Ask the owner to add `CLOUDFLARE_API_TOKEN` to the Cursor
+Cloud environment secrets (Workers Scripts Edit). Do not merge and say it is
+live. Do not run `wrangler login` and wait on a localhost OAuth callback.
+
+## Ship
+
+```bash
+# Desktop nvm (skip if node >= 22.12 is already on PATH):
 export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
 cd rtikhonov.com && npm run deploy
 ```
 
-Use network permissions. Expect ~30–60s. `npm run deploy` already runs `check:docs` and the build.
+`npm run deploy` already runs `check:docs` and `astro build`. If `git status`
+is dirty with undocumented user-facing work, update docs/changelog first.
 
-4. Reply with live URLs and the Wrangler Version ID. Live: `https://rtikhonov.com`, `https://www.rtikhonov.com`, `https://rtikhonov.inrome.workers.dev`.
+Expect ~30–60s. Need network. Then **verify the live URL** (cache-bust):
+
+```bash
+curl -sS -H "Cache-Control: no-cache" "https://rtikhonov.com/?t=$(date +%s)" | rg -n "your-new-string"
+```
+
+Report Wrangler Version ID plus https://rtikhonov.com (and only call it
+published if the curl/page shows the change).
 
 ## Do not
 
-- TodoWrite for deploy
-- `git diff main...HEAD` (or large branch diffs) unless the deploy failed
-- Manual README / `docs/` / CHANGELOG review when `git status` is clean
-- Separate `check:docs` or `astro build` before `npm run deploy`
-- Commit or push unless the user asks
-
-Agent shells often lack Node on PATH. Always export the nvm path above (or `source ~/.nvm/nvm.sh && nvm use`) before npm/astro/wrangler.
+- TodoWrite for a clean-tree deploy
+- `git diff main...HEAD` unless the deploy failed
+- Re-run `check:docs` / `astro build` before `npm run deploy` when the tree is clean
+- Commit or push unless asked (except when a PR is already the agreed path)
+- Hard-require `/Users/rtikhonov/Desktop/...` — that is the owner laptop only.
+  In this repo use `rtikhonov.com/` from the repository root.

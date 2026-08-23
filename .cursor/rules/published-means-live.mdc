@@ -1,0 +1,21 @@
+---
+description: Published means live on rtikhonov.com, not in git
+alwaysApply: true
+---
+
+# Published vs in this repo
+
+**Published** means a visitor can open the page on https://rtikhonov.com.
+
+These are **not** published:
+
+- Files on `main`, a clean tree, or unpushed/pushed commits
+- A green GitHub check
+- GitHub Pages (do not use it)
+
+Never deploy with GitHub Pages or GitHub Actions. Ship only on Cloudflare
+Workers from `rtikhonov.com/` after `wrangler whoami` works. Then curl the
+live URL. GitHub is version control only.
+
+When asked about unpublished / live / public changes, check the live URL first.
+Then report git status as "in this repo" only.
