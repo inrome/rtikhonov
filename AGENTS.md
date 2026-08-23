@@ -41,6 +41,8 @@ See [docs/content.md](docs/content.md) for frontmatter fields and the steps to a
 
 ## Deploy
 
+Never deploy with GitHub Pages or GitHub Actions. GitHub is version control only.
+
 When asked to deploy / ship / publish: `git status`, then (if clean or docs already updated) `cd rtikhonov.com && npm run deploy`. See `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/`. Do not TodoWrite or diff against `main` for a clean-tree deploy.
 
 ## Security and privacy (public repo)

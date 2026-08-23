@@ -2,6 +2,10 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Off The Air
+
+- GitHub no longer ships the site. There is no GitHub Pages deploy. Cloudflare Workers is the only host.
+
 ## 2026-08-23 — Under Construction
 
 - A bottom banner now says the site is a work in progress until 7 September and counts down the days left. You can close it.

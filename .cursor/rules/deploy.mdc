@@ -5,6 +5,9 @@ alwaysApply: true
 
 # Deploy
 
+Never deploy with GitHub Pages or GitHub Actions. GitHub is version control
+only. Ship only with Cloudflare Workers (`npm run deploy` / Wrangler).
+
 When the user says **deploy**, **ship**, or **publish** (to prod):
 
 1. Run `git status` only.

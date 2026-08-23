@@ -8,6 +8,9 @@ description: >-
 
 # Deploy site
 
+Never use GitHub Pages or a GitHub Actions deploy job. GitHub is version
+control only. This skill ships to Cloudflare Workers only.
+
 ## Fast path (default)
 
 1. `git status` only.

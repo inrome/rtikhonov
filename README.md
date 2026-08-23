@@ -32,6 +32,8 @@ npm --prefix rtikhonov.com run deploy
 
 ## Deploy
 
+GitHub is version control only. Never add GitHub Pages or `actions/deploy-pages`.
+
 Deployment is handled by Cloudflare, not GitHub Actions. From the repo root, run `npm --prefix rtikhonov.com run deploy`. That command checks docs, builds the site, and deploys with Wrangler using IPv4-first DNS (needed on Node 24 + macOS). If the repo is connected to Cloudflare Workers Builds, set the build **Root directory** to `rtikhonov.com` in the Cloudflare dashboard.
 
 Agent deploy path (Cursor): `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/` — status check, then `npm run deploy`. Local UI preview: `.cursor/skills/preview-site/` (one server, verify on the port from `astro dev status`). Agent shells need nvm Node on PATH (`~/.nvm/versions/node/v24.18.0/bin`) and must `cd` into `rtikhonov.com/` every command.
