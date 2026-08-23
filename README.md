@@ -1,9 +1,9 @@
 # rtikhonov.com
 
-Personal website of Roman Tikhonov. Built with [Astro](https://astro.build). This repo
-deploys to GitHub Pages, but **published** means the page is live on
-[rtikhonov.com](https://rtikhonov.com). The public site can differ from `main`.
-Inspiration is not on the live site yet (`/inspiration/` is 404).
+Personal website of Roman Tikhonov. Built with [Astro](https://astro.build).
+GitHub is version control only. Do **not** deploy with GitHub Pages or GitHub
+Actions. The live site is [rtikhonov.com](https://rtikhonov.com) on Cloudflare
+Workers. **Published** means a visitor can open that URL.
 
 ## Commands
 
@@ -13,7 +13,13 @@ Inspiration is not on the live site yet (`/inspiration/` is 404).
 | `npm run dev`     | Start the dev server at `localhost:4321`        |
 | `npm run check`   | Type-check pages, components, and content       |
 | `npm run build`   | Build the production site to `./dist/`          |
-| `npm run preview` | Preview the build before you deploy             |
+| `npm run preview` | Preview the local build                         |
+
+## Deploy
+
+Do not add a GitHub Pages or `actions/deploy-pages` workflow. GitHub does not
+host this site. Publish with Cloudflare Workers (`wrangler deploy` / Workers
+Builds) so visitors see [rtikhonov.com](https://rtikhonov.com).
 
 ## Project structure
 
