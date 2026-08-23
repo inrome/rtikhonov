@@ -19,16 +19,37 @@ Inspiration is not on the live site yet (`/inspiration/` is 404).
 
 ```text
 src/
-├── components/   # Small shared pieces (head tags, date, video embed)
+├── components/   # Small shared pieces (head tags, date, video embed, banner)
 ├── content/
 │   └── inspiration/   # Blog posts as Markdown files
 ├── layouts/      # Page shell with nav and metadata
-├── lib/          # Content queries and helpers
+├── lib/          # Content queries, helpers, and site announcements
 ├── pages/        # Routes
 ├── styles/       # Global CSS
 ├── consts.ts     # Site title, description, nav items
 └── content.config.ts  # Content collection schema
 ```
+
+## Site announcements
+
+The bottom banner is defined in `src/lib/announcements.ts`. The first item with
+`enabled` not set to `false` is shown on every page, above the content. Visitors
+can close it. The browser remembers that choice until you change the `id`.
+
+```ts
+{
+  id: "2026-wip-until-sept-7",
+  message: "This site is a work in progress. It is under development until 7 September.",
+  until: "2026-09-07",
+}
+```
+
+`until` is a local calendar day (`YYYY-MM-DD`). The banner adds a live
+countdown and hides after that day ends.
+
+To post a new announcement, add it at the top of the list with a new `id`. To
+hide the banner, set `enabled: false` or clear the list. Set `dismissible: false`
+if the close button should not appear.
 
 ## Add an Inspiration post
 

@@ -1,0 +1,182 @@
+---
+import { getActiveAnnouncement } from "../lib/announcements";
+
+const announcement = getActiveAnnouncement();
+const dismissible = announcement?.dismissible !== false;
+---
+
+{
+	announcement && (
+		<aside
+			class="site-banner"
+			data-banner-id={announcement.id}
+			data-until={announcement.until}
+			role="region"
+			aria-label="Site announcement"
+		>
+			<div class="site-banner__inner">
+				<p class="site-banner__message">
+					{announcement.message}
+					{announcement.until && (
+						<>
+							{" "}
+							<span class="site-banner__countdown" aria-live="polite"></span>
+						</>
+					)}
+					{announcement.href && (
+						<>
+							{" "}
+							<a href={announcement.href}>{announcement.linkLabel ?? "Learn more"}</a>
+						</>
+					)}
+				</p>
+				{dismissible && (
+					<button type="button" class="site-banner__close" aria-label="Dismiss announcement">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							aria-hidden="true"
+						>
+							<path d="M18 6 6 18" />
+							<path d="m6 6 12 12" />
+						</svg>
+					</button>
+				)}
+			</div>
+		</aside>
+	)
+}
+
+<script is:inline>
+	(() => {
+		const banner = document.querySelector(".site-banner");
+		if (!(banner instanceof HTMLElement)) return;
+		const id = banner.dataset.bannerId;
+		if (!id) return;
+		try {
+			if (localStorage.getItem(`site-banner:${id}`) === "dismissed") {
+				banner.hidden = true;
+			}
+		} catch {
+			// Keep the banner visible if storage is blocked.
+		}
+	})();
+</script>
+
+<script>
+	import { formatRemaining, parseUntilDate } from "../lib/announcements";
+
+	const banner = document.querySelector(".site-banner");
+	if (banner instanceof HTMLElement && !banner.hidden) {
+		const storageKey = `site-banner:${banner.dataset.bannerId ?? ""}`;
+		const closeButton = banner.querySelector(".site-banner__close");
+		const countdown = banner.querySelector(".site-banner__countdown");
+		const untilValue = banner.dataset.until;
+
+		const setOffset = () => {
+			const offset = banner.hidden ? "0px" : `${banner.offsetHeight}px`;
+			document.documentElement.style.setProperty("--banner-offset", offset);
+		};
+
+		const hide = (persist: boolean) => {
+			banner.hidden = true;
+			setOffset();
+			if (!persist) return;
+			try {
+				localStorage.setItem(storageKey, "dismissed");
+			} catch {
+				// Ignore quota / private-mode errors.
+			}
+		};
+
+		const updateCountdown = () => {
+			if (!(countdown instanceof HTMLElement) || !untilValue) {
+				setOffset();
+				return;
+			}
+
+			const remaining = parseUntilDate(untilValue).getTime() - Date.now();
+			if (remaining <= 0) {
+				hide(false);
+				return;
+			}
+
+			countdown.textContent = formatRemaining(remaining);
+			setOffset();
+		};
+
+		updateCountdown();
+		const intervalMs = untilValue && parseUntilDate(untilValue).getTime() - Date.now() < 86400000 ? 1000 : 30000;
+		window.setInterval(updateCountdown, intervalMs);
+		window.addEventListener("resize", setOffset);
+		closeButton?.addEventListener("click", () => hide(true));
+	}
+</script>
+
+<style>
+	.site-banner {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		z-index: 50;
+		background: var(--bg);
+		border-top: 1px solid var(--border);
+		box-shadow: 0 -12px 32px color-mix(in srgb, var(--fg) 8%, transparent);
+	}
+
+	.site-banner__inner {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+		max-width: 38rem;
+		margin: 0 auto;
+		padding: 0.85rem 1.5rem calc(0.85rem + env(safe-area-inset-bottom));
+	}
+
+	.site-banner__message {
+		flex: 1;
+		margin: 0;
+		font-size: 0.95rem;
+		line-height: 1.45;
+		color: var(--fg);
+	}
+
+	.site-banner__countdown {
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.site-banner__close {
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		margin: -0.25rem -0.35rem -0.25rem 0;
+		padding: 0;
+		border: 0;
+		border-radius: 0.25rem;
+		background: transparent;
+		color: var(--muted);
+		cursor: pointer;
+	}
+
+	.site-banner__close:hover {
+		color: var(--fg);
+		background: color-mix(in srgb, var(--fg) 6%, transparent);
+	}
+
+	.site-banner__close:focus-visible {
+		outline: 2px solid var(--fg);
+		outline-offset: 2px;
+	}
+</style>
