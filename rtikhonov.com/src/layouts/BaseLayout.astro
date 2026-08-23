@@ -1,0 +1,35 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import SiteBanner from "../components/SiteBanner.astro";
+import SiteNav from "../components/SiteNav.astro";
+
+interface Props {
+	title: string;
+	description?: string;
+	ogTitle?: string;
+	ogDescription?: string;
+	ogType?: "website" | "article";
+}
+
+const { title, description, ogTitle, ogDescription, ogType } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title={title}
+			description={description}
+			ogTitle={ogTitle}
+			ogDescription={ogDescription}
+			ogType={ogType}
+		/>
+	</head>
+	<body>
+		<main>
+			<SiteNav />
+			<slot />
+		</main>
+		<SiteBanner />
+	</body>
+</html>

@@ -1,0 +1,22 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page not found" description="This page does not exist.">
+	<h1>Page not found</h1>
+	<p>The page you asked for does not exist. Try the <a href="/">home page</a>.</p>
+</BaseLayout>
+
+<style>
+	h1 {
+		font-size: 2.4rem;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		margin: 0 0 0.75rem;
+	}
+
+	p {
+		margin: 0;
+		color: var(--muted);
+	}
+</style>

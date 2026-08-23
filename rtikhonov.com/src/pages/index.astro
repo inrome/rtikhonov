@@ -3,8 +3,15 @@ import { Image } from "astro:assets";
 import videoIcon from "@tabler/icons/outline/video.svg?raw";
 import linkedinIcon from "@tabler/icons/outline/brand-linkedin.svg?raw";
 import telegramIcon from "@tabler/icons/outline/brand-telegram.svg?raw";
+import BaseHead from "../components/BaseHead.astro";
+import FormattedDate from "../components/FormattedDate.astro";
 import ProjectsGallery from "../components/ProjectsGallery.astro";
 import SiteBanner from "../components/SiteBanner.astro";
+import SiteNav from "../components/SiteNav.astro";
+import {
+	getInspirationPostPath,
+	getInspirationPosts,
+} from "../lib/inspiration";
 import {
 	formatTimelineDate,
 	timelineDateTime,
@@ -27,10 +34,6 @@ const bioLines = [
 ];
 const bio = bioLines.join(" ");
 const description = `${name} — ${bio}`;
-const canonicalUrl = new URL("/", Astro.site).href;
-// Dedicated public asset so social crawlers are not blocked by the
-// portrait AI-training opt-out on `/_astro/roman*`.
-const ogImageUrl = new URL("/og.jpg", Astro.site).href;
 const ogImageAlt = `${name} portrait`;
 
 /** Tabler Icons (MIT) — https://tabler.io/icons
@@ -112,43 +115,22 @@ for (const group of timelineByYear) {
 	const era = eras.find((e) => e.id === eraForYear(group.year));
 	if (era) era.years.push(group);
 }
+
+const posts = await getInspirationPosts();
 ---
 
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" sizes="any" />
-		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="description" content={description} />
-		<meta
-			name="theme-color"
-			content="#fafafa"
-			media="(prefers-color-scheme: light)"
+		<BaseHead
+			title={name}
+			description={description}
+			ogTitle={name}
+			ogDescription={bio}
 		/>
-		<meta
-			name="theme-color"
-			content="#111"
-			media="(prefers-color-scheme: dark)"
-		/>
-		<link rel="canonical" href={canonicalUrl} />
-		<meta property="og:title" content={name} />
-		<meta property="og:description" content={bio} />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content={canonicalUrl} />
-		<meta property="og:image" content={ogImageUrl} />
-		<meta property="og:image:alt" content={ogImageAlt} />
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content={name} />
-		<meta name="twitter:description" content={bio} />
-		<meta name="twitter:image" content={ogImageUrl} />
-		<meta name="twitter:image:alt" content={ogImageAlt} />
-		<meta name="generator" content={Astro.generator} />
-		<title>{name}</title>
 	</head>
 	<body>
 		<main>
+			<SiteNav />
 			<header>
 				<span class="portrait-frame">
 					<Image
@@ -237,6 +219,28 @@ for (const group of timelineByYear) {
 			</header>
 
 			<ProjectsGallery />
+
+			{
+				posts.length > 0 && (
+					<section class="notes" id="inspiration" aria-label="Inspiration">
+						<h2 class="section-title">
+							<a href="/inspiration/">Inspiration</a>
+						</h2>
+						<ul>
+							{posts.map((post) => (
+								<li>
+									<a href={getInspirationPostPath(post)}>{post.data.title}</a>
+									<p class="notes-meta">
+										<FormattedDate date={post.data.pubDate} />
+										{post.data.draft && <span class="notes-draft">Draft</span>}
+									</p>
+									<p class="notes-desc">{post.data.description}</p>
+								</li>
+							))}
+						</ul>
+					</section>
+				)
+			}
 
 			<section class="timeline" id="timeline" aria-label="Timeline">
 				<h2 class="section-title">Timeline</h2>
@@ -363,76 +367,6 @@ for (const group of timelineByYear) {
 </html>
 
 <style is:global>
-	*,
-	*::before,
-	*::after {
-		box-sizing: border-box;
-	}
-
-	:root {
-		color-scheme: light dark;
-		--bg: #fafafa;
-		--fg: #111;
-		--muted: #555;
-		--border: #ddd;
-		--link: #111;
-		--link-hover: #555;
-		--accent: #e35d05;
-		--accent-fg: #fff;
-		--font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--bg: #111;
-			--fg: #f5f5f5;
-			--muted: #aaa;
-			--border: #333;
-			--link: #f5f5f5;
-			--link-hover: #aaa;
-			--accent: #f59a56;
-			--accent-fg: #111;
-		}
-	}
-
-	html {
-		font-family:
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			"Segoe UI",
-			Roboto,
-			Helvetica,
-			Arial,
-			sans-serif;
-		line-height: 1.5;
-		background: var(--bg);
-		color: var(--fg);
-		overflow-x: clip;
-		scroll-behavior: smooth;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		html {
-			scroll-behavior: auto;
-		}
-	}
-
-	body {
-		margin: 0;
-		min-height: 100dvh;
-		display: flex;
-		justify-content: center;
-		padding: 3rem 1.5rem;
-		padding-bottom: calc(3rem + var(--banner-offset, 0px));
-		overflow-x: clip;
-	}
-
-	main {
-		max-width: 38rem;
-		width: 100%;
-	}
-
 	header {
 		margin-bottom: 3rem;
 	}
@@ -539,20 +473,56 @@ for (const group of timelineByYear) {
 		margin-bottom: 1.5rem;
 	}
 
-	.section-title {
-		margin: 0 0 1rem;
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--muted);
-		font-family: var(--font-mono);
-	}
-
 	#work,
+	#inspiration,
 	#timeline,
 	#contact {
 		scroll-margin-top: 1.25rem;
+	}
+
+	.notes {
+		margin: 0 0 3rem;
+	}
+
+	.notes ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.notes li {
+		padding: 0 0 1.25rem;
+	}
+
+	.notes li:last-child {
+		padding-bottom: 0;
+	}
+
+	.notes li > a {
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	.notes-meta {
+		margin: 0.3rem 0 0.4rem;
+		font-size: 0.875rem;
+		font-family: var(--font-mono);
+		color: var(--muted);
+	}
+
+	.notes-draft {
+		margin-left: 0.5rem;
+		border: 1px solid var(--border);
+		padding: 0.05rem 0.35rem;
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+
+	.notes-desc {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.95rem;
 	}
 
 	nav#contact {

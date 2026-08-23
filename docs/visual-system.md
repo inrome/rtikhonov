@@ -29,6 +29,8 @@ Host locally, keep uncropped; show full image on a blurred self-backdrop; no CDN
 
 [Tabler Icons](https://tabler.io/icons) (MIT), muted gray (`--muted`), left of each contact item. The call CTA is an outlined pill (transparent fill, border) — same language as the Work filter chips, not a filled accent button. LinkedIn and Telegram use quieter linked labels with non-linked prefixes (`LinkedIn:`, `Telegram:`). Project card links match that pattern: muted icon and underlined label at rest, accent on hover.
 
-Section titles (`Work`, `Timeline`) and filter chips use mono uppercase labels / small outlined pill buttons aligned to the main column padding. The active chip uses a stronger border and foreground text, not a filled accent.
+Section titles (`Work`, `Inspiration`, `Timeline`) and filter chips use mono uppercase labels / small outlined pill buttons aligned to the main column padding. The active chip uses a stronger border and foreground text, not a filled accent.
+
+Site nav (`Home`, `Inspiration`) is small muted underlined text above the page. The current item uses foreground color and a thicker underline — not a filled accent.
 
 Site chrome icons: `/favicon.svg` (primary, light/dark), real multi-size `/favicon.ico`, and `/apple-touch-icon.png` (180×180 on `#fafafa`). See [seo-social.md](seo-social.md).

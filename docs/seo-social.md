@@ -1,21 +1,25 @@
 # SEO and social sharing
 
-Source of truth for titles, meta tags, icons, and link-preview behavior on this one-page site.
+Source of truth for titles, meta tags, icons, and link-preview behavior.
 
 ## Defaults
 
-- One canonical homepage: `https://rtikhonov.com/`
+- Canonical homepage: `https://rtikhonov.com/`
 - Set `site: "https://rtikhonov.com"` in `astro.config.mjs` so absolute URLs resolve
-- Page `<title>`: person name
-- Meta description: name plus bio
-- Canonical `<link>` matches the homepage URL
+- Homepage `<title>`: person name
+- Inner pages: `{page title} — {person name}` (Inspiration index uses just `Inspiration`)
+- Meta description: name plus bio on the homepage; post description on notes
+- Canonical `<link>` matches the current page URL
 - Browser chrome: `theme-color` `#fafafa` (light) and `#111` (dark)
+- RSS: when `INSPIRATION_ENABLED` is true, every page links to `/inspiration/rss.xml`
+
+`BaseHead.astro` is the shared implementation. Do not hand-roll a second set of tags.
 
 ## Open Graph and Twitter
 
-Required tags on the homepage:
+Required tags on every page:
 
-- `og:title`, `og:description`, `og:type` (`website`), `og:url`, `og:image`, `og:image:alt`
+- `og:title`, `og:description`, `og:type` (`website` on most pages, `article` on a note), `og:url`, `og:image`, `og:image:alt`
 - `twitter:card` (`summary_large_image`), `twitter:title`, `twitter:description`, `twitter:image`, `twitter:image:alt`
 
 Rules:

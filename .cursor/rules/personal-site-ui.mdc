@@ -1,6 +1,6 @@
 ---
 description: Visual and layout conventions for the personal one-pager
-globs: rtikhonov.com/src/pages/index.astro,rtikhonov.com/src/components/**/*.astro,rtikhonov.com/src/scripts/**/*.ts
+globs: rtikhonov.com/src/pages/**/*.astro,rtikhonov.com/src/layouts/**/*.astro,rtikhonov.com/src/components/**/*.astro,rtikhonov.com/src/scripts/**/*.ts
 alwaysApply: false
 ---
 

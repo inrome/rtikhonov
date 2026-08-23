@@ -14,6 +14,20 @@ const projectLink = z.object({
 	label: z.string(),
 });
 
+const inspiration = defineCollection({
+	loader: glob({ pattern: "**/*.md", base: "./src/content/inspiration" }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string(),
+		pubDate: z.coerce.date(),
+		updatedDate: z.coerce.date().optional(),
+		/** Link to the talk, article, or book the notes come from. */
+		sourceUrl: z.url().optional(),
+		sourceTitle: z.string().optional(),
+		draft: z.boolean().default(false),
+	}),
+});
+
 const projects = defineCollection({
 	loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
 	schema: ({ image }) =>
@@ -33,4 +47,4 @@ const projects = defineCollection({
 		}),
 });
 
-export const collections = { projects };
+export const collections = { inspiration, projects };
