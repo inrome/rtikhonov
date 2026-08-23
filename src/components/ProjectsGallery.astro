@@ -1,0 +1,559 @@
+---
+import { getCollection } from "astro:content";
+import chevronLeftIcon from "@tabler/icons/outline/chevron-left.svg?raw";
+import chevronRightIcon from "@tabler/icons/outline/chevron-right.svg?raw";
+import ProjectCard from "./ProjectCard.astro";
+
+const projects = (await getCollection("projects")).sort(
+	(a, b) => a.data.order - b.data.order,
+);
+
+/** Map card `label` values onto the Work filter chips. */
+const filterGroup = (label: string): "product" | "research" | "teaching" => {
+	switch (label) {
+		case "product":
+		case "mentoring":
+			return "product";
+		case "publication":
+		case "research":
+			return "research";
+		default:
+			return "teaching";
+	}
+};
+
+const filters = [
+	{ id: "all", label: "All" },
+	{ id: "product", label: "Product" },
+	{ id: "research", label: "Research" },
+	{ id: "teaching", label: "Teaching" },
+] as const;
+---
+
+{
+	projects.length > 0 && (
+		<section class="projects" id="work" aria-label="Work">
+			<div class="projects__head">
+				<h2 class="projects__title">Work</h2>
+				<div
+					class="projects__filters"
+					role="group"
+					aria-label="Filter projects"
+				>
+					{filters.map((filter) => (
+						<button
+							type="button"
+							class="projects__chip"
+							data-filter={filter.id}
+							aria-pressed={filter.id === "all" ? "true" : "false"}
+						>
+							{filter.label}
+						</button>
+					))}
+				</div>
+			</div>
+			<div class="projects__scroller">
+				{projects.map((project) => (
+					<div
+						class="projects__item"
+						data-group={filterGroup(project.data.label)}
+					>
+						<ProjectCard
+							id={project.id}
+							title={project.data.title}
+							summary={project.data.summary}
+							label={project.data.label}
+							date={project.data.date}
+							dateEnd={project.data.dateEnd}
+							image={project.data.image}
+							href={project.data.href}
+							hrefLabel={project.data.hrefLabel}
+							links={project.data.links}
+						/>
+					</div>
+				))}
+			</div>
+			<div class="projects__nav">
+				<button
+					type="button"
+					class="projects__arrow"
+					data-projects-prev
+					aria-label="Previous projects"
+				>
+					<span
+						class="projects__arrow-icon"
+						aria-hidden="true"
+						set:html={chevronLeftIcon}
+					/>
+				</button>
+				<button
+					type="button"
+					class="projects__arrow"
+					data-projects-next
+					aria-label="Next projects"
+				>
+					<span
+						class="projects__arrow-icon"
+						aria-hidden="true"
+						set:html={chevronRightIcon}
+					/>
+				</button>
+			</div>
+		</section>
+	)
+}
+
+<script>
+	function initProjectsNav(root: HTMLElement) {
+		const scroller = root.querySelector<HTMLElement>(".projects__scroller");
+		const nav = root.querySelector<HTMLElement>(".projects__nav");
+		const prev = root.querySelector<HTMLButtonElement>("[data-projects-prev]");
+		const next = root.querySelector<HTMLButtonElement>("[data-projects-next]");
+		if (!scroller || !nav || !prev || !next) return;
+
+		const prefersReducedMotion = () =>
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+		const step = () => {
+			const card = scroller.querySelector<HTMLElement>(
+				".projects__item:not([hidden]) .project-card, .projects__item:not([hidden])",
+			);
+			const styles = getComputedStyle(scroller);
+			const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+			const width = card?.offsetWidth ?? scroller.clientWidth * 0.8;
+			return width + gap;
+		};
+
+		const applyFilter = (filter: string) => {
+			const items =
+				scroller.querySelectorAll<HTMLElement>(".projects__item");
+			for (const item of items) {
+				const group = item.getAttribute("data-group") ?? "";
+				const show = filter === "all" || group === filter;
+				item.hidden = !show;
+			}
+			scroller.scrollLeft = 0;
+			update();
+		};
+
+		root.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach((btn) => {
+			btn.addEventListener("click", () => {
+				const filter = btn.getAttribute("data-filter") ?? "all";
+				root.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach(
+					(other) => {
+						other.setAttribute(
+							"aria-pressed",
+							other === btn ? "true" : "false",
+						);
+					},
+				);
+				applyFilter(filter);
+			});
+		});
+
+		const setDisabled = (btn: HTMLButtonElement, disabled: boolean) => {
+			btn.disabled = disabled;
+			btn.setAttribute("aria-disabled", disabled ? "true" : "false");
+		};
+
+		const update = () => {
+			const max = scroller.scrollWidth - scroller.clientWidth;
+			const left = scroller.scrollLeft;
+			/* Ignore tiny leftover overflow from padding/peek math when
+			   every card already fits in view. */
+			const canScroll = max > step() * 0.5;
+			nav.hidden = !canScroll;
+			setDisabled(prev, left <= 1);
+			setDisabled(next, left >= max - 1);
+		};
+
+		const scrollByCard = (direction: -1 | 1) => {
+			scroller.scrollBy({
+				left: direction * step(),
+				behavior: prefersReducedMotion() ? "auto" : "smooth",
+			});
+		};
+
+		prev.addEventListener("click", () => {
+			scrollByCard(-1);
+		});
+		next.addEventListener("click", () => {
+			scrollByCard(1);
+		});
+
+		let raf = 0;
+		scroller.addEventListener(
+			"scroll",
+			() => {
+				if (raf) return;
+				raf = requestAnimationFrame(() => {
+					raf = 0;
+					update();
+				});
+			},
+			{ passive: true },
+		);
+
+		window.addEventListener("resize", update, { passive: true });
+		update();
+		initDragToPan(scroller, prefersReducedMotion);
+	}
+
+	/**
+	 * Mouse drag-to-pan ("hand" cursor). Touch keeps native swipe.
+	 * Snap is disabled while dragging, then the scroller settles on the
+	 * nearest card so re-enabling snap does not cause a jump.
+	 */
+	function initDragToPan(
+		scroller: HTMLElement,
+		prefersReducedMotion: () => boolean,
+	) {
+		const DRAG_THRESHOLD = 6;
+		let pointerId = -1;
+		let startX = 0;
+		let startScrollLeft = 0;
+		let dragging = false;
+		let suppressClick = false;
+		let restoreTimer = 0;
+
+		const nearestSnapLeft = () => {
+			const styles = getComputedStyle(scroller);
+			const pad =
+				parseFloat(
+					styles.scrollPaddingInlineStart || styles.scrollPaddingLeft,
+				) || 0;
+			const max = scroller.scrollWidth - scroller.clientWidth;
+			const current = scroller.scrollLeft;
+			const scrollerLeft = scroller.getBoundingClientRect().left;
+			let best = Math.min(Math.max(current, 0), max);
+			let bestDist = Infinity;
+			for (const card of scroller.querySelectorAll<HTMLElement>(
+				".projects__item:not([hidden]) .project-card",
+			)) {
+				const left = Math.min(
+					Math.max(
+						card.getBoundingClientRect().left - scrollerLeft + current - pad,
+						0,
+					),
+					max,
+				);
+				const dist = Math.abs(left - current);
+				if (dist < bestDist) {
+					bestDist = dist;
+					best = left;
+				}
+			}
+			return best;
+		};
+
+		const restoreSnap = () => {
+			clearTimeout(restoreTimer);
+			scroller.classList.remove("is-snapless");
+		};
+
+		const settle = () => {
+			const target = nearestSnapLeft();
+			if (prefersReducedMotion() || Math.abs(target - scroller.scrollLeft) < 1) {
+				scroller.scrollLeft = target;
+				restoreSnap();
+				return;
+			}
+			scroller.scrollTo({ left: target, behavior: "smooth" });
+			scroller.addEventListener("scrollend", restoreSnap, { once: true });
+			// Fallback for browsers without the scrollend event
+			restoreTimer = window.setTimeout(restoreSnap, 700);
+		};
+
+		scroller.addEventListener("pointerdown", (e) => {
+			if (e.pointerType !== "mouse" || e.button !== 0) return;
+			pointerId = e.pointerId;
+			startX = e.clientX;
+			startScrollLeft = scroller.scrollLeft;
+			dragging = false;
+			suppressClick = false;
+		});
+
+		scroller.addEventListener("pointermove", (e) => {
+			if (e.pointerId !== pointerId) return;
+			const dx = e.clientX - startX;
+			if (!dragging) {
+				if (Math.abs(dx) < DRAG_THRESHOLD) return;
+				dragging = true;
+				clearTimeout(restoreTimer);
+				scroller.classList.add("is-dragging", "is-snapless");
+				scroller.setPointerCapture(pointerId);
+			}
+			scroller.scrollLeft = startScrollLeft - dx;
+		});
+
+		const endDrag = () => {
+			if (pointerId === -1) return;
+			pointerId = -1;
+			if (!dragging) return;
+			dragging = false;
+			suppressClick = true;
+			scroller.classList.remove("is-dragging");
+			settle();
+		};
+
+		scroller.addEventListener("pointerup", endDrag);
+		scroller.addEventListener("pointercancel", endDrag);
+
+		// A completed drag should not open the card link under the cursor
+		scroller.addEventListener(
+			"click",
+			(e) => {
+				if (!suppressClick) return;
+				suppressClick = false;
+				e.preventDefault();
+				e.stopPropagation();
+			},
+			true,
+		);
+
+		// Stop native image/link dragging from hijacking the pan gesture
+		scroller.addEventListener("dragstart", (e) => {
+			if (pointerId !== -1 || dragging) e.preventDefault();
+		});
+	}
+
+	document.querySelectorAll<HTMLElement>(".projects").forEach(initProjectsNav);
+</script>
+
+<style>
+	.projects {
+		/*
+		 * Full-bleed breakout from the 38rem main column.
+		 * Shared tokens drive card width on every viewport — no breakpoint swap.
+		 */
+		--projects-gutter: 1.5rem;
+		--projects-pad: max(
+			var(--projects-gutter),
+			calc((100vw - 38rem) / 2 + var(--projects-gutter))
+		);
+		--card-gap: 0.75rem;
+		/* Peek of the next card so horizontal scroll is discoverable */
+		--card-peek: 2.5rem;
+		--card-max: 20rem;
+		--card-width: min(
+			var(--card-max),
+			calc(100vw - (2 * var(--projects-pad)) - var(--card-peek))
+		);
+
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
+		margin-bottom: 3rem;
+	}
+
+	.projects__head {
+		padding: 0 var(--projects-pad);
+		margin-bottom: 0.75rem;
+	}
+
+	.projects__title {
+		margin: 0 0 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--muted);
+		font-family: var(--font-mono);
+	}
+
+	.projects__filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+	}
+
+	.projects__chip {
+		appearance: none;
+		margin: 0;
+		padding: 0.3rem 0.7rem;
+		font: inherit;
+		font-size: 0.8rem;
+		color: var(--muted);
+		background: transparent;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		cursor: pointer;
+		transition:
+			color 150ms ease,
+			border-color 150ms ease,
+			background 150ms ease;
+	}
+
+	.projects__chip:hover {
+		color: var(--fg);
+		border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+	}
+
+	.projects__chip:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	.projects__chip[aria-pressed="true"] {
+		color: var(--fg);
+		background: transparent;
+		border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+	}
+
+	.projects__scroller {
+		display: flex;
+		gap: var(--card-gap);
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x mandatory;
+		scroll-padding-inline: var(--projects-pad);
+		-webkit-overflow-scrolling: touch;
+		/* Allow vertical page scroll when the gesture starts on a card */
+		touch-action: pan-x pan-y;
+		scrollbar-width: none;
+		/* Extra vertical padding so card lift + shadow are not clipped */
+		padding: 0.75rem var(--projects-pad) 1.25rem;
+	}
+
+	.projects__item {
+		flex: 0 0 var(--card-width);
+		min-width: 0;
+		scroll-snap-align: start;
+	}
+
+	.projects__item[hidden] {
+		display: none;
+	}
+
+	.projects__item :global(.project-card) {
+		flex: none;
+		width: 100%;
+		max-width: none;
+		scroll-snap-align: unset;
+	}
+
+	.projects__scroller :global(.project-card) {
+		scroll-snap-stop: normal;
+	}
+
+	@media (pointer: coarse) {
+		.projects__scroller :global(.project-card) {
+			scroll-snap-stop: always;
+		}
+	}
+
+	.projects__scroller::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Mouse drag-to-pan: "hand" cursor on fine pointers only.
+	   Selection is off entirely — it starts during the pre-drag
+	   threshold and fights the pan gesture. */
+	@media (hover: hover) and (pointer: fine) {
+		.projects__scroller {
+			cursor: grab;
+			-webkit-user-select: none;
+			user-select: none;
+		}
+	}
+
+	.projects__scroller.is-dragging {
+		cursor: grabbing;
+	}
+
+	.projects__scroller.is-dragging :global(a) {
+		pointer-events: none;
+	}
+
+	.projects__scroller.is-snapless {
+		scroll-snap-type: none;
+	}
+
+	.projects__nav {
+		display: none;
+		justify-content: flex-end;
+		gap: 0.5rem;
+		padding: 0 var(--projects-pad);
+		margin-top: -0.5rem;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		.projects__nav {
+			display: flex;
+		}
+
+		.projects__nav[hidden] {
+			display: none;
+		}
+	}
+
+	.projects__arrow {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		border: 1px solid var(--border);
+		border-radius: 50%;
+		background: var(--bg);
+		color: var(--muted);
+		cursor: pointer;
+		transition:
+			color 150ms ease,
+			border-color 150ms ease,
+			transform 120ms ease;
+	}
+
+	.projects__arrow:hover:not(:disabled) {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	.projects__arrow:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	.projects__arrow:active:not(:disabled) {
+		transform: scale(0.95);
+	}
+
+	.projects__arrow:disabled,
+	.projects__arrow[aria-disabled="true"] {
+		opacity: 0.35;
+		cursor: default;
+	}
+
+	.projects__arrow-icon {
+		display: inline-flex;
+		width: 1.1rem;
+		height: 1.1rem;
+	}
+
+	.projects__arrow-icon :global(svg) {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.projects__scroller {
+			scroll-behavior: auto;
+		}
+
+		.projects__arrow {
+			transition: none;
+		}
+
+		.projects__chip {
+			transition: none;
+		}
+
+		.projects__arrow:active:not(:disabled) {
+			transform: none;
+		}
+	}
+</style>

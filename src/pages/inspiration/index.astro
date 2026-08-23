@@ -1,8 +1,16 @@
 ---
 import FormattedDate from "../../components/FormattedDate.astro";
-import { INSPIRATION_DESCRIPTION, INSPIRATION_TITLE } from "../../consts";
+import {
+	INSPIRATION_DESCRIPTION,
+	INSPIRATION_ENABLED,
+	INSPIRATION_TITLE,
+} from "../../consts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getInspirationPostPath, getInspirationPosts } from "../../lib/inspiration";
+
+if (!INSPIRATION_ENABLED) {
+	return Astro.redirect("/");
+}
 
 const posts = await getInspirationPosts();
 ---
@@ -39,8 +47,8 @@ const posts = await getInspirationPosts();
 	}
 
 	h1 {
-		font-size: 1.75rem;
-		font-weight: 600;
+		font-size: 2.4rem;
+		font-weight: 700;
 		letter-spacing: -0.02em;
 		margin: 0 0 0.5rem;
 	}
@@ -81,6 +89,7 @@ const posts = await getInspirationPosts();
 	.meta {
 		margin: 0.35rem 0 0.5rem;
 		font-size: 0.875rem;
+		font-family: var(--font-mono);
 		color: var(--muted);
 	}
 
@@ -91,6 +100,7 @@ const posts = await getInspirationPosts();
 		font-size: 0.75rem;
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
+		font-family: var(--font-mono);
 	}
 
 	.posts p:last-child {

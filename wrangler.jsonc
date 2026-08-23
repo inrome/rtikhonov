@@ -1,0 +1,23 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "rtikhonov",
+	"compatibility_date": "2026-07-18",
+	"workers_dev": true,
+	"routes": [
+		{
+			"pattern": "rtikhonov.com",
+			"custom_domain": true
+		},
+		{
+			"pattern": "www.rtikhonov.com",
+			"custom_domain": true
+		}
+	],
+	"assets": {
+		"directory": "./dist",
+		"not_found_handling": "404-page"
+	},
+	"observability": {
+		"enabled": true
+	}
+}

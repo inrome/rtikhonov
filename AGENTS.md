@@ -1,46 +1,72 @@
 ## Development
 
-When starting the dev server, use background mode:
+The live Astro site is the repository root (`wrangler.jsonc` is here). When
+starting the dev server, use background mode:
 
 ```
 astro dev --background
 ```
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+Manage the server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
-Run `npm run check` before you commit. It type-checks components and validates post
-frontmatter against the content collection schema.
+On the owner laptop, Node may live in nvm:
+
+```
+export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
+```
+
+On Cursor Cloud, use the `node` already on PATH if it is >= 22.12. Do not
+require `/Users/rtikhonov/Desktop/...`.
+
+For local UI checks, use `.cursor/skills/preview-site/` — one server, verify on
+the port from `astro dev status`.
 
 ## Content
 
-Blog posts live in the `inspiration` content collection (`src/content/inspiration/*.md`).
+Inspiration posts live in `src/content/inspiration/*.md`.
 The schema is in `src/content.config.ts`, and shared queries are in
-`src/lib/inspiration.ts` — use `getInspirationPosts()` instead of calling
-`getCollection()` directly, so drafts and sorting stay consistent everywhere.
+`src/lib/inspiration.ts` — use `getInspirationPosts()` instead of
+calling `getCollection()` directly, so drafts and sorting stay consistent.
 
-See the README for the post frontmatter fields and the steps to add a post.
+Public display is gated by `INSPIRATION_ENABLED` in `src/consts.ts`.
+Set it to `true` and merge to `main` (Cloudflare Workers Builds ships it).
+
+See [docs/content.md](docs/content.md) for frontmatter fields and how to add a post.
 
 ## What "published" means
 
-**Published** means a visitor can open it on the live site: https://rtikhonov.com
+**Published** means a visitor can open the change on https://rtikhonov.com.
 
-Do **not** treat these as published:
+A merge to `main` publishes because **Cloudflare Workers Builds** deploys
+the Worker. GitHub only stores the code.
 
-- Code on `main`, a clean working tree, or a pushed commit
+These are **not** published:
+
+- A commit or PR that is not on `main`
 - A green GitHub check
-- A post without `draft: true` (`draft` only controls this repo's production *build*)
+- A GitHub Pages run (do not add Pages or `actions/deploy-pages`)
+- `draft: false` on a post (that only affects the build)
 
-Never deploy with GitHub Pages or GitHub Actions. Ship only with Cloudflare
-Workers (`wrangler` / Workers Builds). GitHub is version control only.
+## Deploy
 
-The public domain is Cloudflare. Inspiration is **not** live:
-`https://rtikhonov.com/inspiration/` is 404 even though the section exists on
-`main`.
+GitHub is version control only. Ship only with Cloudflare Workers.
 
-When the owner asks if something is unpublished, live, or public:
+Default path (Workers Builds):
 
-1. Check the live URL first (`https://rtikhonov.com` and the specific path).
-2. Report git status only as "in this repo", never as "published".
+1. Edit on `main` (or a PR into `main`).
+2. `npm run check`
+3. Open a PR. Preview versions come from Workers Builds on non-`main` branches.
+4. Merge to `main`. Cloudflare builds and deploys Worker `rtikhonov`.
+5. `curl` https://rtikhonov.com (cache-bust) and confirm the new copy.
+
+Emergency / first cutover only: `npm run deploy` after `npx wrangler whoami`
+works (`CLOUDFLARE_API_TOKEN` in Cursor environment secrets). Do not use this
+as the everyday path.
+
+Do not TodoWrite or `git diff main...HEAD` for a clean-tree ship.
+
+See [docs/deploy.md](docs/deploy.md), `.cursor/rules/deploy.mdc`, and
+`.cursor/skills/deploy-site/`.
 
 ## Security and privacy (public repo)
 
@@ -49,7 +75,8 @@ This repository is public. Everything committed is visible on the internet.
 - Never commit secrets (API keys, tokens, passwords, private keys) or `.env*` files.
 - Never commit private personal data (address, phone, IDs) unless the owner explicitly wants it public.
 - Use placeholders for unpublished contact details; only ship emails/links the owner approved.
-- Put deploy secrets in GitHub Actions secrets / environment variables, not in source.
+- Put deploy secrets in Cloudflare Workers Builds or Cursor environment secrets,
+  not in source. Never commit `CLOUDFLARE_API_TOKEN`.
 - If a secret may already be in git history, warn the owner and rotate it — removing the file is not enough.
 - When unsure whether content should be public, ask before adding it.
 
@@ -57,13 +84,6 @@ See also `.cursor/rules/public-repo-security.mdc`.
 
 ## Documentation
 
+Site overview and doc index: [README.md](README.md). Detailed guides live under [docs/](docs/).
+
 Full documentation: https://docs.astro.build
-
-Consult these guides before working on related tasks:
-
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)

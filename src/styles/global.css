@@ -12,6 +12,9 @@
 	--border: #ddd;
 	--link: #111;
 	--link-hover: #555;
+	--accent: #e35d05;
+	--accent-fg: #fff;
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,6 +25,8 @@
 		--border: #333;
 		--link: #f5f5f5;
 		--link-hover: #aaa;
+		--accent: #f59a56;
+		--accent-fg: #111;
 	}
 }
 
@@ -38,15 +43,24 @@ html {
 	line-height: 1.5;
 	background: var(--bg);
 	color: var(--fg);
+	overflow-x: clip;
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
 }
 
 body {
 	margin: 0;
-	min-height: 100vh;
+	min-height: 100dvh;
 	display: flex;
 	justify-content: center;
 	padding: 3rem 1.5rem;
 	padding-bottom: calc(3rem + var(--banner-offset, 0px));
+	overflow-x: clip;
 }
 
 main {
@@ -64,6 +78,11 @@ a:hover {
 	color: var(--link-hover);
 }
 
+a:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+}
+
 .site-nav {
 	display: flex;
 	flex-wrap: wrap;
@@ -72,6 +91,36 @@ a:hover {
 	font-size: 0.95rem;
 }
 
+.site-nav a {
+	color: var(--muted);
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+	color: var(--fg);
+}
+
 .site-nav a[aria-current="page"] {
+	color: var(--fg);
 	text-decoration-thickness: 2px;
+}
+
+.section-title {
+	margin: 0 0 1rem;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--muted);
+	font-family: var(--font-mono);
+}
+
+.section-title a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.section-title a:hover,
+.section-title a:focus-visible {
+	color: color-mix(in srgb, var(--accent) 55%, var(--fg));
 }

@@ -1,0 +1,5 @@
+{
+  "name": "rtikhonov.com",
+  "install": "npm ci",
+  "start": "npx astro dev --background"
+}
