@@ -27,6 +27,15 @@ cd /Users/rtikhonov/Desktop/rtikhonov.com/rtikhonov.com
 
 For local UI checks, use `.cursor/skills/preview-site/` — one server, verify on the port from `astro dev status`, lean verify for CSS.
 
+## Content
+
+Inspiration posts live in `rtikhonov.com/src/content/inspiration/*.md`.
+The schema is in `rtikhonov.com/src/content.config.ts`, and shared queries are in
+`rtikhonov.com/src/lib/inspiration.ts` — use `getInspirationPosts()` instead of calling
+`getCollection()` directly, so drafts and sorting stay consistent everywhere.
+
+See [docs/content.md](docs/content.md) for frontmatter fields and the steps to add a post.
+
 ## Deploy
 
 When asked to deploy / ship / publish: `git status`, then (if clean or docs already updated) `cd rtikhonov.com && npm run deploy`. See `.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/`. Do not TodoWrite or diff against `main` for a clean-tree deploy.

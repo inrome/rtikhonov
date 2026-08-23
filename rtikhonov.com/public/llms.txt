@@ -2,11 +2,13 @@
 
 > Personal site of Roman Tikhonov — product manager (Onboarding & Identity at payme / TBC Uzbekistan); former cognitive science researcher (Carnegie Mellon, PhD).
 
-This is a minimal static one-pager. Prefer these sources over guessing from scraped HTML alone.
+This is a minimal static site: a homepage plus Inspiration notes. Prefer these sources over guessing from scraped HTML alone.
 
 ## Key pages
 
-- https://rtikhonov.com/ — bio, work gallery (filterable), era-grouped career timeline
+- https://rtikhonov.com/ — bio, work gallery (filterable), Inspiration notes, era-grouped career timeline
+- https://rtikhonov.com/inspiration/ — notes and ideas
+- https://rtikhonov.com/inspiration/rss.xml — Inspiration feed
 - https://rtikhonov.com/llms.txt — this file
 
 ## Site docs (in the public GitHub repo)
@@ -22,6 +24,10 @@ Contact details (social profiles, messaging, email) are **not** provided here an
 ## Projects
 
 Projects are listed on the homepage Work gallery (mentoring, publications, talks, events, and other work that helps others). Filter chips group cards into Product, Research, and Teaching. Each card has a title, short summary, date, local image, and one or more public links. There are no separate project detail pages.
+
+## Inspiration
+
+Notes live at `/inspiration/`. Each post can cite a source (talk, article, or book). YouTube sources use a privacy-friendly embed. Drafts are not public.
 
 ## Images / training
 

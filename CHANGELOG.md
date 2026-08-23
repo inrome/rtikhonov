@@ -2,6 +2,12 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Arrival
+
+- Inspiration notes are on the live site. Home, `/inspiration/`, and the RSS feed at `/inspiration/rss.xml` share the same posts.
+- The first note is from Yuval Noah Harari’s talk on language, AI, and power, with a privacy-friendly YouTube embed.
+- Draft posts stay on the local preview. Production and the feed only show published notes.
+
 ## 2026-07-21 — Separate Tables
 
 - Timeline events live in one typed data file instead of the homepage. You add a life event by appending an object with a stable id, date, and short line.

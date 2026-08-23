@@ -86,7 +86,41 @@ A year with one entry stays a plain row inside its era. A year with two or more 
 
 Cover career roles, research programs, and leadership projects. Prefer short public-facing lines. Do not duplicate the same Carnegie Mellon role and its Open Mind publication as two vague “2022/2023 research” rows — keep distinct milestones.
 
-Blog or note pages are a later step: add a post collection when the first long-form piece ships, then set `href` on the matching timeline entry.
+When a timeline row has a related Inspiration post, set `href` to that post path (for example `/inspiration/language-ai-and-power/`).
+
+## Inspiration
+
+Content collection: `rtikhonov.com/src/content/inspiration/*.md`  
+Schema: `rtikhonov.com/src/content.config.ts`  
+Queries: `rtikhonov.com/src/lib/inspiration.ts` — always use `getInspirationPosts()` so drafts and sort stay consistent.
+
+The file name is the URL: `language-ai-and-power.md` → `/inspiration/language-ai-and-power/`.
+
+| Field | Notes |
+|--------|--------|
+| `title` | Required |
+| `description` | Required. One or two sentences for the list, homepage, and RSS |
+| `pubDate` | Required. ISO date |
+| `updatedDate` | Optional |
+| `sourceUrl` | Optional URL of the talk, article, or book. YouTube links also render a `youtube-nocookie` embed — strip tracking params such as `?si=` |
+| `sourceTitle` | Optional label for the source link |
+| `draft` | Optional. `true` hides the post from production and RSS; it still shows in `astro dev`, marked Draft |
+
+Add a post — create a markdown file:
+
+```yaml
+---
+title: "Post title"
+description: "One or two sentences for the list page and RSS feed."
+pubDate: 2026-08-03
+sourceUrl: "https://www.youtube.com/watch?v=VIDEO_ID"
+sourceTitle: "Talk or article title"
+draft: true
+---
+Your notes in Markdown.
+```
+
+The list is `/inspiration/`. The feed is `/inspiration/rss.xml`. The homepage Inspiration section lists the same published posts.
 
 ### Work filter chips
 

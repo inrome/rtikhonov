@@ -4,9 +4,11 @@ Minimal personal one-pager.
 
 ## Page anatomy
 
-1. **Header** — portrait, name, short two-line bio, outlined 15-minute call CTA, and quieter LinkedIn / Telegram handles (Tabler icons; contact targets decoded by JS)
-2. **Work** — horizontal scroll gallery with filter chips (All / Product / Research / Teaching), backed by a content collection
-3. **Timeline** — career history stored in `src/data/timeline.ts`, grouped into eras (Product, Academia, Undergrad, Earlier). Product starts open; the others start closed. Years with two or more entries still collapse into a short overview inside an era. Entries can carry an optional marker (emoji or icon) and a link to a future post.
+1. **Site nav** — Home and Inspiration, with the current page marked
+2. **Header** — portrait, name, short two-line bio, outlined 15-minute call CTA, and quieter LinkedIn / Telegram handles (Tabler icons; contact targets decoded by JS)
+3. **Work** — horizontal scroll gallery with filter chips (All / Product / Research / Teaching), backed by a content collection
+4. **Inspiration** — notes and ideas. The homepage lists posts; `/inspiration/` is the full index; each note has its own page. RSS lives at `/inspiration/rss.xml`
+5. **Timeline** — career history stored in `src/data/timeline.ts`, grouped into eras (Product, Academia, Undergrad, Earlier). Product starts open; the others start closed. Years with two or more entries still collapse into a short overview inside an era. Entries can carry an optional marker (emoji or icon) and a link to a related post.
 
 ## Feature summary
 
@@ -21,3 +23,4 @@ Minimal personal one-pager.
 - **Video call** — Opens a relaxed 15-minute video call from an outlined “15 min call” pill (same style as Work chips).
 - **Link previews** — Gives shared pages a clear title, description, portrait, theme color, and proper icons.
 - **Era timeline** — Product / Academia / Undergrad / Earlier eras open and close with native `<details>`. Busy years inside an era still fold the same way.
+- **Inspiration notes** — Markdown posts with optional source links. YouTube sources render a privacy-friendly embed. Drafts show in local preview and stay out of production and RSS.
