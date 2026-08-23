@@ -6,6 +6,7 @@ Notable updates to rtikhonov.com. Newest entries come first.
 
 - `/weeks/` and `/inspiration/` stay reachable by URL. They are not in the nav and not on the homepage.
 - `INSPIRATION_ENABLED` only puts Inspiration in the nav, the homepage list, and the RSS `<link>` in `<head>`.
+- Inspiration includes today’s Wait But Why notes at `/inspiration/life-in-weeks/`. The flatten onto `main` had dropped that post.
 
 ## 2026-08-23 — Life In Weeks
 
