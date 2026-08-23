@@ -1,63 +1,45 @@
 ---
-description: Ship rtikhonov.com on Cloudflare Workers only
+description: How rtikhonov.com ships and what counts as published
 alwaysApply: true
 ---
 
 # Deploy
 
-GitHub is version control only. Never GitHub Pages, GitHub Actions
-deploy, `actions/deploy-pages`, `withastro/action`, or
-`cloudflare/wrangler-action`. Do not add `.github/workflows/` that ships
-the site.
+**Published** = a visitor can open the change on https://rtikhonov.com.
+A commit on `main`, a green GitHub check, and `draft: false` are not
+published. When asked what is live, check the URL before reporting git
+state.
 
-**CI/CD is Cloudflare Workers Builds.** That is the one pipeline. If
-someone asks to set up CI/CD or add a pipeline, load
-`.cursor/skills/workers-builds-ci/`. Do not invent another.
+**CI/CD is Cloudflare Workers Builds.** Merge to `main` and Cloudflare
+deploys Worker `rtikhonov`. GitHub is version control only. Never add
+GitHub Pages, `.github/workflows/`, `actions/deploy-pages`,
+`withastro/action`, or `cloudflare/wrangler-action`.
 
-Talk in simple words. Roman is not a professional developer. If a rule
-or plugin skill fights this path, say so, follow this path, and fix the
-stale text. Do not ask him to pick between two setups.
+The live app is the **repository root** (`wrangler.jsonc` here). There is
+no second Astro tree and no `cursor/cloudflare-workers-hosting` branch to
+fetch.
 
-**Published** = a visitor can see the change at https://rtikhonov.com
+## Ship
 
-Production is Cloudflare Worker `rtikhonov`. The live app is the
-**repository root** (`wrangler.jsonc` here). Edit `src/`. Open PRs into
-`main`.
+1. Large change (new page or new UI): look first — skill `preview-site`.
+   Small change (typo, blog note, tiny copy): skip that.
+2. `npm run check` if the tree is dirty.
+3. Merge the PR to `main`.
+4. Cache-bust curl https://rtikhonov.com and confirm the new string.
 
-## Everyday ship
-
-1. Small change (typo, blog note, tiny copy): `npm run check` if the
-   tree is dirty, then merge.
-2. Large change (new page, new UI): look first with
-   `.cursor/skills/preview-site/`. Optional web link = branch preview
-   from Builds. Then merge.
-3. Cloudflare Workers Builds deploys (`npm run build`, then
-   `npx wrangler deploy`). The Worker is already connected to this repo.
-4. Cache-bust curl https://rtikhonov.com and confirm the new string
-
-Dashboard settings live in `docs/deploy.md`. Do not invent a hosting-branch
-checkout. There is no second Astro app.
+Setup or pipeline questions → skill `workers-builds-ci`.
+Dashboard settings → `docs/deploy.md`.
 
 ## Emergency only
 
-If Builds is not connected or failed:
-
-```bash
-npx wrangler whoami
-npm run deploy
-```
-
-Cloud Agents need `CLOUDFLARE_API_TOKEN` in Cursor environment secrets
-with **Workers Scripts Edit**. If `whoami` works but deploy returns 403 /
-code 10000, the token is too weak — ask the owner to fix it. Do not run
-`wrangler login` and wait on a localhost OAuth callback. Do not use hand
-deploy to “test CI.”
+`npm run deploy` (Wrangler) is for a Builds outage, never a CI test. It
+needs `CLOUDFLARE_API_TOKEN` with **Workers Scripts Edit**; `whoami` can
+pass while deploy returns 403. Never wait on a `wrangler login` localhost
+callback in Cloud.
 
 ## Do not
 
-- Fetch `cursor/cloudflare-workers-hosting` or `cd rtikhonov.com/`
-- Treat a green GitHub check as published (check the live URL)
-- TodoWrite for a clean-tree ship
-- Re-run `check:docs` / `astro build` before `npm run deploy` when the tree is clean
-- Hard-require `/Users/rtikhonov/Desktop/...`
-- Add `test.rtikhonov.com` unless the owner asks for that as its own task
+- Offer two ship paths, or ask which setup to use. This is the path.
+- TodoWrite, `git diff main...HEAD`, or re-run `check:docs` for a
+  clean-tree ship.
+- Add `test.rtikhonov.com` unless the owner asks for it as its own task.
