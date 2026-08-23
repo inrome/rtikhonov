@@ -1,6 +1,9 @@
 # rtikhonov.com
 
-Personal website of Roman Tikhonov. Built with [Astro](https://astro.build) and deployed to GitHub Pages.
+Personal website of Roman Tikhonov. Built with [Astro](https://astro.build). This repo
+deploys to GitHub Pages, but **published** means the page is live on
+[rtikhonov.com](https://rtikhonov.com). The public site can differ from `main`.
+Inspiration is not on the live site yet (`/inspiration/` is 404).
 
 ## Commands
 

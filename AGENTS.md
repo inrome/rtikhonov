@@ -20,6 +20,25 @@ The schema is in `src/content.config.ts`, and shared queries are in
 
 See the README for the post frontmatter fields and the steps to add a post.
 
+## What "published" means
+
+**Published** means a visitor can open it on the live site: https://rtikhonov.com
+
+Do **not** treat these as published:
+
+- Code on `main`, a clean working tree, or a pushed commit
+- A successful GitHub Pages deploy
+- A post without `draft: true` (`draft` only controls this repo's production *build*)
+
+The public domain is fronted by Cloudflare and can serve a different site than this
+Astro repo. Inspiration is **not** live: `https://rtikhonov.com/inspiration/` is 404
+even though the section exists on `main`.
+
+When the owner asks if something is unpublished, live, or public:
+
+1. Check the live URL first (`https://rtikhonov.com` and the specific path).
+2. Report git status only as "in this repo", never as "published".
+
 ## Security and privacy (public repo)
 
 This repository is public. Everything committed is visible on the internet.
