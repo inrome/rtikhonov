@@ -2,6 +2,10 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-08-23 — Hello, Goodbye
+
+- `/hello` is live so we can see if a merge to `main` reaches https://rtikhonov.com/hello through Workers Builds.
+
 ## 2026-08-23 — One Way Or Another
 
 - Cloudflare Workers Builds is connected to this repo. A merge to `main` is the everyday ship. Emergency Wrangler stays for outages only.
