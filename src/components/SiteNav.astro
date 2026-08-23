@@ -1,12 +1,12 @@
 ---
-import { INSPIRATION_ENABLED, NAV_ITEMS } from "../consts";
+import { NAV_ITEMS } from "../consts";
 
 const path = Astro.url.pathname;
 const isCurrent = (href: string) =>
 	href === "/" ? path === "/" : path.startsWith(href);
 
-// Hide the whole chrome when Inspiration is off — Home alone looks odd on a one-pager.
-const showNav = INSPIRATION_ENABLED && NAV_ITEMS.length > 0;
+// Hide the chrome when Home is the only item — it looks odd on a one-pager.
+const showNav = NAV_ITEMS.length > 1;
 ---
 
 {

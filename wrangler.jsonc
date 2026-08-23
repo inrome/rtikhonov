@@ -3,6 +3,7 @@
 	"name": "rtikhonov",
 	"compatibility_date": "2026-07-18",
 	"workers_dev": true,
+	"preview_urls": true,
 	"routes": [
 		{
 			"pattern": "rtikhonov.com",
@@ -19,5 +20,18 @@
 	},
 	"observability": {
 		"enabled": true
+	},
+	"env": {
+		"test": {
+			"name": "rtikhonov-test",
+			"workers_dev": true,
+			"preview_urls": true,
+			"routes": [
+				{
+					"pattern": "test.rtikhonov.com",
+					"custom_domain": true
+				}
+			]
+		}
 	}
 }

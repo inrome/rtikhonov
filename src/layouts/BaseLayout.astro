@@ -9,9 +9,10 @@ interface Props {
 	ogTitle?: string;
 	ogDescription?: string;
 	ogType?: "website" | "article";
+	wide?: boolean;
 }
 
-const { title, description, ogTitle, ogDescription, ogType } = Astro.props;
+const { title, description, ogTitle, ogDescription, ogType, wide = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -26,7 +27,7 @@ const { title, description, ogTitle, ogDescription, ogType } = Astro.props;
 		/>
 	</head>
 	<body>
-		<main>
+		<main class:list={{ wide }}>
 			<SiteNav />
 			<slot />
 		</main>

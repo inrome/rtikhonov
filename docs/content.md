@@ -90,14 +90,14 @@ When a timeline row has a related Inspiration post, set `href` to that post path
 
 ## Inspiration
 
-Feature flag: `INSPIRATION_ENABLED` in `src/consts.ts`.
+`/inspiration/` and each post URL always work. Feature flag: `INSPIRATION_ENABLED` in `src/consts.ts`.
 
-- `false` (current) — nav, homepage list, `/inspiration/` routes, and RSS stay off. Post Markdown can still live in the repo.
-- `true` — set the flag, then merge to `main` so Workers Builds ships it.
+- `false` (current) — no nav link, no homepage list, no RSS `<link>` in `<head>`.
+- `true` — show Inspiration in the nav and on the homepage, and advertise the feed in `<head>`.
 
 Content collection: `src/content/inspiration/*.md`  
 Schema: `src/content.config.ts`  
-Queries: `src/lib/inspiration.ts` — always use `getInspirationPosts()` so drafts, the flag, and sort stay consistent.
+Queries: `src/lib/inspiration.ts` — always use `getInspirationPosts()` so drafts and sort stay consistent.
 
 The file name is the URL: `language-ai-and-power.md` → `/inspiration/language-ai-and-power/`.
 
@@ -125,7 +125,20 @@ draft: true
 Your notes in Markdown.
 ```
 
-The list is `/inspiration/`. The feed is `/inspiration/rss.xml`. The homepage Inspiration section lists the same published posts.
+The list is `/inspiration/`. The feed is `/inspiration/rss.xml`. Those URLs stay unlisted unless `INSPIRATION_ENABLED` is on.
+
+## Weeks
+
+The life calendar is `/weeks/`. It is not in the nav. Annotations live in `src/lib/weeks.ts` (`WEEK_ANNOTATIONS`).
+
+| Field | Notes |
+|--------|--------|
+| `date` | Any day in that week (`YYYY-MM-DD`). The page derives the week number and range |
+| `emoji` | One color emoji |
+| `title` | Factual event line |
+| `location` | Optional. Shown as `Location: …` |
+
+Birth week is 16 May 1992. Keep comments factual. Do not guess a week from a year-only event.
 
 ### Work filter chips
 

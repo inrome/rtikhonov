@@ -15,6 +15,9 @@
 	--accent: #e35d05;
 	--accent-fg: #fff;
 	--font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	--week-past: #111;
+	--week-present: var(--accent);
+	--week-future: #d4d4d4;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,6 +30,8 @@
 		--link-hover: #aaa;
 		--accent: #f59a56;
 		--accent-fg: #111;
+		--week-past: #f5f5f5;
+		--week-future: #3a3a3a;
 	}
 }
 
@@ -66,6 +71,10 @@ body {
 main {
 	max-width: 38rem;
 	width: 100%;
+}
+
+main.wide {
+	max-width: 58rem;
 }
 
 a {

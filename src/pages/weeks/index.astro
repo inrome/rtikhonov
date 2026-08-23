@@ -1,0 +1,78 @@
+---
+import WeeksGrid from "../../components/WeeksGrid.astro";
+import { WEEKS_DESCRIPTION, WEEKS_TITLE } from "../../consts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title={WEEKS_TITLE} description={WEEKS_DESCRIPTION} wide>
+	<header>
+		<h1>{WEEKS_TITLE}</h1>
+		<p class="lede">Each square is one week of my life, from 16 May 1992. The grid is 80 years.</p>
+		<ul class="legend">
+			<li>
+				<span class="legend__swatch is-past"></span>
+				Past
+			</li>
+			<li>
+				<span class="legend__swatch is-present"></span>
+				This week
+			</li>
+			<li>
+				<span class="legend__swatch is-future"></span>
+				Future
+			</li>
+		</ul>
+	</header>
+
+	<WeeksGrid />
+</BaseLayout>
+
+<style>
+	header {
+		margin-bottom: 1.75rem;
+	}
+
+	h1 {
+		font-size: 1.75rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		margin: 0 0 0.5rem;
+	}
+
+	.lede {
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.85rem 1.25rem;
+		list-style: none;
+		margin: 1.1rem 0 0;
+		padding: 0;
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+
+	.legend li {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	.legend__swatch {
+		width: 0.875rem;
+		height: 0.875rem;
+		border-radius: 2px;
+		background: var(--week-future);
+	}
+
+	.legend__swatch.is-past {
+		background: var(--week-past);
+	}
+
+	.legend__swatch.is-present {
+		background: var(--week-present);
+	}
+</style>

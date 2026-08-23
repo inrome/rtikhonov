@@ -21,8 +21,9 @@ it with `astro dev status` / `stop` / `logs`, and verify on the port
 Inspiration posts live in `src/content/inspiration/*.md`. The schema is
 `src/content.config.ts`. Query through `getInspirationPosts()` in
 `src/lib/inspiration.ts`, not `getCollection()`, so drafts and sorting
-stay consistent. `INSPIRATION_ENABLED` in `src/consts.ts` gates public
-display. Fields and how to add a post: [docs/content.md](docs/content.md).
+stay consistent. `/inspiration/` and `/weeks/` work by URL and stay off
+Home and the nav. `INSPIRATION_ENABLED` only shows Inspiration in chrome.
+Fields and how to add a post: [docs/content.md](docs/content.md).
 
 ## Ship
 

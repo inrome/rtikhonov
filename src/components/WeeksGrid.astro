@@ -1,0 +1,373 @@
+---
+import {
+	LIFE_YEARS,
+	WEEKS_PER_YEAR,
+	WEEK_ANNOTATIONS,
+	calendarFromDate,
+	formatWeekMeta,
+	resolveAnnotations,
+	weekTone,
+} from "../lib/weeks";
+
+const today = calendarFromDate(new Date());
+const annotations = resolveAnnotations(WEEK_ANNOTATIONS);
+
+const years = Array.from({ length: LIFE_YEARS }, (_, year) => ({
+	year,
+	showLabel: year % 10 === 0,
+	weeks: Array.from({ length: WEEKS_PER_YEAR }, (_, column) => {
+		const week = year * WEEKS_PER_YEAR + column + 1;
+		const annotation = annotations.get(week);
+		const label = annotation
+			? [
+					annotation.title,
+					annotation.location ? `Location: ${annotation.location}` : "",
+					formatWeekMeta(week),
+				]
+					.filter(Boolean)
+					.join(". ")
+			: undefined;
+
+		return {
+			week,
+			tone: weekTone(week, today),
+			annotation,
+			label,
+		};
+	}),
+}));
+---
+
+<div class="weeks-scroll" role="region" aria-label="Life calendar, 80 years by 52 weeks">
+	<div class="weeks-board" data-weeks-board>
+		{
+			years.map(({ year, showLabel, weeks }) => (
+				<div class="weeks-row">
+					<span class="weeks-row__age" aria-hidden="true">
+						{showLabel ? year : ""}
+					</span>
+					{weeks.map(({ week, tone, annotation, label }) =>
+						annotation ? (
+							<button
+								type="button"
+								class:list={["week", `is-${tone}`]}
+								data-week={week}
+								aria-label={label}
+							>
+								<span class="week__emoji" aria-hidden="true">
+									{annotation.emoji}
+								</span>
+							</button>
+						) : (
+							<span class:list={["week", `is-${tone}`]} data-week={week}></span>
+						),
+					)}
+				</div>
+			))
+		}
+	</div>
+</div>
+
+<div class="weeks-popover" data-weeks-popover hidden>
+	<p class="weeks-popover__title" data-weeks-title></p>
+	<p class="weeks-popover__location" data-weeks-location></p>
+	<p class="weeks-popover__meta" data-weeks-meta></p>
+</div>
+
+<script>
+	import {
+		calendarFromDate,
+		formatWeekMeta,
+		resolveAnnotations,
+		weekTone,
+	} from "../lib/weeks";
+
+	const board = document.querySelector("[data-weeks-board]");
+	const popover = document.querySelector("[data-weeks-popover]");
+	const titleEl = document.querySelector("[data-weeks-title]");
+	const locationEl = document.querySelector("[data-weeks-location]");
+	const metaEl = document.querySelector("[data-weeks-meta]");
+
+	if (
+		board instanceof HTMLElement &&
+		popover instanceof HTMLElement &&
+		titleEl instanceof HTMLElement &&
+		locationEl instanceof HTMLElement &&
+		metaEl instanceof HTMLElement
+	) {
+		const annotations = resolveAnnotations();
+		const cells = board.querySelectorAll<HTMLElement>(".week");
+
+		let pinned: HTMLElement | null = null;
+		let hovered: HTMLElement | null = null;
+
+		const paint = () => {
+			const today = calendarFromDate(new Date());
+			for (const cell of cells) {
+				const week = Number(cell.dataset.week);
+				const tone = weekTone(week, today);
+				cell.classList.toggle("is-past", tone === "past");
+				cell.classList.toggle("is-present", tone === "present");
+				cell.classList.toggle("is-future", tone === "future");
+			}
+		};
+
+		const weekFrom = (target: EventTarget | null) => {
+			if (!(target instanceof Element)) return null;
+			const cell = target.closest(".week");
+			return cell instanceof HTMLElement && board.contains(cell) ? cell : null;
+		};
+
+		const activeCell = () => {
+			if (pinned) return pinned;
+			if (hovered) return hovered;
+			const focused = document.activeElement;
+			if (focused instanceof HTMLElement && focused.classList.contains("week") && board.contains(focused)) {
+				return focused;
+			}
+			return null;
+		};
+
+		let pointerX = 0;
+		let pointerY = 0;
+
+		const cellUnderPointer = (x = pointerX, y = pointerY) => {
+			return weekFrom(document.elementFromPoint(x, y));
+		};
+
+		const placePopover = (cell: HTMLElement) => {
+			const week = Number(cell.getAttribute("data-week"));
+			if (!Number.isFinite(week) || week < 1) {
+				popover.hidden = true;
+				return;
+			}
+
+			const note = annotations.get(week);
+			metaEl.textContent = formatWeekMeta(week);
+			titleEl.textContent = note?.title ?? "";
+			locationEl.textContent = note?.location ? `Location: ${note.location}` : "";
+
+			popover.hidden = false;
+
+			const rect = cell.getBoundingClientRect();
+			const tip = popover.getBoundingClientRect();
+			let top = rect.top - tip.height - 10;
+			if (top < 8) top = rect.bottom + 10;
+
+			let left = rect.left + rect.width / 2 - tip.width / 2;
+			left = Math.min(Math.max(8, left), window.innerWidth - tip.width - 8);
+
+			popover.style.top = `${top}px`;
+			popover.style.left = `${left}px`;
+		};
+
+		const updatePopover = () => {
+			const cell = activeCell();
+			if (!cell) {
+				popover.hidden = true;
+				return;
+			}
+			placePopover(cell);
+		};
+
+		const setPinned = (cell: HTMLElement | null) => {
+			if (pinned) pinned.classList.remove("is-open");
+			pinned = cell;
+			if (pinned) pinned.classList.add("is-open");
+			updatePopover();
+		};
+
+		const refreshHover = (x: number, y: number) => {
+			pointerX = x;
+			pointerY = y;
+			if (!pinned) hovered = cellUnderPointer(x, y);
+			updatePopover();
+		};
+
+		paint();
+
+		board.addEventListener("pointermove", (event) => {
+			refreshHover(event.clientX, event.clientY);
+		});
+
+		board.addEventListener("pointerleave", () => {
+			hovered = null;
+			if (!pinned) updatePopover();
+		});
+
+		board.addEventListener("click", (event) => {
+			const cell = weekFrom(event.target) ?? cellUnderPointer(event.clientX, event.clientY);
+			if (!cell) return;
+			event.stopPropagation();
+			setPinned(pinned === cell ? null : cell);
+		});
+
+		board.addEventListener("focusin", () => {
+			updatePopover();
+		});
+
+		board.addEventListener("focusout", () => {
+			window.requestAnimationFrame(updatePopover);
+		});
+
+		document.addEventListener("click", (event) => {
+			if (weekFrom(event.target) || popover.contains(event.target as Node)) return;
+			setPinned(null);
+		});
+
+		document.addEventListener("keydown", (event) => {
+			if (event.key !== "Escape") return;
+			setPinned(null);
+			hovered = cellUnderPointer();
+			updatePopover();
+		});
+
+		window.addEventListener(
+			"scroll",
+			() => {
+				if (!pinned) hovered = cellUnderPointer();
+				updatePopover();
+			},
+			true,
+		);
+		window.addEventListener("resize", updatePopover);
+	}
+</script>
+
+<style>
+	.weeks-scroll {
+		--week-size: 0.875rem;
+		--week-gap: 0.16rem;
+		overflow: visible;
+		padding: 1.35rem 0.4rem 2rem;
+		margin-inline: -0.4rem;
+	}
+
+	.weeks-board {
+		display: flex;
+		flex-direction: column;
+		gap: var(--week-gap);
+		width: max-content;
+	}
+
+	.weeks-row {
+		display: grid;
+		grid-template-columns: 1.75rem repeat(52, var(--week-size));
+		column-gap: var(--week-gap);
+		align-items: center;
+	}
+
+	.weeks-row__age {
+		font-size: 0.75rem;
+		line-height: 1;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+		text-align: right;
+		padding-right: 0.15rem;
+	}
+
+	.week {
+		position: relative;
+		box-sizing: border-box;
+		width: var(--week-size);
+		height: var(--week-size);
+		margin: 0;
+		padding: 0;
+		border: 0;
+		border-radius: 2px;
+		background: var(--week-future);
+		color: inherit;
+		display: grid;
+		place-items: center;
+		line-height: 0;
+		appearance: none;
+		-webkit-appearance: none;
+		cursor: pointer;
+	}
+
+	button.week {
+		font: inherit;
+	}
+
+	.week.is-past {
+		background: var(--week-past);
+	}
+
+	.week.is-present {
+		background: var(--week-present);
+	}
+
+	.week.is-future {
+		background: var(--week-future);
+	}
+
+	.week__emoji {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		font-size: 0.8rem;
+		line-height: 1;
+		pointer-events: none;
+		filter: drop-shadow(0 0 0.6px #fff);
+	}
+
+	.week:hover,
+	.week:focus-visible,
+	.week.is-open {
+		transform: scale(2.15);
+		z-index: 5;
+		box-shadow: 0 0 0 2px var(--bg), 0 8px 18px color-mix(in srgb, var(--fg) 22%, transparent);
+	}
+
+	.week:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	.weeks-popover {
+		position: fixed;
+		z-index: 20;
+		min-width: 12rem;
+		max-width: min(18rem, calc(100vw - 1rem));
+		padding: 0.65rem 0.75rem;
+		border: 1px solid var(--border);
+		border-radius: 0.4rem;
+		background: var(--bg);
+		box-shadow: 0 10px 28px color-mix(in srgb, var(--fg) 12%, transparent);
+		pointer-events: none;
+	}
+
+	.weeks-popover[hidden] {
+		display: none;
+	}
+
+	.weeks-popover p {
+		margin: 0;
+	}
+
+	.weeks-popover p:empty {
+		display: none;
+	}
+
+	.weeks-popover__title {
+		font-weight: 600;
+		font-size: 0.95rem;
+		letter-spacing: -0.01em;
+	}
+
+	.weeks-popover__location {
+		margin-top: 0.2rem;
+		font-size: 0.9rem;
+	}
+
+	.weeks-popover__meta {
+		margin-top: 0.35rem;
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
+
+	.weeks-popover__title:empty + .weeks-popover__location:empty + .weeks-popover__meta {
+		margin-top: 0;
+	}
+</style>

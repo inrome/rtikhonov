@@ -8,6 +8,7 @@ import FormattedDate from "../components/FormattedDate.astro";
 import ProjectsGallery from "../components/ProjectsGallery.astro";
 import SiteBanner from "../components/SiteBanner.astro";
 import SiteNav from "../components/SiteNav.astro";
+import { INSPIRATION_ENABLED } from "../consts";
 import {
 	getInspirationPostPath,
 	getInspirationPosts,
@@ -116,7 +117,7 @@ for (const group of timelineByYear) {
 	if (era) era.years.push(group);
 }
 
-const posts = await getInspirationPosts();
+const posts = INSPIRATION_ENABLED ? await getInspirationPosts() : [];
 ---
 
 <html lang="en">

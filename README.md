@@ -46,7 +46,31 @@ add GitHub Pages or GitHub Actions.
    `npx wrangler deploy`.
 3. Open [rtikhonov.com](https://rtikhonov.com) (or `curl` it) and confirm.
 
+A push to a PR branch uploads a preview version (not production). The stable
+alias is `https://<branch-with-dashes>-rtikhonov.inrome.workers.dev`.
+
 Exact dashboard settings: [docs/deploy.md](docs/deploy.md). Cursor rules
 live in [.cursor/rules/](.cursor/rules/) and skills in
 [.cursor/skills/](.cursor/skills/) — `deploy-site` to ship,
 `workers-builds-ci` for pipeline questions, `preview-site` to look first.
+
+## Add a week on /weeks
+
+The life calendar is `/weeks/`. It is not in the nav. Each square is one week
+from 16 May 1992. Colors update in the browser: past, this week (orange), and
+future.
+
+To mark a week, add an object to `WEEK_ANNOTATIONS` in `src/lib/weeks.ts`:
+
+```ts
+{
+  date: "1992-05-16",
+  emoji: "🇺🇦",
+  title: "The week I was born",
+  location: "Kryvyi Rih, Ukraine",
+}
+```
+
+`date` is any day in that week (`YYYY-MM-DD`). The page derives the week number
+and the date range. Use one color emoji. `location` is optional. Keep the title
+and location factual.
