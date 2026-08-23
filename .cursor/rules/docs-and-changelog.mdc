@@ -1,0 +1,17 @@
+---
+description: Keep documentation and changelog current with site changes
+alwaysApply: true
+---
+
+# Documentation and changelog
+
+Every user-facing, content-structure, deploy, or agent-workflow change
+needs its docs updated in the same work: the focused guide under `docs/`,
+the index in `README.md`, `public/llms.txt` if its summary changed, and a
+short `CHANGELOG.md` entry for significant work only.
+
+Use skill `maintain-project-docs` for the doc map and changelog format.
+
+Do not ship while docs are stale relative to pending changes. When the
+tree is already clean, do not re-audit docs by hand — `npm run check`
+runs `check:docs`.

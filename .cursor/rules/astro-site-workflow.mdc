@@ -1,50 +1,25 @@
 ---
-description: Astro personal site path, content DB, preview, and Cloudflare deploy
+description: Astro site paths, content collections, and preview entry point
 globs: src/**,astro.config.mjs,wrangler.jsonc
 alwaysApply: false
 ---
 
 # Astro site workflow
 
-The site is the repository root. Run Astro and Wrangler from here.
+The site is the repository root. Run Astro and Wrangler from here. Prefer
+`./node_modules/.bin/astro` over `npx astro` once deps are installed.
 
-## Shell
+For local preview, HMR, or “did my CSS land?”, follow skill
+`preview-site` — one server, verify on the port from `astro dev status`.
 
-On the owner laptop, export nvm Node if needed:
+## Content collections
 
-```bash
-export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-```
-
-On Cursor Cloud, skip the nvm line if `node` is already >= 22.12. Do not
-require `/Users/rtikhonov/Desktop/...`.
-
-Prefer `./node_modules/.bin/astro` over `npx astro` once deps are installed.
-
-For local preview / HMR / “did my CSS land?”, follow `.cursor/skills/preview-site/`
-(status → one port → lean verify).
-
-## Preview
-
-```bash
-astro dev --background   # or: npm run dev -- --host 127.0.0.1 --port 4321
-```
-
-- Always `astro dev status` before navigating or verifying — use **that** URL/port.
-- If HMR looks stale (edits not in served CSS), hard-refresh; then stop → kill ports 4321–4323 → start **one** server. Prefer hard-refresh after image asset rewrites.
-- Never start a second server while one is already running.
-
-## Content “DB”
-
-Prefer Astro content collections over inline arrays for growing lists (projects, etc.):
+Prefer collections over inline arrays for growing lists:
 
 - Schema: `src/content.config.ts` with `glob` loader + Zod
 - Entries: `src/content/<collection>/*.md`
-- Dates for filtering: `z.coerce.date()` (ISO in frontmatter). Optional `dateEnd` for ranges
-- Display formatting lives in `src/lib/` helpers — keep raw `Date` in data
+- Filterable dates: `z.coerce.date()` (ISO in frontmatter); optional
+  `dateEnd` for ranges
+- Keep raw `Date` in data; format in `src/lib/` helpers
 
-## Deploy
-
-When the user asks to deploy, follow `.cursor/rules/deploy.mdc` / the
-`deploy-site` skill. Everyday: merge to `main`, then curl the live URL.
-`npm run deploy` is emergency only.
+Timeline events live in `src/data/timeline.ts`.

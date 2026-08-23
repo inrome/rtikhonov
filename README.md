@@ -15,7 +15,8 @@ Workers Builds is connected.
 - [Interactions](docs/interactions.md) — card hover lift and portrait holographic sheen
 - [SEO / social](docs/seo-social.md) — titles, meta, Open Graph, favicons, sharing rules
 - [Crawling / AI](docs/crawling-ai.md) — robots, portrait opt-out, contact obfuscation
-- [Deploy](docs/deploy.md) — Workers Builds settings and emergency Wrangler
+- [Deploy](docs/deploy.md) — Workers Builds (the only CI/CD), preview vs ship, emergency Wrangler
+- [Agent context](docs/agent-context.md) — how rules and skills are written and kept cheap
 - [Changelog](CHANGELOG.md) — notable site and documentation changes
 
 Also see [AGENTS.md](AGENTS.md) and [.cursor/rules/](.cursor/rules/).
@@ -25,7 +26,7 @@ Also see [AGENTS.md](AGENTS.md) and [.cursor/rules/](.cursor/rules/).
 ```sh
 npm install
 npm run dev
-npm run check
+npm run check        # docs + agent context + astro check
 npm run build
 npm run preview
 npm run deploy
@@ -36,9 +37,11 @@ ships go through merge to `main`.
 
 ## Deploy
 
-GitHub is version control only. Never add GitHub Pages or `actions/deploy-pages`.
+GitHub is version control only. CI/CD is Cloudflare Workers Builds. Never
+add GitHub Pages or GitHub Actions.
 
-1. Change the site on a PR into `main`.
+1. Change the site on a PR into `main`. Large work: look on the local
+   preview first. Small copy and blog notes can merge without that tour.
 2. Merge. Cloudflare Workers Builds runs `npm run build`, then
    `npx wrangler deploy`.
 3. Open [rtikhonov.com](https://rtikhonov.com) (or `curl` it) and confirm.
@@ -46,13 +49,10 @@ GitHub is version control only. Never add GitHub Pages or `actions/deploy-pages`
 A push to a PR branch uploads a preview version (not production). The stable
 alias is `https://<branch-with-dashes>-rtikhonov.inrome.workers.dev`.
 
-The test host is [test.rtikhonov.com](https://test.rtikhonov.com). It is Worker
-`rtikhonov-test`. Ship it with `npm run deploy:test` (needs a Cloudflare token
-with Workers Scripts Edit). Do not point that command at production.
-
-Exact dashboard settings: [docs/deploy.md](docs/deploy.md). Cursor:
-`.cursor/rules/deploy.mdc` and `.cursor/skills/deploy-site/`. Preview:
-`.cursor/skills/preview-site/`.
+Exact dashboard settings: [docs/deploy.md](docs/deploy.md). Cursor rules
+live in [.cursor/rules/](.cursor/rules/) and skills in
+[.cursor/skills/](.cursor/skills/) — `deploy-site` to ship,
+`workers-builds-ci` for pipeline questions, `preview-site` to look first.
 
 ## Add a week on /weeks
 

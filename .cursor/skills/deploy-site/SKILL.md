@@ -1,24 +1,29 @@
 ---
 name: deploy-site
 description: >-
-  Deploy the live rtikhonov.com Cloudflare Worker. Use when the user says
-  deploy, ship, publish, or that a change is missing on the live site.
+  Ships a change to the live rtikhonov.com Cloudflare Worker and verifies it
+  on the URL. Use when the user says deploy, ship, publish, or reports that a
+  change is missing from the live site.
 ---
 
 # Deploy site
 
-Load this instead of inventing a GitHub Pages path or a second site tree.
-
 ## Everyday
 
-1. Confirm `wrangler.jsonc` is at the **repository root**.
-2. `npm run check`
-3. Merge to `main` (or ask the owner to merge). Cloudflare Workers Builds
+1. Confirm `wrangler.jsonc` is at the repository root.
+2. Large change with nobody having looked at it yet → skill
+   `preview-site` first. Small copy and blog posts skip that.
+3. `npm run check`
+4. Merge to `main`, or ask the owner to merge. Cloudflare Workers Builds
    ships the Worker.
-4. `curl` https://rtikhonov.com (no-cache) for the new copy. Only then say
-   it is published.
+5. Cache-bust `curl` https://rtikhonov.com for the new copy. Only then
+   call it published.
 
-Settings: `docs/deploy.md`.
+"Test the process" or "test CI" means merge, watch Builds, open the live
+URL. It never means `npm run deploy`.
+
+Settings: `docs/deploy.md`. Pipeline or setup questions: skill
+`workers-builds-ci`.
 
 ## Emergency (Builds down or not connected)
 
@@ -27,14 +32,14 @@ npx wrangler whoami
 npm run deploy
 ```
 
-No token / not logged in → stop and ask for `CLOUDFLARE_API_TOKEN` on the
-Cursor Cloud environment.
-
-Skip the laptop nvm PATH export when `node` is already ≥ 22.12.
+No token → stop and ask for `CLOUDFLARE_API_TOKEN` with **Workers
+Scripts Edit** on the Cursor Cloud environment. Never wait on a
+`wrangler login` localhost callback in Cloud.
 
 ## Do not
 
-- GitHub Pages, `actions/deploy-pages`, `withastro/action`
+- Add GitHub Pages, `.github/workflows/`, `actions/deploy-pages`,
+  `withastro/action`, or `cloudflare/wrangler-action`
 - Fetch `cursor/cloudflare-workers-hosting` or work in `rtikhonov.com/`
-- Todo lists or `git diff main...HEAD` for a clean ship
+- Use todo lists or `git diff main...HEAD` for a clean ship
 - Commit unless the user asked

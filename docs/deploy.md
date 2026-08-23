@@ -5,19 +5,37 @@ https://rtikhonov.com and https://www.rtikhonov.com.
 
 **Published** means a visitor can open the change on those URLs.
 
+## Why this way
+
+CI/CD means: you save the site in GitHub, and a service puts it on the
+live website. That service is **Cloudflare Workers Builds**. You already
+have it. Merge to `main`. The live site updates.
+
+Do not add GitHub Actions or GitHub Pages. Those are a second robot and
+an old host. A green GitHub check does not update rtikhonov.com.
+
+**Small work** (typo, blog / inspiration note, tiny copy): merge. No
+local tour.
+
+**Large work** (new page, new UI): look first on local `astro dev`. If
+you want a link on the web, push the branch and open the Builds preview
+(`*.workers.dev`). Merge only after it looks good. Do not add a custom
+test domain unless you want that as its own task.
+
 ## Everyday path
 
 1. Edit on a branch. Open a PR into `main`.
-2. Run `npm run check`.
-3. Merge to `main`.
-4. Cloudflare Workers Builds deploys.
-5. Confirm with a cache-bust:
+2. For a large change, look on the local preview first.
+3. Run `npm run check`.
+4. Merge to `main`.
+5. Cloudflare Workers Builds deploys.
+6. Confirm with a cache-bust:
 
 ```sh
 curl -sS -H "Cache-Control: no-cache" "https://rtikhonov.com/?t=$(date +%s)"
 ```
 
-Do not add GitHub Pages or `actions/deploy-pages`.
+Do not add GitHub Pages, GitHub Actions, or `actions/deploy-pages`.
 
 ## Workers Builds
 

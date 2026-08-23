@@ -1,65 +1,58 @@
 ---
 name: maintain-project-docs
 description: >-
-  Keeps README, focused docs, CHANGELOG, and llms.txt aligned with the site.
-  Use after notable code or content changes, when editing documentation, when
-  rebuilding history from Git, or when a dirty tree blocks deploy. For
-  deploy-only requests (deploy / ship / publish), use deploy-site instead.
+  Keeps README, the focused docs, CHANGELOG, and llms.txt aligned with the
+  site, and holds the doc map and changelog entry format. Use when notable
+  code or content changed, when editing documentation, when rebuilding
+  history from Git, or when undocumented pending changes block a ship. For
+  deploy-only requests, use deploy-site instead.
 ---
 
-# Maintain Project Docs
+# Maintain project docs
 
 ## Workflow
 
-1. Read the changed files and `git diff --name-status` (pending work only — not `main...HEAD` unless needed).
+1. Read the changed files and `git diff --name-status` — pending work
+   only, not `main...HEAD` unless asked.
 2. Read only the focused docs related to those changes.
-3. Update existing docs before creating a new page.
+3. Update an existing doc before creating a new page.
 4. Update `README.md` when a doc is added, removed, or renamed.
-5. Update `public/llms.txt` when its public summary changes.
+5. Update `public/llms.txt` when its public summary changed.
 6. Add only significant work to `CHANGELOG.md`.
-7. Run the validator:
+7. Run `npm run check:docs`.
 
-```bash
-export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-npm run check:docs
-```
-
-If the user also asked to deploy, hand off to `deploy-site` after docs are current. Do not load this skill for a clean-tree deploy-only request.
+Docs current and the user also asked to ship → hand off to skill
+`deploy-site`. Skip this skill for a clean-tree deploy-only request.
 
 ## Doc map
 
-- `README.md`: short project overview, doc index, commands, deploy notes
+- `README.md`: overview, doc index, commands, deploy summary
 - `docs/features.md`: page anatomy and user-facing features
 - `docs/design-principles.md`: design intent and decision rules
 - `docs/content.md`: project schema and timeline data rules
 - `docs/visual-system.md`: tokens, layout, type, cards, images, icons
 - `docs/interactions.md`: motion and input behavior
-- `docs/seo-social.md`: titles, meta, Open Graph, favicons, sharing rules
+- `docs/seo-social.md`: titles, meta, Open Graph, favicons, sharing
 - `docs/crawling-ai.md`: crawler access and privacy preferences
+- `docs/deploy.md`: Workers Builds settings, ship by size, emergency Wrangler
+- `docs/agent-context.md`: how rules and skills are written and budgeted
 - `CHANGELOG.md`: dated record of significant changes
 
-Keep each fact in one focused page. Link to it instead of copying it elsewhere.
+Keep each fact on one page. Link to it instead of copying it.
 
 ## Changelog format
 
 ```markdown
 ## YYYY-MM-DD — Movie Or Song Title
-
-- Significant change in plain, active B1 English.
 ```
 
-- Use a real movie or song title that fits the work.
-- A playful or self-mocking title is welcome.
-- There is no word-count limit on the title.
-- Group work from the same date.
-- Put newest dates first.
-- Use short bullets. Skip minor internal changes.
-- Use a PostHog-like voice: clear, specific, direct, honest, and conversational.
-- Lead with what changed for the reader. Do not start with “Added” or “Changed.”
-- Prefer active voice and present tense. Write like you are talking to a smart friend.
-- Cut buzzwords, filler, hedging, and forced jokes. Clear beats clever.
-- When rebuilding history, inspect Git dates and diffs. Do not paste commit messages.
-
-## Dirty tree before deploy
-
-If deploy is blocked by undocumented pending changes, fix docs here first. Then use `deploy-site`. Do not re-run a full manual gate when `git status` is already clean — `npm run deploy` runs `check:docs` and the build.
+- Use a real movie or song title that fits the work. Playful or
+  self-mocking is welcome; no length limit.
+- Newest dates first. Group work from the same date.
+- Short bullets, significant changes only. Skip minor internal edits.
+- Lead with the outcome for the reader, not "Added" or "Changed".
+- Plain B1 English, active voice, present tense, short sentences.
+- Clear and conversational, like explaining it to a smart friend. No
+  buzzwords, filler, hedging, or forced jokes.
+- When rebuilding history, read Git dates and diffs. Do not paste commit
+  messages.

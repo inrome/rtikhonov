@@ -1,24 +1,23 @@
 ---
 name: preview-site
 description: >-
-  Starts or reuses the Astro local preview, picks the correct port, and verifies
-  UI changes with a short path. Use when editing rtikhonov.com UI, checking
-  gallery/card/hover behavior, or when HMR looks stale after .astro style edits.
+  Starts or reuses the Astro local preview on the right port and verifies UI
+  changes with the shortest check that proves the edit. Use when editing
+  rtikhonov.com UI, checking gallery, card, or hover behavior, when HMR looks
+  stale after .astro style edits, or to look at a large change (new page or
+  new UI) before shipping. Skip for a typo, blog note, or tiny copy change.
 ---
 
 # Preview site (fast path)
 
-The site is the repository root (`wrangler.jsonc` here).
+This is the look-before-you-ship step. Default for a **large** change
+(new page, new UI, hover or click behavior, layout that can break the
+homepage). Skip it for a **small** change (typo, inspiration or blog
+note, tiny copy).
 
-## Every shell command
-
-On the owner laptop, export nvm Node if needed. Do not trust a previous turn’s cwd.
-
-```bash
-export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-```
-
-On Cursor Cloud, skip the nvm line if `node` is already >= 22.12.
+The site is the repository root (`wrangler.jsonc` here). Do not trust a
+previous turn's cwd. On the owner laptop only, export nvm Node first:
+`export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"`.
 
 ## Server lifecycle (one server only)
 
@@ -51,8 +50,17 @@ Verify only against the port printed by `astro dev status` (or the start output)
 
 Skip browser automation when the edit is a few lines of CSS and the file content is already correct — restart + hard refresh is enough.
 
+## Optional web preview
+
+For a link the owner can open himself, push the branch. Workers Builds
+runs `npx wrangler versions upload` on non-`main` branches and returns a
+`*.workers.dev` URL. Merge only after he says it looks good. Do not add
+a custom test domain unless he asks for it as its own task.
+
 ## Don’t
 
 - `cd rtikhonov.com` (that folder is gone; the app is the repo root)
 - Start a new `astro` via global `npx` when local `node_modules/.bin/astro` exists
 - Keep verifying after the first successful computed-style check for CSS-only edits
+- Force a full UI tour for a blog post or tiny copy change
+- Add GitHub Actions “so we can test in CI”
