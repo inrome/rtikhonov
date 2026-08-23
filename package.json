@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "deploy:test": "astro build && npx wrangler deploy --env test",
     "astro": "astro"
   },
   "dependencies": {

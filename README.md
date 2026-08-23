@@ -21,6 +21,13 @@ Do not add a GitHub Pages or `actions/deploy-pages` workflow. GitHub does not
 host this site. Publish with Cloudflare Workers (`wrangler deploy` / Workers
 Builds) so visitors see [rtikhonov.com](https://rtikhonov.com).
 
+A push to a PR branch uploads a preview version (not production). The stable
+alias is `https://<branch-with-dashes>-rtikhonov.inrome.workers.dev`.
+
+The test host is [test.rtikhonov.com](https://test.rtikhonov.com). It is Worker
+`rtikhonov-test`. Ship it with `npm run deploy:test` (needs a Cloudflare token
+with Workers Scripts Edit). Do not point that command at production.
+
 ## Project structure
 
 ```text
