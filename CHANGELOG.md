@@ -2,6 +2,11 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-09-12 — The Notebook
+
+- Cursor in this repo can talk to Notion. The project lists Notion MCP next to Cloudflare, and turns on the official Notion plugin.
+- Sign in once in Cursor Customize (OAuth). Cloud Agents need the same Notion URL in the Agents MCP list. Tokens stay out of git.
+
 ## 2026-08-23 — Off The Menu
 
 - `/weeks/` and `/inspiration/` stay reachable by URL. They are not in the nav and not on the homepage.
