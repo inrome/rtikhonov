@@ -1,7 +1,8 @@
 # Agent context
 
 How this repo talks to AI agents: `AGENTS.md`, Cursor rules in
-`.cursor/rules/`, and skills in `.cursor/skills/`.
+`.cursor/rules/`, skills in `.cursor/skills/`, MCP servers in
+`.cursor/mcp.json`, and plugins in `.cursor/settings.json`.
 
 Every always-on file is re-sent with every message in every chat. That
 costs money and, worse, invites drift: three copies of the deploy policy
@@ -54,6 +55,14 @@ Scoped rules: `astro-site-workflow.mdc`, `personal-site-ui.mdc`,
 Skills: `deploy-site` (ship now), `workers-builds-ci` (pipeline and CI
 questions), `preview-site` (look at a large change first),
 `maintain-project-docs` (doc map and changelog format).
+
+Plugins: Cloudflare (`cloudflare`) and Notion (`notion-workspace`).
+
+MCP servers in `.cursor/mcp.json`: Cloudflare Workers (docs, bindings,
+builds, observability) and Notion (`https://mcp.notion.com/mcp`). Notion
+needs a one-time OAuth in Cursor Customize. For Cloud Agents, add the
+same HTTP URL in the Agents MCP list and sign in there too. Do not
+commit Notion tokens.
 
 ## Changing them
 

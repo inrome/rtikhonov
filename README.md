@@ -16,7 +16,7 @@ Workers Builds is connected.
 - [SEO / social](docs/seo-social.md) — titles, meta, Open Graph, favicons, sharing rules
 - [Crawling / AI](docs/crawling-ai.md) — robots, portrait opt-out, contact obfuscation
 - [Deploy](docs/deploy.md) — Workers Builds (the only CI/CD), preview vs ship, emergency Wrangler
-- [Agent context](docs/agent-context.md) — how rules and skills are written and kept cheap
+- [Agent context](docs/agent-context.md) — how rules, skills, plugins, and MCP are set up
 - [Changelog](CHANGELOG.md) — notable site and documentation changes
 
 Also see [AGENTS.md](AGENTS.md) and [.cursor/rules/](.cursor/rules/).
