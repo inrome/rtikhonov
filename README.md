@@ -1,10 +1,11 @@
 # rtikhonov.com
 
-Personal site built with [Astro](https://astro.build), hosted on [Cloudflare Workers](https://developers.cloudflare.com/workers/).
+Personal site built with [Astro](https://astro.build). The public domain
+points at a Lovable app. This repo still builds with Cloudflare Workers,
+but it does not own [rtikhonov.com](https://rtikhonov.com).
 
-The app lives at the repository root. **Published** means a visitor can open
-[rtikhonov.com](https://rtikhonov.com). A merge to `main` ships when Cloudflare
-Workers Builds is connected.
+The app lives at the repository root. A merge to `main` updates the Worker
+only. It does not change the public page.
 
 ## Documentation
 
@@ -44,7 +45,8 @@ add GitHub Pages or GitHub Actions.
    preview first. Small copy and blog notes can merge without that tour.
 2. Merge. Cloudflare Workers Builds runs `npm run build`, then
    `npx wrangler deploy`.
-3. Open [rtikhonov.com](https://rtikhonov.com) (or `curl` it) and confirm.
+3. Confirm the Worker on its `*.workers.dev` URL. The public domain stays
+   on Lovable.
 
 A push to a PR branch uploads a preview version (not production). The stable
 alias is `https://<branch-with-dashes>-rtikhonov.inrome.workers.dev`.

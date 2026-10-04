@@ -2,6 +2,11 @@
 
 Notable updates to rtikhonov.com. Newest entries come first.
 
+## 2026-10-04 — Lovely Day
+
+- https://rtikhonov.com and https://www.rtikhonov.com point at the Lovable app. The Worker no longer owns those names.
+- The CNAME is DNS only. An orange cloud returns Cloudflare error 1014.
+
 ## 2026-09-12 — The Notebook
 
 - Cursor in this repo can talk to Notion. The project lists Notion MCP next to Cloudflare, and turns on the official Notion plugin.

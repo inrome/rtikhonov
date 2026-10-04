@@ -1,15 +1,24 @@
 # Deploy
 
-GitHub stores the code. Cloudflare Worker `rtikhonov` serves
-https://rtikhonov.com and https://www.rtikhonov.com.
+GitHub stores this Astro app. Cloudflare Worker `rtikhonov` builds it.
 
-**Published** means a visitor can open the change on those URLs.
+Visitors on https://rtikhonov.com and https://www.rtikhonov.com see the
+Lovable app. Both names are DNS-only CNAMEs to
+`pixel-perfect-capture-3633.lovable.app`. Leave the cloud grey. An orange
+cloud returns Cloudflare error 1014. Do not add these names back as Worker
+custom domains. The next deploy would replace the CNAME.
+
+Email (MX and DKIM) stays on Cloudflare.
+
+**Published** for this repo means the Worker deployed. It does not change
+the public page. Check the URL before you say what is live.
 
 ## Why this way
 
-CI/CD means: you save the site in GitHub, and a service puts it on the
-live website. That service is **Cloudflare Workers Builds**. You already
-have it. Merge to `main`. The live site updates.
+CI/CD means: you save the app in GitHub, and a service deploys the
+Worker. That service is **Cloudflare Workers Builds**. You already
+have it. Merge to `main`. The Worker updates. The public domain stays
+on Lovable.
 
 Do not add GitHub Actions or GitHub Pages. Those are a second robot and
 an old host. A green GitHub check does not update rtikhonov.com.
@@ -29,11 +38,8 @@ test domain unless you want that as its own task.
 3. Run `npm run check`.
 4. Merge to `main`.
 5. Cloudflare Workers Builds deploys.
-6. Confirm with a cache-bust:
-
-```sh
-curl -sS -H "Cache-Control: no-cache" "https://rtikhonov.com/?t=$(date +%s)"
-```
+6. Confirm the Worker on its `*.workers.dev` URL. Do not expect
+   https://rtikhonov.com to show this Astro build.
 
 Do not add GitHub Pages, GitHub Actions, or `actions/deploy-pages`.
 
@@ -79,5 +85,5 @@ localhost OAuth callback in Cloud.
 
 Turn Pages **off** in the GitHub repo: Settings → Pages → Disabled.
 
-Do not add a root `CNAME` or `public/CNAME` for Pages. Custom domains belong
-on the Worker in `wrangler.jsonc`.
+Do not add a root `CNAME` or `public/CNAME` for Pages. The public CNAME
+lives in Cloudflare DNS and points at Lovable.

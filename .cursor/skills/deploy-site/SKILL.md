@@ -1,9 +1,10 @@
 ---
 name: deploy-site
 description: >-
-  Ships a change to the live rtikhonov.com Cloudflare Worker and verifies it
-  on the URL. Use when the user says deploy, ship, publish, or reports that a
-  change is missing from the live site.
+  Ships a change to the Cloudflare Worker and verifies it on the
+  workers.dev URL. The public domain stays on Lovable. Use when the user
+  says deploy, ship, publish, or reports that a change is missing from
+  the Worker.
 ---
 
 # Deploy site
@@ -16,11 +17,11 @@ description: >-
 3. `npm run check`
 4. Merge to `main`, or ask the owner to merge. Cloudflare Workers Builds
    ships the Worker.
-5. Cache-bust `curl` https://rtikhonov.com for the new copy. Only then
-   call it published.
+5. Confirm the Worker on its `*.workers.dev` URL. Do not treat
+   https://rtikhonov.com as this build. That domain is the Lovable app.
 
-"Test the process" or "test CI" means merge, watch Builds, open the live
-URL. It never means `npm run deploy`.
+"Test the process" or "test CI" means merge, watch Builds, open the
+workers.dev URL. It never means `npm run deploy`.
 
 Settings: `docs/deploy.md`. Pipeline or setup questions: skill
 `workers-builds-ci`.
