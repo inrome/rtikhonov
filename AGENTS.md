@@ -1,8 +1,8 @@
 ## The project
 
-Personal one-pager on Astro, served by Cloudflare Worker `rtikhonov`.
-The live app is the **repository root** (`wrangler.jsonc` here). Edit
-`src/`. There is no second Astro tree.
+Personal one-pager on Astro, built by Cloudflare Worker `rtikhonov`.
+The public domain points at Lovable, not this Worker. Edit `src/`.
+There is no second Astro tree.
 
 Talk in plain B1 English. Roman is not a professional developer. Explain
 trade-offs and flag risky tech choices instead of adding tools.
@@ -27,9 +27,9 @@ Fields and how to add a post: [docs/content.md](docs/content.md).
 
 ## Ship
 
-**Published** means a visitor can open the change on https://rtikhonov.com.
-A commit on `main`, a green GitHub check, and `draft: false` are not
-published.
+**Published** on https://rtikhonov.com is the Lovable app. A merge here
+does not change that page. Do not attach the apex or `www` as Worker
+custom domains.
 
 CI/CD is Cloudflare Workers Builds. Merge to `main` and Cloudflare
 deploys. GitHub is version control only — never add GitHub Pages or a

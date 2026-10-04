@@ -5,17 +5,18 @@ alwaysApply: true
 
 # Deploy
 
-**Published** = a visitor can open the change on https://rtikhonov.com.
-A commit on `main`, a green GitHub check, and `draft: false` are not
-published. When asked what is live, check the URL before reporting git
-state.
+**Published** on https://rtikhonov.com is the Lovable app. This Worker
+does not own `rtikhonov.com` or `www`. Those names are DNS-only CNAMEs
+to `pixel-perfect-capture-3633.lovable.app`. Do not attach them as
+Worker custom domains, and do not proxy them (orange cloud returns
+error 1014). When asked what is live, check the URL.
 
-**CI/CD is Cloudflare Workers Builds.** Merge to `main` and Cloudflare
-deploys Worker `rtikhonov`. GitHub is version control only. Never add
-GitHub Pages, `.github/workflows/`, `actions/deploy-pages`,
+**CI/CD is Cloudflare Workers Builds.** Merge to `main` deploys Worker
+`rtikhonov` without those hostnames. GitHub is version control only.
+Never add GitHub Pages, `.github/workflows/`, `actions/deploy-pages`,
 `withastro/action`, or `cloudflare/wrangler-action`.
 
-The live app is the **repository root** (`wrangler.jsonc` here). There is
+The Astro app is the **repository root** (`wrangler.jsonc` here). There is
 no second Astro tree and no `cursor/cloudflare-workers-hosting` branch to
 fetch.
 
@@ -25,7 +26,8 @@ fetch.
    Small change (typo, blog note, tiny copy): skip that.
 2. `npm run check` if the tree is dirty.
 3. Merge the PR to `main`.
-4. Cache-bust curl https://rtikhonov.com and confirm the new string.
+4. Confirm the Worker on its `*.workers.dev` URL. The public domain
+   stays on Lovable.
 
 Setup or pipeline questions → skill `workers-builds-ci`.
 Dashboard settings → `docs/deploy.md`.

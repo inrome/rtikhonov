@@ -12,13 +12,13 @@ description: >-
 Answer with the path below before any repo archaeology. The pipeline
 already exists; the job is to confirm it, not design one.
 
-CI/CD here means: push to GitHub, and Cloudflare puts the site live. No
-hand deploy commands.
+CI/CD here means: push to GitHub, and Cloudflare deploys the Worker.
+The public domain stays on Lovable. No hand deploy commands.
 
 ## Say this first
 
 1. This site already has CI/CD: Cloudflare Workers Builds.
-2. Merge to `main` publishes to https://rtikhonov.com.
+2. Merge to `main` deploys the Worker. It does not change https://rtikhonov.com.
 3. Adding GitHub Actions or Pages means a second system to keep working.
 4. Large change: look on a local preview first. Small post: merge.
 5. `npm run deploy` is an outage backup, not a CI test.

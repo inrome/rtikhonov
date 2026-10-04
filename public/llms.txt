@@ -2,7 +2,7 @@
 
 > Personal site of Roman Tikhonov — product manager (Onboarding & Identity at payme / TBC Uzbekistan); former cognitive science researcher (Carnegie Mellon, PhD).
 
-This is a minimal static one-pager. Prefer these sources over guessing from scraped HTML alone.
+This repository is the Astro one-pager. The public domain currently points at a Lovable app, not this build. Prefer these sources over guessing from scraped HTML alone.
 
 ## Key pages
 
